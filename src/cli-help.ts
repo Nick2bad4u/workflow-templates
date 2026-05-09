@@ -213,13 +213,13 @@ const HELP_NOTES = [
 ];
 
 const HELP_EXAMPLES = [
-    "gh runs-cleanup --repo owner/repo --confirm",
-    "gh runs-cleanup --repos owner/repo,owner/other-repo --dry-run",
-    "gh runs-cleanup --all-repos --owner my-user --status failure --confirm",
-    "gh runs-cleanup --repo owner/repo --status failure,cancelled --limit 500 --confirm",
-    'gh runs-cleanup --repo owner/repo --workflow "CI" --branch main --dry-run',
-    "gh runs-cleanup --repo owner/repo --json --dry-run",
-    "gh runs-cleanup --before-days 30 --status failure --confirm",
+    "gh workflow-templates --repo owner/repo --confirm",
+    "gh workflow-templates --repos owner/repo,owner/other-repo --dry-run",
+    "gh workflow-templates --all-repos --owner my-user --status failure --confirm",
+    "gh workflow-templates --repo owner/repo --status failure,cancelled --limit 500 --confirm",
+    'gh workflow-templates --repo owner/repo --workflow "CI" --branch main --dry-run',
+    "gh workflow-templates --repo owner/repo --json --dry-run",
+    "gh workflow-templates --before-days 30 --status failure --confirm",
 ];
 
 function styleToken(token: string, styler: Styler): string {
@@ -257,12 +257,12 @@ export function buildHelpText(styler?: Styler): string {
 
     const lines: string[] = [];
     lines.push(
-        title("gh-runs-cleanup"),
+        title("workflow-templates"),
         "",
         "  Delete GitHub Actions workflow runs using the gh CLI.",
         "",
         heading("  Usage:"),
-        `    ${styleCommandExample("gh runs-cleanup", styler)} ${arg("[options]")}`,
+        `    ${styleCommandExample("gh workflow-templates", styler)} ${arg("[options]")}`,
         ""
     );
 

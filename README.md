@@ -1,18 +1,18 @@
-# gh-runs-cleanup
+# workflow-templates
 
-[![latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/gh-runs-cleanup?color=cyan)](https://github.com/Nick2bad4u/gh-runs-cleanup/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/gh-runs-cleanup?color=yellow)](https://github.com/Nick2bad4u/gh-runs-cleanup/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/gh-runs-cleanup?color=green)](https://github.com/Nick2bad4u/gh-runs-cleanup/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/gh-runs-cleanup?color=red)](https://github.com/Nick2bad4u/gh-runs-cleanup/issues)
+[![latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/workflow-templates?color=cyan)](https://github.com/Nick2bad4u/workflow-templates/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/workflow-templates?color=yellow)](https://github.com/Nick2bad4u/workflow-templates/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/workflow-templates?color=green)](https://github.com/Nick2bad4u/workflow-templates/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/workflow-templates?color=red)](https://github.com/Nick2bad4u/workflow-templates/issues)
 
-`gh-runs-cleanup` is a GitHub CLI extension for safely cleaning up GitHub Actions workflow runs in bulk.
+`workflow-templates` is a GitHub CLI extension for safely cleaning up GitHub Actions workflow runs in bulk.
 
 It is designed for repos that accumulate thousands of failed/cancelled runs and need controlled cleanup with clear filters and safety checks.
 
 ## Install
 
 ```bash
-gh extension install Nick2bad4u/gh-runs-cleanup
+gh extension install Nick2bad4u/workflow-templates
 ```
 
-Project site: <https://nick2bad4u.github.io/gh-runs-cleanup/>
+Project site: <https://nick2bad4u.github.io/workflow-templates/>
 
 ## Requirements
 
@@ -24,11 +24,11 @@ Extension installs run directly from the repository source; no local build step 
 ## Usage
 
 ```bash
-gh runs-cleanup --repo owner/repo --dry-run
-gh runs-cleanup --repo owner/repo --status failure,cancelled --confirm
-gh runs-cleanup --repo owner/repo --workflow CI --branch main --max-delete 100 --confirm
-gh runs-cleanup --repo owner/repo --dry-run --json
-gh runs-cleanup --before-days 30 --status failure --confirm
+gh workflow-templates --repo owner/repo --dry-run
+gh workflow-templates --repo owner/repo --status failure,cancelled --confirm
+gh workflow-templates --repo owner/repo --workflow CI --branch main --max-delete 100 --confirm
+gh workflow-templates --repo owner/repo --dry-run --json
+gh workflow-templates --before-days 30 --status failure --confirm
 ```
 
 ## Repository selection
@@ -86,5 +86,5 @@ npm test
 ## TypeScript and build output
 
 - Source code lives in `src/`.
-- The extension entrypoints (`gh-runs-cleanup`, `cleanup-workflow-runs.mjs`) execute `src/cli.ts` directly.
+- The extension entrypoints (`workflow-templates`, `cleanup-workflow-runs.mjs`) execute `src/cli.ts` directly.
 - Build output goes to `dist/` via `tsc` for CI validation and local compiled testing.

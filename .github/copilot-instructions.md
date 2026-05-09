@@ -1,4 +1,4 @@
-# Copilot Instructions for gh-runs-cleanup
+# Copilot Instructions for workflow-templates
 
 This repository is a GitHub CLI extension focused on safe cleanup of workflow runs.
 
@@ -23,7 +23,7 @@ Before finalizing changes, run:
 - Source: `src/`
 - Tests: `test/`
 - Build output: `dist/`
-- Extension entrypoints: `gh-runs-cleanup`, `cleanup-workflow-runs.mjs`
+- Extension entrypoints: `workflow-templates`, `cleanup-workflow-runs.mjs`
 
 ## Behavioral expectations
 

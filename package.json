@@ -1,6 +1,6 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
-    "name": "gh-runs-cleanup",
+    "name": "workflow-templates",
     "version": "1.0.0",
     "private": true,
     "description": "GitHub CLI extension to bulk-delete workflow runs with safe filters.",
@@ -11,23 +11,23 @@
         "workflow-runs",
         "cleanup"
     ],
-    "homepage": "https://github.com/Nick2bad4u/gh-runs-cleanup",
+    "homepage": "https://github.com/Nick2bad4u/workflow-templates",
     "bugs": {
-        "url": "https://github.com/Nick2bad4u/gh-runs-cleanup/issues"
+        "url": "https://github.com/Nick2bad4u/workflow-templates/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Nick2bad4u/gh-runs-cleanup.git"
+        "url": "git+https://github.com/Nick2bad4u/workflow-templates.git"
     },
     "license": "MIT",
     "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)",
     "type": "module",
     "bin": {
-        "gh-runs-cleanup": "./gh-runs-cleanup"
+        "workflow-templates": "./workflow-templates"
     },
     "files": [
         "cleanup-workflow-runs.mjs",
-        "gh-runs-cleanup",
+        "workflow-templates",
         "src",
         "README.md",
         "LICENSE"

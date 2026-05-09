@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { buildHelpText } from "../src/cli-help.js";
 import { main } from "../src/cli.js";
 
 function withSilentConsole<T>(callback: () => T): T {
@@ -151,4 +152,10 @@ test("main returns 1 when --all-repos is combined with --repo", () => {
         ])
     );
     assert.equal(code, 1);
+});
+
+test("help text uses workflow-templates branding", () => {
+    const helpText = buildHelpText();
+    assert.match(helpText, /^workflow-templates/mu);
+    assert.match(helpText, /gh workflow-templates \[options\]/u);
 });
