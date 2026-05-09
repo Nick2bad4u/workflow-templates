@@ -1,4 +1,4 @@
-# Contributing to gh-runs-cleanup
+# Contributing to workflow-templates
 
 Thanks for helping improve this GitHub CLI extension.
 

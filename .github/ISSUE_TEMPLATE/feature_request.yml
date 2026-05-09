@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an enhancement for gh-runs-cleanup
+description: Suggest an enhancement for workflow-templates
 title: "[Feature]: "
 labels:
     - enhancement

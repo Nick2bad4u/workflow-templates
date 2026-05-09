@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible bug in gh-runs-cleanup
+description: Report a reproducible bug in workflow-templates
 title: "[Bug]: "
 labels:
     - bug
@@ -18,7 +18,7 @@ body:
           label: Steps to reproduce
           description: Include exact command(s) and flags used.
           placeholder: |
-              1. gh runs-cleanup --repo owner/repo ...
+              1. gh workflow-templates --repo owner/repo ...
               2. ...
       validations:
           required: true

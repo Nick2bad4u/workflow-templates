@@ -255,7 +255,7 @@ jobs:
                     echo "## Install / Upgrade"
                     echo ''
                     echo '```bash'
-                    echo 'gh extension upgrade Nick2bad4u/gh-runs-cleanup || gh extension install Nick2bad4u/gh-runs-cleanup'
+                    echo 'gh extension upgrade Nick2bad4u/workflow-templates || gh extension install Nick2bad4u/workflow-templates'
                     echo '```'
                     echo ""
                     echo "## Release Details"
