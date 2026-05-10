@@ -1,38 +1,42 @@
 {
-  "$schema": "https://www.schemastore.org/package.json",
-  "name": "workflow-templates",
-  "private": true,
-  "description": "GitHub Actions workflow template repository.",
-  "keywords": [
-    "github-actions",
-    "workflow-templates",
-    "template-repository"
-  ],
-  "homepage": "https://github.com/Nick2bad4u/workflow-templates",
-  "bugs": {
-    "url": "https://github.com/Nick2bad4u/workflow-templates/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Nick2bad4u/workflow-templates.git"
-  },
-  "license": "MIT",
-  "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)",
-  "scripts": {
-    "format": "prettier . --write",
-    "format:check": "prettier . --check",
-    "lint": "npm run lint:prettier",
-    "lint:fix": "npm run lint:prettier:fix",
-    "lint:prettier": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --check",
-    "lint:prettier:fix": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --write",
-    "update-deps": "npx ncu -i --install never && npm install --force"
-  },
-  "devDependencies": {
-    "prettier": "^3.8.3",
-    "prettier-plugin-packagejson": "^3.0.2"
-  },
-  "packageManager": "npm@11.12.1",
-  "engines": {
-    "node": ">=22.18.0"
-  }
+    "$schema": "https://www.schemastore.org/package.json",
+    "name": "workflow-templates",
+    "private": true,
+    "description": "GitHub Actions workflow template repository.",
+    "keywords": [
+        "github-actions",
+        "workflow-templates",
+        "template-repository"
+    ],
+    "homepage": "https://github.com/Nick2bad4u/workflow-templates",
+    "bugs": {
+        "url": "https://github.com/Nick2bad4u/workflow-templates/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Nick2bad4u/workflow-templates.git"
+    },
+    "license": "MIT",
+    "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)",
+    "scripts": {
+        "build": "npm run build:runtime",
+        "format": "prettier . --write",
+        "format:check": "prettier . --check",
+        "lint": "cross-env NODE_OPTIONS=--max_old_space_size=8192 eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache",
+        "lint:all": "npm run lint && npm run format:check",
+        "lint:all:fix": "npm run lint:fix && npm run format",
+        "lint:fix": "npm run lint:prettier:fix",
+        "lint:prettier": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --check",
+        "lint:prettier:fix": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --write",
+        "update-deps": "npx ncu -i --install never && npm install --force"
+    },
+    "devDependencies": {
+        "eslint-config-nick2bad4u": "^1.0.11",
+        "prettier": "^3.8.3",
+        "prettier-config-nick2bad4u": "^1.0.10"
+    },
+    "packageManager": "npm@11.12.1",
+    "engines": {
+        "node": ">=22.18.0"
+    }
 }

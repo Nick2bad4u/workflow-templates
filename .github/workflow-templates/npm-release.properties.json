@@ -1,0 +1,7 @@
+{
+    "categories": ["JavaScript", "TypeScript"],
+    "description": "Publish npm package and create GitHub release from git tags or manual workflow dispatch.",
+    "filePatterns": ["package.json$"],
+    "iconName": "workflow-template-node.svg",
+    "name": "npm Release & GitHub Release"
+}

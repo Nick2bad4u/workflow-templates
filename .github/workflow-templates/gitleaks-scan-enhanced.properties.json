@@ -1,0 +1,11 @@
+{
+    "categories": ["YAML", "Shell"],
+    "description": "Scan repository for leaked secrets and credentials using Gitleaks. Includes optional custom configuration.",
+    "filePatterns": [
+        ".gitleaks.toml$",
+        ".gitleaks.yaml$",
+        ".gitleaks.yml$"
+    ],
+    "iconName": "workflow-template-security.svg",
+    "name": "Gitleaks Secret Scan"
+}

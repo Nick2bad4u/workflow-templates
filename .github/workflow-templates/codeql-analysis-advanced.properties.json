@@ -1,0 +1,17 @@
+{
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "YAML"
+    ],
+    "description": "Security scanning for JavaScript, TypeScript code and GitHub Actions workflow YAML files.",
+    "filePatterns": [
+        "codeql.yml$",
+        "codeql-analysis.yml$",
+        "codeql-analysis.yaml$",
+        "codeql-analysis-advanced.yml$",
+        "codeql-analysis-advanced.yaml$"
+    ],
+    "iconName": "workflow-template-security.svg",
+    "name": "CodeQL Analysis (JavaScript, TypeScript & Workflows)"
+}

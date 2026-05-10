@@ -1,0 +1,10 @@
+{
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "YAML"
+    ],
+    "description": "Notify search engines of URL changes via IndexNow protocol. Supports delta (changed URLs) or full sitemap submission.",
+    "iconName": "octicon globe",
+    "name": "Submit IndexNow Notification"
+}
