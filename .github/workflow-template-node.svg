@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Node template icon">
+  <rect width="128" height="128" rx="20" fill="#0f172a"/>
+  <path fill="#68cc65" d="M63.9 16 24 39v50l39.9 23L104 89V39L63.9 16Zm0 9.3 31.8 18.2v41L63.9 102 32.3 84.5v-41L63.9 25.3Z"/>
+  <path fill="#68cc65" d="M49.4 49.2h8.1v29.6h-8.1zm20.9 0h8.1v18.3c0 7.6-4.2 11.8-11.6 11.8-3.2 0-6.4-.8-8.8-2.4l2.6-6.1c1.6 1.1 3.8 1.8 5.7 1.8 2.7 0 4-1.4 4-4.2V49.2Z"/>
+</svg>

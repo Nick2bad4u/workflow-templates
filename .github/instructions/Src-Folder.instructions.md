@@ -1,13 +1,12 @@
 ---
 name: Source-Guidelines
-description: Rules for TypeScript source in src/
-applyTo: "src/**"
+description: Rules for reusable workflow templates
+applyTo: ".github/workflow-templates/**"
 ---
 
-# Source Guidelines (`src/`)
+# Template Guidelines (`.github/workflow-templates/`)
 
-- Keep CLI behavior safe and explicit.
-- Validate user input before external calls.
-- Prefer typed helper functions over large monolithic logic blocks.
-- Preserve stable output shape for `--json` mode.
-- Use Node built-ins unless an external package is clearly justified.
+- Keep triggers and job names explicit and easy to customize.
+- Default to least-privilege `permissions`.
+- Prefer deterministic steps and pinned action versions when practical.
+- Avoid adding opinionated project-specific logic in generic templates.

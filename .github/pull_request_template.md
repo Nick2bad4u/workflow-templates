@@ -4,10 +4,8 @@
 
 ## Validation
 
-- [ ] `npm run build`
-- [ ] `npm run typecheck`
 - [ ] `npm run lint`
-- [ ] `npm test`
+- [ ] Workflows validated (CI or local actionlint)
 
 ## Notes
 

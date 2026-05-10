@@ -12,8 +12,6 @@
 
 ## Validation
 
-- [ ] Reproduction added/updated in tests
-- [ ] `npm run build`
-- [ ] `npm run typecheck`
 - [ ] `npm run lint`
-- [ ] `npm test`
+- [ ] Reproduction details added to issue/PR notes
+- [ ] Workflows validated (CI or local actionlint)

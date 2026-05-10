@@ -1,12 +1,12 @@
 ---
 name: Test-Guidelines
-description: Rules for automated tests in test/
-applyTo: "test/**"
+description: Rules for repository workflow validation files
+applyTo: ".github/workflows/**"
 ---
 
-# Test Guidelines (`test/`)
+# Workflow Validation Guidelines (`.github/workflows/`)
 
-- Cover argument validation, exit codes, and safety gates.
-- Keep tests deterministic and independent from network/auth state.
-- Silence console noise unless output is part of the assertion.
-- Add tests whenever changing CLI flags or default behavior.
+- Keep CI checks deterministic and focused on repository quality gates.
+- Validate workflow files and template metadata relationships.
+- Keep permissions least-privilege and avoid unnecessary write scopes.
+- Add or update validation steps when introducing new templates.

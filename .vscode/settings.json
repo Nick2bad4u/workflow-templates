@@ -43,13 +43,8 @@
         "vue-ts",
         "tailwindcss"
     ],
-    "eslint.workingDirectories": [
-        "."
-    ],
-    "markdown.validate.ignoredLinks": [
-        "*-Nick2bad4u",
-        "#a11y-Nick2bad4u"
-    ],
+    "eslint.workingDirectories": ["."],
+    "markdown.validate.ignoredLinks": ["*-Nick2bad4u", "#a11y-Nick2bad4u"],
     "markdownlint.config": {
         "extends": ".remarkrc.mjs"
     },
@@ -64,11 +59,7 @@
         "connectionId": "nick2bad4u",
         "projectKey": "Nick2bad4u_Uptime-Watcher"
     },
-    "sonarlint.pathsToExclude": [
-        "**/node_modules/**",
-        "**/dist/**",
-        "**/coverage/**"
-    ],
+    "sonarlint.pathsToExclude": ["**/node_modules/**", "**/dist/**", "**/coverage/**"],
     "strykerMutator.enable": false,
     "vitest.rootConfig": "vite.config.ts"
 }

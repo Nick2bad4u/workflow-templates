@@ -8,13 +8,11 @@
 
 ## Validation
 
-- [ ] `npm run build`
-- [ ] `npm run typecheck`
 - [ ] `npm run lint`
-- [ ] `npm test`
+- [ ] Workflows validated (CI or local actionlint)
 
 ## Checklist
 
-- [ ] README updated (if CLI behavior changed)
-- [ ] Tests added/updated
+- [ ] README updated (if template behavior changed)
+- [ ] Template metadata (`*.properties.json`) added/updated if needed
 - [ ] No unrelated file churn

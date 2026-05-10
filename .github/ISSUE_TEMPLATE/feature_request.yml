@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an enhancement for workflow-templates
+description: Suggest an enhancement for workflow templates in this repository
 title: "[Feature]: "
 labels:
     - enhancement
@@ -16,7 +16,7 @@ body:
       id: proposed
       attributes:
           label: Proposed solution
-          description: Describe the command UX and expected output.
+          description: Describe the workflow template behavior and expected outcome.
       validations:
           required: true
 

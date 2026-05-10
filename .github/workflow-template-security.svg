@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Security template icon">
+  <rect width="128" height="128" rx="20" fill="#111827"/>
+  <path fill="#60a5fa" d="M64 14 24 30v34c0 27.2 16.5 42.8 40 50 23.5-7.2 40-22.8 40-50V30L64 14Zm0 11.4 29 11.7V64c0 21.3-12.3 34.4-29 40-16.7-5.6-29-18.7-29-40V37.1l29-11.7Z"/>
+  <path fill="#93c5fd" d="M55.8 69.9 46.7 61l-5.4 5.5 14.5 14.1 30-29.2-5.4-5.5z"/>
+</svg>

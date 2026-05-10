@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible bug in workflow-templates
+description: Report a reproducible issue in a workflow template
 title: "[Bug]: "
 labels:
     - bug
@@ -16,10 +16,11 @@ body:
       id: steps
       attributes:
           label: Steps to reproduce
-          description: Include exact command(s) and flags used.
+          description: Include workflow file, trigger event, and exact failing behavior.
           placeholder: |
-              1. gh workflow-templates --repo owner/repo ...
-              2. ...
+              1. Use template: node-ci.yml
+              2. Trigger: pull_request
+              3. Failure/output: ...
       validations:
           required: true
 
@@ -38,24 +39,10 @@ body:
           required: true
 
     - type: input
-      id: extension-version
+      id: runner-info
       attributes:
-          label: Extension version
-          placeholder: 0.1.0
-
-    - type: input
-      id: gh-version
-      attributes:
-          label: gh CLI version
-          placeholder: gh version 2.x
-      validations:
-          required: true
-
-    - type: input
-      id: node-version
-      attributes:
-          label: Node.js version
-          placeholder: node -v output
+          label: Runner or environment details
+          placeholder: ubuntu-latest, self-hosted, local runner version, etc.
       validations:
           required: true
 
