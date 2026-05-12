@@ -1,4 +1,5 @@
 {
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
     "categories": ["YAML", "Shell"],
     "description": "Scan repository for leaked secrets and credentials using Trufflehog. Reports only verified secrets.",
     "iconName": "workflow-template-security.svg",

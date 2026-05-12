@@ -1,4 +1,5 @@
 {
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
     "categories": ["JavaScript", "TypeScript"],
     "description": "Run tests with coverage across Linux, Windows, and macOS; upload results to Codecov.",
     "filePatterns": [

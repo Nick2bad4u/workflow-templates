@@ -1,4 +1,5 @@
 {
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
     "categories": ["YAML"],
     "description": "Automatically label pull requests based on configuration file (.github/labeler.yml).",
     "iconName": "octicon tag",

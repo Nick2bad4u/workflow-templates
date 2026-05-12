@@ -20,6 +20,9 @@
     "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)",
     "scripts": {
         "build": "npm run build:runtime",
+        "changelog:generate": "git-cliff --config cliff.toml --output CHANGELOG.md",
+        "changelog:preview": "git-cliff --config cliff.toml --unreleased",
+        "changelog:release-notes": "git-cliff --config cliff.toml --latest --strip all",
         "format": "prettier . --write",
         "format:check": "prettier . --check",
         "lint": "cross-env NODE_OPTIONS=--max_old_space_size=8192 eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache",
@@ -28,14 +31,18 @@
         "lint:fix": "npm run lint:prettier:fix",
         "lint:prettier": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --check",
         "lint:prettier:fix": "prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --write",
+        "schema:check:workflow-template-properties": "node ./scripts/update-workflow-template-properties-schema.mjs && git diff --exit-code -- schemas/github-workflow-template-properties.schema.json",
+        "schema:test:workflow-template-properties": "node ./scripts/validate-workflow-template-properties-schema-fixtures.mjs",
+        "schema:update:workflow-template-properties": "node ./scripts/update-workflow-template-properties-schema.mjs",
         "update-deps": "npx ncu -i --install never && npm install --force"
     },
     "devDependencies": {
-        "eslint-config-nick2bad4u": "^1.0.11",
+        "ajv": "^8.17.1",
+        "eslint-config-nick2bad4u": "^1.0.13",
         "prettier": "^3.8.3",
-        "prettier-config-nick2bad4u": "^1.0.10"
+        "prettier-config-nick2bad4u": "^1.0.12"
     },
-    "packageManager": "npm@11.12.1",
+    "packageManager": "npm@11.14.1",
     "engines": {
         "node": ">=22.18.0"
     }

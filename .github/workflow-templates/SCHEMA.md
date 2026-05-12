@@ -115,7 +115,7 @@ Regular expressions (without delimiters) to match root-level files in the user's
 ## GitHub Actions Workflow Template Files
 
 ### Directory Structure
-```
+```folder
 .github/
 ├── workflow-templates/
 │   ├── my-workflow.yml                    # Workflow YAML
@@ -137,6 +137,74 @@ Regular expressions (without delimiters) to match root-level files in the user's
 - [Creating starter workflows for your organization](https://docs.github.com/en/actions/using-workflows/creating-starter-workflows-for-your-organization)
 - [GitHub Linguist Languages](https://github.com/github/linguist/blob/main/lib/linguist/languages.yml)
 - [Starter Workflows Repository](https://github.com/actions/starter-workflows)
+
+---
+
+## SchemaStore Submission Snippet
+
+Use the generated schema at:
+
+```text
+schemas/github-workflow-template-properties.schema.json
+```
+
+### Suggested SchemaStore Catalog Entry
+
+```json
+{
+    "name": "GitHub Actions Workflow Template Properties",
+    "description": "Schema for GitHub Actions workflow template metadata files (*.properties.json) in .github/workflow-templates/.",
+    "fileMatch": [
+        ".github/workflow-templates/*.properties.json",
+        "**/.github/workflow-templates/*.properties.json"
+    ],
+    "url": "https://raw.githubusercontent.com/Nick2bad4u/workflow-templates/main/schemas/github-workflow-template-properties.schema.json"
+}
+```
+
+### Suggested Pull Request Summary
+
+```md
+## Summary
+
+Adds a JSON schema for GitHub Actions workflow template metadata files (`.github/workflow-templates/*.properties.json`).
+
+The schema validates:
+
+- `name` (required)
+- `description` (required)
+- `iconName` (optional: local SVG stem or `octicon <name>`)
+- `categories` (optional; values generated from starter-workflows categories, GitHub Linguist languages, and supported tech stacks)
+- `filePatterns` (optional regex string array)
+
+## Why
+
+GitHub documents workflow template metadata files, but there is currently no dedicated SchemaStore entry for them. This schema improves editor autocomplete and catches common template metadata mistakes.
+
+## fileMatch
+
+The `fileMatch` patterns are intentionally narrow so they only target workflow template metadata files and do not collide with unrelated `*.properties.json` files.
+
+## Maintenance
+
+This schema is generated from upstream sources with:
+
+```bash
+npm run schema:update:workflow-template-properties
+```
+
+Fixture validation is available with:
+
+```bash
+npm run schema:test:workflow-template-properties
+```
+
+### Maintainer Checklist
+
+- Run `npm run schema:update:workflow-template-properties`
+- Run `npm run schema:test:workflow-template-properties`
+- Run `npm run lint`
+- Confirm `.github/workflow-templates/*.properties.json` files still validate against the generated schema
 
 ---
 

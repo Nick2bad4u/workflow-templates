@@ -2,31 +2,32 @@
     "$schema": "vscode://schemas/tasks",
     "tasks": [
         {
-            "label": "Lint",
-            "type": "npm",
-            "script": "lint",
-            "group": "test",
             "detail": "Checks repository formatting with Prettier.",
-            "isBackground": false,
-            "problemMatcher": []
-        },
-        {
-            "label": "Lint:Fix",
-            "type": "npm",
-            "script": "lint:fix",
             "group": "test",
-            "detail": "Applies repository formatting with Prettier.",
             "isBackground": false,
-            "problemMatcher": []
+            "label": "Lint",
+            "problemMatcher": [],
+            "script": "lint",
+            "type": "npm"
         },
         {
-            "label": "Install Dependencies (UpdateDeps)",
-            "type": "npm",
-            "script": "update-deps",
-            "group": "build",
-            "detail": "Interactively updates package versions and reinstalls dependencies.",
+            "detail": "Applies repository formatting with Prettier.",
+            "group": "test",
             "isBackground": false,
-            "problemMatcher": []
+            "label": "Lint:Fix",
+            "problemMatcher": [],
+            "script": "lint:fix",
+            "type": "npm"
+        },
+        {
+            "detail": "Interactively updates package versions and reinstalls dependencies.",
+            "group": "build",
+            "isBackground": false,
+            "label": "Install Dependencies (UpdateDeps)",
+            "problemMatcher": [],
+            "script": "update-deps",
+            "type": "npm"
         }
-    ]
+    ],
+    "version": "2.0.0"
 }

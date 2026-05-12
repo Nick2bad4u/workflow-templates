@@ -1,11 +1,15 @@
 {
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
     "categories": [
         "JavaScript",
         "TypeScript",
         "Markdown"
     ],
     "description": "Build Docusaurus site and deploy to GitHub Pages when docs or config changes.",
-    "filePatterns": ["docusaurus.config.js$", "docusaurus.config.ts$"],
+    "filePatterns": [
+        "docusaurus.config.js$",
+        "docusaurus.config.ts$"
+    ],
     "iconName": "octicon globe",
     "name": "Deploy Docusaurus to GitHub Pages"
 }

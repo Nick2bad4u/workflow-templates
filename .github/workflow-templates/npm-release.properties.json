@@ -1,4 +1,5 @@
 {
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
     "categories": ["JavaScript", "TypeScript"],
     "description": "Publish npm package and create GitHub release from git tags or manual workflow dispatch.",
     "filePatterns": ["package.json$"],

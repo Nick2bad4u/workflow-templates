@@ -1,0 +1,5 @@
+{
+    "categories": "JavaScript",
+    "description": "The categories property must be an array, not a string.",
+    "name": "Invalid Categories Type"
+}
