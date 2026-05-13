@@ -272,6 +272,7 @@ function buildSchema({
 
     return {
         $schema: "https://json-schema.org/draft-07/schema#",
+        $id: "https://raw.githubusercontent.com/Nick2bad4u/workflow-templates/main/schemas/github-workflow-template-properties.schema.json",
         title: "GitHub Actions Workflow Template Properties",
         description:
             "Schema for .properties.json metadata files paired with .github/workflow-templates/*.yml GitHub Actions workflow templates.",

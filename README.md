@@ -5,6 +5,8 @@
 Production-ready, security-hardened GitHub Actions workflow templates for common CI/CD, testing, security, and deployment tasks.
 
 > **For end-users:** Browse workflows in **Actions → Explore** in your GitHub repository, or see [**USAGE.md**](./USAGE.md) for detailed documentation on each workflow.
+>
+> **For maintainers:** See [**Maintaining Workflow Templates**](./docs/guides/maintaining-workflow-templates.md) before adding or changing templates.
 
 ---
 
@@ -44,10 +46,11 @@ All workflows include hardened runners, least-privilege permissions, concurrency
 ```bash
 # Clone this repo (or download specific files)
 cp .github/workflow-templates/node-test-matrix.yml YOUR_REPO/.github/workflows/
-cp .github/workflow-templates/node-test-matrix.properties.json YOUR_REPO/.github/workflow-templates/
 
 # Customize as needed
 ```
+
+Only copy `.properties.json` files when you are publishing your own workflow-template repository. Normal consuming repositories only need the generated workflow YAML under `.github/workflows/`.
 
 ---
 
@@ -134,6 +137,7 @@ USAGE.md                         # Detailed per-workflow guide
 
 ```bash
 npm install
+npm run typecheck
 npm run lint
 ```
 
@@ -154,6 +158,8 @@ npm run schema:update:workflow-template-properties
 ## 📚 Resources
 
 - **[USAGE.md](./USAGE.md)** — Detailed guide for each workflow
+- **[Using Workflow Templates](./docs/guides/using-workflow-templates.md)** — Consumer setup checklist
+- **[Maintaining Workflow Templates](./docs/guides/maintaining-workflow-templates.md)** — Maintainer workflow and validation gates
 - **[GitHub Docs: Creating Workflow Templates](https://docs.github.com/en/actions/using-workflows/creating-starter-workflows-for-your-organization)**
 - **[GitHub Docs: Security Hardening](https://docs.github.com/en/actions/security-guides)**
 - **[OpenSSF Best Practices Badge](https://bestpractices.coreinfrastructure.org/)**

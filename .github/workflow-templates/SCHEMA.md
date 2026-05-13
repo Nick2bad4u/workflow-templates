@@ -164,7 +164,7 @@ schemas/github-workflow-template-properties.schema.json
 
 ### Suggested Pull Request Summary
 
-```md
+````md
 ## Summary
 
 Adds a JSON schema for GitHub Actions workflow template metadata files (`.github/workflow-templates/*.properties.json`).
@@ -198,6 +198,7 @@ Fixture validation is available with:
 ```bash
 npm run schema:test:workflow-template-properties
 ```
+````
 
 ### Maintainer Checklist
 

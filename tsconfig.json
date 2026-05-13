@@ -92,10 +92,6 @@
         "target": "ES2024",
         "traceResolution": false,
         "tsBuildInfoFile": "./.cache/tsbuildinfo/tsconfig.app.tsbuildinfo",
-        "types": [
-            "vite/client",
-            "vitest/globals"
-        ],
         "useDefineForClassFields": true,
         "useUnknownInCatchVariables": true,
         "verbatimModuleSyntax": true

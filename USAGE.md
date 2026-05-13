@@ -73,6 +73,11 @@ strategy:
 
 ### Node.js Test & Coverage Best Practices
 
+- Keep `npm test` deterministic and CI-safe; put coverage flags in the test script if your runner needs them.
+- Reduce the OS matrix before removing checks entirely if hosted-runner cost becomes an issue.
+- Keep Codecov upload on one OS unless you intentionally need per-OS coverage flags.
+- Use `.node-version` as the source of truth for the Node runtime used by `actions/setup-node`.
+
 ---
 
 ## npm Release & GitHub Release
@@ -82,15 +87,19 @@ strategy:
 
 ### npm Release Getting Started
 
-1. Create npm token:
+1. Choose a publishing model:
+   - **Trusted publishing:** preferred after npm trusted publishing is configured for the repository.
+   - **Token-based publishing:** supported by the template through `NPM_TOKEN`.
+
+2. For token-based publishing, create npm token:
    - Visit <https://npmjs.com/settings/~/tokens>
    - Create "Automation" token (no expiration if possible)
 
-2. Store in GitHub Secrets:
+3. Store in GitHub Secrets:
    - Settings → Secrets and variables → Actions
    - Create `NPM_TOKEN` with your token value
 
-3. Configure `package.json`:
+4. Configure `package.json`:
 
    ```json
    {
@@ -100,7 +109,7 @@ strategy:
    }
    ```
 
-4. Create and push a version tag:
+5. Create and push a version tag:
 
    ```bash
    npm version minor
@@ -128,6 +137,11 @@ strategy:
 ```
 
 ### npm Release Best Practices
+
+- Run package validation before publishing. If your repository has scripts such as `release:check`, `publint`, or `attw`, keep them in the release workflow.
+- Prefer npm trusted publishing with provenance for long-term maintenance.
+- If you are bootstrapping trusted publishing for the first time, npm may require an initial manual publish outside the normal provenance flow.
+- Keep `contents: write` and `id-token: write` scoped to the release workflow, not general CI.
 
 ---
 
@@ -185,6 +199,10 @@ on:
 ```
 
 ### CodeQL Analysis Best Practices
+
+- Keep the default scheduled scan; PR-only CodeQL misses issues introduced by dependency or query updates.
+- Use a CodeQL config file only when you need path filtering or custom query suites.
+- Avoid excluding tests unless CodeQL noise is proven; tests often contain workflow and helper patterns worth scanning.
 
 ---
 
@@ -247,6 +265,10 @@ tests-only:
 
 ### Auto-Label Pull Requests Best Practices
 
+- Create labels before enabling the workflow so early PRs do not fail or silently skip expected labels.
+- Keep label rules path-based and predictable; avoid labels that imply review status or merge approval.
+- Review the labeler config when directories are renamed.
+
 ---
 
 ## Mark Stale Issues & PRs
@@ -292,6 +314,10 @@ No setup required! Workflow runs on a daily schedule by default.
 ```
 
 ### Stale Issues & PRs Best Practices
+
+- Exempt security, pinned, roadmap, and actively maintained labels.
+- Start with conservative close windows; aggressive stale automation creates maintenance noise.
+- Use `workflow_dispatch` for manual dry runs after changing thresholds.
 
 ---
 
@@ -340,6 +366,10 @@ Gitleaks runs automatically on every push/PR. No setup required!
 
 ### Gitleaks Secret Scan Best Practices
 
+- Keep test fixtures and fake credentials in `.gitleaksignore` or a narrow allowlist.
+- Review every allowlist entry during code review; broad regex allowlists defeat the scanner.
+- Use Gitleaks alongside GitHub secret scanning rather than treating it as a replacement.
+
 ---
 
 ## Dependency Review
@@ -374,6 +404,10 @@ Dependency Review runs automatically on every PR. No setup required!
 
 ### Dependency Review Best Practices and Recommendations
 
+- Keep license policy explicit if the organization has approved and denied license lists.
+- Set the severity threshold to match the repository's risk tolerance; many projects use `high` or stricter.
+- Keep Dependabot or another dependency-update workflow enabled so findings have a repair path.
+
 ---
 
 ## Trufflehog Secret Scan
@@ -406,6 +440,10 @@ Trufflehog runs automatically on every push/PR. No setup required!
 ```
 
 ### Trufflehog Secret Scan Best Practices
+
+- Use Trufflehog as a second scanner when verified-secret checks are useful.
+- Keep scan scope broad for scheduled runs and narrower for PR-only performance if needed.
+- Treat verified findings as incidents, not routine lint failures.
 
 ---
 
@@ -457,6 +495,10 @@ The workflow evaluates:
 
 ### OpenSSF Scorecard Best Practices
 
+- Upload SARIF results to code scanning so findings are visible in the Security tab.
+- Fix low-effort repository hygiene findings first: branch protection, pinned actions, `SECURITY.md`, and Dependabot.
+- Review score changes after workflow or release-process changes.
+
 ---
 
 ## Deploy Docusaurus to GitHub Pages
@@ -472,8 +514,7 @@ The workflow evaluates:
 
 2. Enable GitHub Pages:
    - Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: `gh-pages` / Folder: `/ (root)`
+   - Source: **GitHub Actions**
 
 3. Initialize Docusaurus (if needed):
 
@@ -530,6 +571,10 @@ docusaurus.config.js
 
 ### Deploy Docusaurus Best Practices
 
+- Use the GitHub Actions Pages source, not branch deployment, when using `actions/deploy-pages`.
+- Keep docs build scripts deterministic and avoid writing generated docs output back to the repository from this workflow.
+- Add path filters for docs, Docusaurus config, package manifests, and any shared theme files that affect the build.
+
 ---
 
 ## Submit IndexNow Notification
@@ -581,6 +626,10 @@ env:
 
 ### IndexNow Notifications Best Practices
 
+- Store the key in `INDEXNOW_KEY` and do not hardcode it in workflow YAML.
+- Prefer delta submissions for routine content updates and sitemap submissions for large rebuilds.
+- Keep submitted URLs canonical and public; IndexNow should not receive preview or localhost URLs.
+
 ---
 
 ## General Troubleshooting
@@ -623,6 +672,8 @@ env:
 
 ## Resources
 
+- [Using Workflow Templates](<./docs/guides/using-workflow-templates.md>)
+- [Maintaining Workflow Templates](<./docs/guides/maintaining-workflow-templates.md>)
 - [GitHub Actions Documentation](<https://docs.github.com/en/actions>)
 - [Security Hardening for Actions](<https://docs.github.com/en/actions/security-guides>)
 - [CodeQL](<https://codeql.github.com/>)
