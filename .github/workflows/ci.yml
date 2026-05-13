@@ -1,17 +1,33 @@
-name: CI
+name: Continuous Integration
+
+run-name: >-
+    Continuous Integration • ${{ github.event_name }} •
+    ${{ github.event.pull_request.number || github.ref_name || github.sha }}
 
 on:
     push:
         branches:
             - main
     pull_request:
+    merge_group:
+        types:
+            - checks_requested
+
+concurrency:
+    group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
 
 permissions:
     contents: read
 
 jobs:
     validate:
+        name: Validate repository
         runs-on: ubuntu-latest
+        timeout-minutes: 15
+        defaults:
+            run:
+                shell: bash
         steps:
             - name: Harden the runner (Audit all outbound calls)
               uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
@@ -31,11 +47,17 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Lint formatting
+            - name: Check generated schema is up to date
+              run: npm run schema:check:workflow-template-properties
+
+            - name: Validate schema fixtures
+              run: npm run schema:test:workflow-template-properties
+
+            - name: Lint repository
               run: npm run lint
 
             - name: Lint workflow syntax with actionlint
-              uses: reviewdog/action-actionlint@v1
+              uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1.72.0
               with:
                   fail_level: error
 

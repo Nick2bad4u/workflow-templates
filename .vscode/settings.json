@@ -57,9 +57,13 @@
     },
     "sonarlint.connectedMode.project": {
         "connectionId": "nick2bad4u",
-        "projectKey": "Nick2bad4u_Uptime-Watcher"
+        "projectKey": "Nick2bad4u_workflow_templates"
     },
-    "sonarlint.pathsToExclude": ["**/node_modules/**", "**/dist/**", "**/coverage/**"],
+    "sonarlint.pathsToExclude": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/coverage/**"
+    ],
     "strykerMutator.enable": false,
     "vitest.rootConfig": "vite.config.ts"
 }

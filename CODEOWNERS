@@ -1,0 +1,7 @@
+# Default ownership for the entire repository.
+* @Nick2bad4u
+
+# Specific ownership for certain paths.
+
+# The .github/ directory contains GitHub-specific files, such as issue templates and workflows.
+.github/ @Nick2bad4u

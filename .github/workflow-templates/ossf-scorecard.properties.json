@@ -1,0 +1,7 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": ["YAML"],
+    "description": "Evaluate open source project security posture using OpenSSF Scorecard and upload results to code scanning.",
+    "iconName": "workflow-template-security.svg",
+    "name": "OpenSSF Scorecard Supply Chain Security"
+}

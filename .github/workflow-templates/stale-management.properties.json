@@ -1,0 +1,7 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": ["YAML"],
+    "description": "Automatically mark and close stale issues and pull requests after inactivity.",
+    "iconName": "octicon archive",
+    "name": "Mark Stale Issues & PRs"
+}

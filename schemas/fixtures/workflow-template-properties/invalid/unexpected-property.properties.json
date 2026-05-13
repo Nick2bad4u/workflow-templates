@@ -1,0 +1,5 @@
+{
+    "description": "Contains a property that should be rejected.",
+    "name": "Unexpected Property",
+    "unsupported": true
+}

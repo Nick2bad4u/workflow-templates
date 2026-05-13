@@ -1,0 +1,14 @@
+{
+    "$schema": "../../github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript"
+    ],
+    "description": "Run tests with coverage across multiple operating systems.",
+    "filePatterns": [
+        "package.json$",
+        "package-lock.json$"
+    ],
+    "iconName": "octicon shield-check",
+    "name": "Node.js Test & Coverage"
+}
