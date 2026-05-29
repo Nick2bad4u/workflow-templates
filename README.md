@@ -27,6 +27,7 @@ All workflows include hardened runners, least-privilege permissions, concurrency
 | **OpenSSF Scorecard** | Supply chain security audit | Multiple events | YAML |
 | **Deploy Docusaurus** | Build & deploy docs to GitHub Pages | Push (docs path), manual | JavaScript, TypeScript, Markdown |
 | **Submit IndexNow** | Notify search engines of URL changes | Manual dispatch | JavaScript, TypeScript, YAML |
+| **Git-Cliff Release Notes Validation** | Check published release notes match the tag | Release published/edited, manual | YAML |
 
 ---
 
@@ -93,6 +94,7 @@ Each workflow may require additional configuration:
 | **Mark Stale Issues** | Built-in params | Days before stale/close |
 | **Deploy Docusaurus** | `docusaurus.config.js` | Docs site config |
 | **Submit IndexNow** | Repository secret: `INDEXNOW_KEY` | SEO notification key |
+| **Git-Cliff Release Notes Validation** | `cliff.toml` | Git-cliff release-note heading convention |
 
 See [USAGE.md](./USAGE.md) for per-workflow setup details.
 

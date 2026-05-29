@@ -1,0 +1,8 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": ["YAML"],
+    "description": "Validate that published git-cliff release notes match the release tag.",
+    "filePatterns": ["cliff.toml$"],
+    "iconName": "workflow-template-node.svg",
+    "name": "Git-Cliff Release Notes Validation"
+}

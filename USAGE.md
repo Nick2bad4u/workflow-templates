@@ -15,6 +15,7 @@ Detailed setup, configuration, and best practices for each workflow template.
 9. [OpenSSF Scorecard](#openssf-scorecard)
 10. [Deploy Docusaurus](#deploy-docusaurus-to-github-pages)
 11. [IndexNow Notifications](#submit-indexnow-notification)
+12. [Git-Cliff Release Notes Validation](#git-cliff-release-notes-validation)
 
 ---
 
@@ -629,6 +630,67 @@ env:
 - Store the key in `INDEXNOW_KEY` and do not hardcode it in workflow YAML.
 - Prefer delta submissions for routine content updates and sitemap submissions for large rebuilds.
 - Keep submitted URLs canonical and public; IndexNow should not receive preview or localhost URLs.
+
+---
+
+## Git-Cliff Release Notes Validation
+
+**File:** `git-cliff-release-notes-validation.yml`
+**Purpose:** Validate that a published GitHub release body starts with git-cliff notes for the same release tag.
+
+This workflow is intended for repositories whose release notes use headings like `## [1.2.3] - 2026-05-29`.
+It flags release bodies that are empty, contain placeholder text, start with `## [Unreleased]`, or start with a
+different version heading than the published tag.
+
+### Git-Cliff Release Notes Validation Getting Started
+
+1. Add the workflow to `.github/workflows/validate-release-notes.yml`.
+2. Confirm the repository uses git-cliff-style release notes with version headings.
+3. Publish or edit a release to run the validator.
+
+If your release is created by a workflow using the default `GITHUB_TOKEN`, GitHub does not normally trigger another
+workflow from that release event. In that setup, keep this validator's `workflow_dispatch` trigger and call it after
+the release step. The release workflow needs `actions: write` permission for the dispatch call:
+
+```yaml
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  publish:
+    steps:
+      - name: Validate published release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh workflow run validate-release-notes.yml -f tag="$TAG"
+```
+
+### Git-Cliff Release Notes Validation Configuration Options
+
+```yaml
+on:
+  release:
+    types:
+      - published
+      - edited
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+```
+
+Use the `release` trigger for releases created manually, by a personal access token, or by a GitHub App token. Use
+`workflow_dispatch` as the fallback when another workflow creates the release with `GITHUB_TOKEN`.
+
+### Git-Cliff Release Notes Validation Best Practices
+
+- Use it only on repositories where release notes are expected to start with `## [version]`.
+- Keep it non-blocking by running it after the release is already published.
+- Pair it with a `changelog:release-notes` script that uses `git-cliff --current --strip all` for tag releases.
+- Leave custom GitHub-generated notes such as `## What's Changed` on repos that do not use git-cliff.
 
 ---
 
