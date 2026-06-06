@@ -9,7 +9,7 @@ Reusable workflows are different from workflow templates:
 
 GitHub does not support reusable workflows from subdirectories under `.github/workflows/`, so the reusable workflow files use the `reusable-` filename prefix instead of a separate folder inside `.github/workflows/`.
 
-The caller examples keep top-level `permissions: {}` and grant only the called workflow's required scopes on the `jobs.<job_id>.permissions` block. The caller workflow owns the `on:` trigger, so each example mirrors the matching starter workflow trigger with `main` in place of `$default-branch`.
+The caller examples keep top-level `permissions: {}` and grant only the called workflow's required scopes on the `jobs.<job_id>.permissions` block. The caller workflow owns the `on:` trigger, so examples with default-branch filters include both `main` and `master` for compatibility.
 
 ## Available Workflows
 
