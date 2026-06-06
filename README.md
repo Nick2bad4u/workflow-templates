@@ -23,6 +23,7 @@ All workflows include hardened runners, least-privilege permissions, concurrency
 | **Mark Stale Issues** | Close stale issues/PRs after inactivity | Schedule, manual | YAML |
 | **Gitleaks Scan** | Detect leaked secrets (with config support) | Push, PR, schedule | YAML, Shell |
 | **Dependency Review** | Scan PR dependencies + license check | PR, merge_group | Multiple languages |
+| **Dependabot Auto-Merge** | Enable auto-merge for Dependabot patch/minor PRs | PR, merge_group | Multiple languages |
 | **Trufflehog Scan** | Alt secret scanner (verified secrets only) | Multiple events | YAML, Shell |
 | **OpenSSF Scorecard** | Supply chain security audit | Multiple events | YAML |
 | **Deploy Docusaurus** | Build & deploy docs to GitHub Pages | Push (docs path), manual | JavaScript, TypeScript, Markdown |
@@ -91,6 +92,7 @@ Each workflow may require additional configuration:
 |----------|-------------|---------|
 | **Auto-Label PRs** | `.github/labeler.yml` | Define PR label rules |
 | **Gitleaks Scan** | `.gitleaks.toml` (optional) | Custom secret patterns |
+| **Dependabot Auto-Merge** | Repository auto-merge + Dependabot | Auto-merge patch/minor updates after checks |
 | **Mark Stale Issues** | Built-in params | Days before stale/close |
 | **Deploy Docusaurus** | `docusaurus.config.js` | Docs site config |
 | **Submit IndexNow** | Repository secret: `INDEXNOW_KEY` | SEO notification key |

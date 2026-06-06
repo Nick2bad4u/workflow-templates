@@ -11,11 +11,12 @@ Detailed setup, configuration, and best practices for each workflow template.
 5. [Stale Issues & PRs](#mark-stale-issues--prs)
 6. [Gitleaks Secret Scan](#gitleaks-secret-scan)
 7. [Dependency Review](#dependency-review)
-8. [Trufflehog Secret Scan](#trufflehog-secret-scan)
-9. [OpenSSF Scorecard](#openssf-scorecard)
-10. [Deploy Docusaurus](#deploy-docusaurus-to-github-pages)
-11. [IndexNow Notifications](#submit-indexnow-notification)
-12. [Git-Cliff Release Notes Validation](#git-cliff-release-notes-validation)
+8. [Dependabot Auto-Merge](#dependabot-auto-merge)
+9. [Trufflehog Secret Scan](#trufflehog-secret-scan)
+10. [OpenSSF Scorecard](#openssf-scorecard)
+11. [Deploy Docusaurus](#deploy-docusaurus-to-github-pages)
+12. [IndexNow Notifications](#submit-indexnow-notification)
+13. [Git-Cliff Release Notes Validation](#git-cliff-release-notes-validation)
 
 ---
 
@@ -408,6 +409,47 @@ Dependency Review runs automatically on every PR. No setup required!
 - Keep license policy explicit if the organization has approved and denied license lists.
 - Set the severity threshold to match the repository's risk tolerance; many projects use `high` or stricter.
 - Keep Dependabot or another dependency-update workflow enabled so findings have a repair path.
+
+---
+
+## Dependabot Auto-Merge
+
+**File:** `auto-merge-dependabot.yml`
+**Purpose:** Enable GitHub auto-merge for Dependabot patch and minor pull requests after required checks pass.
+
+This workflow is intended for repositories that already use Dependabot and have branch protection or rulesets that
+require the checks you trust before merging. It does not auto-merge semver-major updates by default.
+
+### Dependabot Auto-Merge Getting Started
+
+1. Enable repository auto-merge in **Settings → General → Pull Requests → Allow auto-merge**.
+2. Add or confirm `.github/dependabot.yml` is configured for the ecosystems you want Dependabot to update.
+3. Add the workflow to `.github/workflows/auto-merge-dependabot.yml`.
+4. Confirm branch protection or repository rulesets require the checks that must pass before auto-merge completes.
+
+### Dependabot Auto-Merge Configuration Options
+
+**Allow major updates only after you are comfortable with the repository's required checks and review policy:**
+
+```yaml
+contains(
+  fromJSON('["version-update:semver-patch","version-update:semver-minor","version-update:semver-major"]'),
+  steps.metadata.outputs.update-type
+)
+```
+
+**Change the merge method if your repository does not use squash merges:**
+
+```yaml
+gh pr merge --auto --merge "${PR_URL}"
+```
+
+### Dependabot Auto-Merge Best Practices
+
+- Keep semver-major updates out of the default auto-merge path unless human review is required by branch protection.
+- Require the same CI and security checks that a maintainer would wait for before merging manually.
+- Keep repository auto-merge enabled; the workflow fails early with the evaluated GitHub API value when it is disabled.
+- Use merge queue support only as a status path. Auto-merge enablement happens on Dependabot pull request events.
 
 ---
 

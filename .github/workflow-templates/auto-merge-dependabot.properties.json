@@ -1,0 +1,25 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "Python",
+        "Ruby",
+        "Java",
+        "Go",
+        "PHP",
+        "YAML"
+    ],
+    "description": "Enable GitHub auto-merge for Dependabot patch and minor pull requests after required checks pass.",
+    "filePatterns": [
+        ".github/dependabot.yml$",
+        "package.json$",
+        "Gemfile$",
+        "requirements.txt$",
+        "pom.xml$",
+        "go.mod$",
+        "composer.json$"
+    ],
+    "iconName": "octicon dependabot",
+    "name": "Dependabot Auto-Merge"
+}
