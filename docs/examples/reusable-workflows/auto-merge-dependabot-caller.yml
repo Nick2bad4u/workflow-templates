@@ -5,6 +5,11 @@ on:
         branches:
             - main
             - master
+            - develop
+            - release/*
+            - feature/*
+            - bugfix/*
+            - dependabot/*
         types:
             - opened
             - synchronize
@@ -14,6 +19,11 @@ on:
         branches:
             - main
             - master
+            - develop
+            - release/*
+            - feature/*
+            - bugfix/*
+            - dependabot/*
         types:
             - checks_requested
 
