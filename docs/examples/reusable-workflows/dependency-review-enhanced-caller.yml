@@ -1,0 +1,15 @@
+name: Dependency Review
+
+on:
+    pull_request:
+    merge_group:
+        types:
+            - checks_requested
+
+permissions: {}
+
+jobs:
+    dependency-review:
+        permissions:
+            contents: read
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-dependency-review-enhanced.yml@main

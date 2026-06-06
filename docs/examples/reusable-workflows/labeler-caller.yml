@@ -1,0 +1,20 @@
+name: Label Pull Requests
+
+on:
+    pull_request_target:
+        branches:
+            - main
+        types:
+            - opened
+            - edited
+            - reopened
+            - synchronize
+
+permissions: {}
+
+jobs:
+    labeler:
+        permissions:
+            contents: read
+            pull-requests: write
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-labeler.yml@main

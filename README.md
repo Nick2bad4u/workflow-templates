@@ -6,6 +6,8 @@ Production-ready, security-hardened GitHub Actions workflow templates for common
 
 > **For end-users:** Browse workflows in **Actions → Explore** in your GitHub repository, or see [**USAGE.md**](./USAGE.md) for detailed documentation on each workflow.
 >
+> **For reusable workflows:** See [**Reusable Workflows**](./docs/guides/reusable-workflows.md) for `jobs.<job_id>.uses` examples.
+>
 > **For maintainers:** See [**Maintaining Workflow Templates**](./docs/guides/maintaining-workflow-templates.md) before adding or changing templates.
 
 ---
@@ -23,7 +25,7 @@ All workflows include hardened runners, least-privilege permissions, concurrency
 | **Mark Stale Issues** | Close stale issues/PRs after inactivity | Schedule, manual | YAML |
 | **Gitleaks Scan** | Detect leaked secrets (with config support) | Push, PR, schedule | YAML, Shell |
 | **Dependency Review** | Scan PR dependencies + license check | PR, merge_group | Multiple languages |
-| **Dependabot Auto-Merge** | Enable auto-merge for Dependabot patch/minor PRs | PR, merge_group | Multiple languages |
+| **Dependabot Auto-Merge** | Enable auto-merge for selected Dependabot semver PRs | PR, merge_group | Multiple languages |
 | **Trufflehog Scan** | Alt secret scanner (verified secrets only) | Multiple events | YAML, Shell |
 | **OpenSSF Scorecard** | Supply chain security audit | Multiple events | YAML |
 | **Deploy Docusaurus** | Build & deploy docs to GitHub Pages | Push (docs path), manual | JavaScript, TypeScript, Markdown |
@@ -53,6 +55,20 @@ cp .github/workflow-templates/node-test-matrix.yml YOUR_REPO/.github/workflows/
 ```
 
 Only copy `.properties.json` files when you are publishing your own workflow-template repository. Normal consuming repositories only need the generated workflow YAML under `.github/workflows/`.
+
+### Calling a Reusable Workflow
+
+Reusable variants live under `.github/workflows/reusable-*.yml` and can be called from a consumer workflow:
+
+```yaml
+jobs:
+  dependabot-auto-merge:
+    uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-auto-merge-dependabot.yml@main
+    with:
+      semver-policy: patch,minor
+```
+
+Use templates when you want a copied starter workflow. Use reusable workflows when you want centrally maintained logic.
 
 ---
 
@@ -92,7 +108,7 @@ Each workflow may require additional configuration:
 |----------|-------------|---------|
 | **Auto-Label PRs** | `.github/labeler.yml` | Define PR label rules |
 | **Gitleaks Scan** | `.gitleaks.toml` (optional) | Custom secret patterns |
-| **Dependabot Auto-Merge** | Repository auto-merge + Dependabot | Auto-merge patch/minor updates after checks |
+| **Dependabot Auto-Merge** | Repository auto-merge + `DEPENDABOT_AUTO_MERGE_SEMVER` | Auto-merge selected semver updates after checks |
 | **Mark Stale Issues** | Built-in params | Days before stale/close |
 | **Deploy Docusaurus** | `docusaurus.config.js` | Docs site config |
 | **Submit IndexNow** | Repository secret: `INDEXNOW_KEY` | SEO notification key |
@@ -119,13 +135,16 @@ All workflows include:
 
 ```folder
 .github/
-├── workflow-templates/          # Reusable workflow templates
+├── workflow-templates/          # Workflow templates shown in GitHub Actions UI
 │   ├── *.yml                    # Workflow definitions
 │   ├── *.properties.json        # Metadata for GitHub UI
 │   ├── *.svg                    # Optional custom icons
 │   └── SCHEMA.md                # Schema documentation
-├── workflows/                   # Your repository's own workflows
+├── workflows/                   # Repository workflows and reusable-*.yml callable workflows
 └── ...
+
+docs/examples/reusable-workflows/
+└── *.yml                        # Caller workflow examples
 
 schemas/
 └── github-workflow-template-properties.schema.json  # JSON schema for validation
@@ -163,6 +182,7 @@ npm run schema:update:workflow-template-properties
 
 - **[USAGE.md](./USAGE.md)** — Detailed guide for each workflow
 - **[Using Workflow Templates](./docs/guides/using-workflow-templates.md)** — Consumer setup checklist
+- **[Reusable Workflows](./docs/guides/reusable-workflows.md)** — Callable workflow reference and examples
 - **[Maintaining Workflow Templates](./docs/guides/maintaining-workflow-templates.md)** — Maintainer workflow and validation gates
 - **[GitHub Docs: Creating Workflow Templates](https://docs.github.com/en/actions/using-workflows/creating-starter-workflows-for-your-organization)**
 - **[GitHub Docs: Security Hardening](https://docs.github.com/en/actions/security-guides)**

@@ -6,7 +6,12 @@ applyTo: ".github/workflows/*.yml"
 
 # Repository Workflow Instructions
 
-Files in `.github/workflows/` validate and protect this repository. They are not the reusable workflow templates that consumers select from the GitHub Actions UI.
+Files in `.github/workflows/` include two different surfaces:
+
+- Repository automation such as `ci.yml`, `codeql.yml`, `dependency-review.yml`, and `gitleaks.yml`, which validate and protect this repository.
+- Reusable workflows named `reusable-*.yml`, which consumers call with `jobs.<job_id>.uses`.
+
+They are still separate from `.github/workflow-templates/*.yml`, which consumers select from the GitHub Actions UI and copy into their own repositories.
 
 ## Standards
 
@@ -20,6 +25,7 @@ Files in `.github/workflows/` validate and protect this repository. They are not
   - `npm run schema:check:workflow-template-properties`
   - `npm run schema:test:workflow-template-properties`
 - Keep workflow template metadata presence checks in CI so every `.github/workflow-templates/*.yml` has a paired `.properties.json`.
+- Keep reusable workflows directly under `.github/workflows/`; GitHub does not support reusable workflow subdirectories.
 
 ## Validation
 

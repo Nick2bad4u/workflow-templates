@@ -12,6 +12,7 @@ Start from the workflow that matches the job you want to automate:
 | npm package publishing | `npm-release.yml` |
 | Code scanning | `codeql-analysis-advanced.yml` |
 | Dependency and license review | `dependency-review-enhanced.yml` |
+| Dependabot auto-merge | `auto-merge-dependabot.yml` |
 | Secret scanning | `gitleaks-scan-enhanced.yml` or `trufflehog-scan.yml` |
 | PR labeling | `labeler.yml` |
 | Stale issue management | `stale-management.yml` |
@@ -85,3 +86,7 @@ Keep the workflow `permissions` block as narrow as possible. Add write permissio
 - Keep `timeout-minutes` on every job.
 
 See the per-template details in [`USAGE.md`](../../USAGE.md).
+
+For a complete consumer workflow example, see [`docs/examples/workflows/auto-merge-dependabot.yml`](../examples/workflows/auto-merge-dependabot.yml).
+
+If you want a centrally maintained workflow instead of a copied starter workflow, use a reusable workflow. See [Reusable Workflows](./reusable-workflows.md).

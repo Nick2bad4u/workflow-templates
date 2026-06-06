@@ -10,6 +10,9 @@ This guide is for maintainers of this template repository.
   <template>.properties.json
   SCHEMA.md
 
+.github/workflows/
+  reusable-<template>.yml
+
 schemas/
   github-workflow-template-properties.schema.json
   fixtures/workflow-template-properties/
@@ -19,7 +22,9 @@ scripts/
   validate-workflow-template-properties-schema-fixtures.mjs
 ```
 
-The `.yml` files are the templates consumers receive. The `.properties.json` files control how GitHub presents those templates in the Actions UI.
+The `.github/workflow-templates/*.yml` files are the templates consumers receive. The `.properties.json` files control how GitHub presents those templates in the Actions UI.
+
+The `.github/workflows/reusable-*.yml` files are reusable workflow variants that consumers can call with `jobs.<job_id>.uses`. They must stay directly under `.github/workflows/`; GitHub does not support reusable workflow subdirectories.
 
 ## Add A Template
 
@@ -31,6 +36,7 @@ The `.yml` files are the templates consumers receive. The `.properties.json` fil
 6. Add `concurrency` when repeated runs can race or waste compute.
 7. Pin actions consistently with the existing templates.
 8. Document setup requirements in `USAGE.md`.
+9. If the template should also be centrally callable, add or update `.github/workflows/reusable-<template>.yml`.
 
 ## Metadata Checklist
 
@@ -90,14 +96,17 @@ npm run lint
 Also verify:
 
 - Every template YAML has matching metadata.
+- Matching reusable workflows still pass `actionlint`.
 - `README.md` and `USAGE.md` mention any new template.
 - Required secrets and repository settings are documented.
 - CI-only workflows under `.github/workflows/` still validate this repository rather than consumer projects.
+- Reusable workflows under `.github/workflows/reusable-*.yml` still expose `workflow_call`.
 
 ## Common Mistakes
 
 - Copying `.properties.json` files into a normal consumer repository. Those files are only for template publishers.
 - Replacing `$default-branch` with this repository's default branch inside starter templates.
+- Placing reusable workflows in a subdirectory. GitHub only supports reusable workflows directly under `.github/workflows/`.
 - Granting `contents: write` at workflow level when only one job needs it.
 - Adding new generated schema values manually instead of updating the generator or rerunning the schema update.
 - Documenting GitHub Pages deployment as branch-based when the workflow uses `actions/deploy-pages`.

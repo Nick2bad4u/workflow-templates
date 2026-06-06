@@ -1,0 +1,44 @@
+name: OpenSSF Scorecard
+
+on:
+    workflow_call:
+concurrency:
+    group: scorecard-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+    security-events: write
+    id-token: write
+    actions: read
+    issues: read
+    pull-requests: read
+    checks: read
+
+jobs:
+    analysis:
+        name: Scorecard Analysis
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        steps:
+            - name: Harden runner
+              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+              with:
+                  egress-policy: audit
+
+            - name: Checkout
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                  persist-credentials: false
+
+            - name: Run Scorecard analysis
+              uses: ossf/scorecard-action@08b4669551908b1974325464e95a49ae528d7649 # v2.4.1
+              with:
+                  results_file: scorecard-results.sarif
+                  results_format: sarif
+                  publish_results: true
+
+            - name: Upload Scorecard results
+              uses: github/codeql-action/upload-sarif@1d16ed59ea56f7bae8c9c35be4a1d6b45ae4de72 # v4.32.10
+              with:
+                  sarif_file: scorecard-results.sarif

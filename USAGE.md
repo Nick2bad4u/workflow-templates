@@ -2,6 +2,8 @@
 
 Detailed setup, configuration, and best practices for each workflow template.
 
+For centrally maintained callable workflows, see [Reusable Workflows](./docs/guides/reusable-workflows.md).
+
 ## Table of Contents
 
 1. [Node.js Test & Coverage](#nodejs-test--coverage)
@@ -418,7 +420,8 @@ Dependency Review runs automatically on every PR. No setup required!
 **Purpose:** Enable GitHub auto-merge for Dependabot patch and minor pull requests after required checks pass.
 
 This workflow is intended for repositories that already use Dependabot and have branch protection or rulesets that
-require the checks you trust before merging. It does not auto-merge semver-major updates by default.
+require the checks you trust before merging. It defaults to patch and minor updates, and repositories can opt into
+major updates with the `DEPENDABOT_AUTO_MERGE_SEMVER` Actions variable.
 
 ### Dependabot Auto-Merge Getting Started
 
@@ -429,13 +432,16 @@ require the checks you trust before merging. It does not auto-merge semver-major
 
 ### Dependabot Auto-Merge Configuration Options
 
+**Configure allowed update levels with a repository or organization Actions variable:**
+
+```text
+DEPENDABOT_AUTO_MERGE_SEMVER=patch,minor
+```
+
 **Allow major updates only after you are comfortable with the repository's required checks and review policy:**
 
-```yaml
-contains(
-  fromJSON('["version-update:semver-patch","version-update:semver-minor","version-update:semver-major"]'),
-  steps.metadata.outputs.update-type
-)
+```text
+DEPENDABOT_AUTO_MERGE_SEMVER=patch,minor,major
 ```
 
 **Change the merge method if your repository does not use squash merges:**
@@ -450,6 +456,7 @@ gh pr merge --auto --merge "${PR_URL}"
 - Require the same CI and security checks that a maintainer would wait for before merging manually.
 - Keep repository auto-merge enabled; the workflow fails early with the evaluated GitHub API value when it is disabled.
 - Use merge queue support only as a status path. Auto-merge enablement happens on Dependabot pull request events.
+- See [Dependabot Auto-Merge](<./docs/guides/dependabot-auto-merge.md>) for setup examples.
 
 ---
 

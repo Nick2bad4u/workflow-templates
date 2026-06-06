@@ -1,0 +1,28 @@
+name: Stale Issues & Pull Requests
+
+on:
+    schedule:
+        - cron: 38 7 * * *
+    issues:
+        types:
+            - opened
+            - reopened
+            - edited
+    pull_request_target:
+        branches:
+            - main
+        types:
+            - opened
+            - reopened
+            - synchronize
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    stale:
+        permissions:
+            contents: read
+            issues: write
+            pull-requests: write
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-stale-management.yml@main

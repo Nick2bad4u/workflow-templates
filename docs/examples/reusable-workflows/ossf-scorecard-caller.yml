@@ -1,0 +1,28 @@
+name: OpenSSF Scorecard
+
+on:
+    branch_protection_rule:
+        types:
+            - created
+            - edited
+            - deleted
+    schedule:
+        - cron: 20 7 * * 2
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    scorecard:
+        permissions:
+            contents: read
+            security-events: write
+            id-token: write
+            actions: read
+            issues: read
+            pull-requests: read
+            checks: read
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-ossf-scorecard.yml@main

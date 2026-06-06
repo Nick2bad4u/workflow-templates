@@ -1,0 +1,20 @@
+name: Node.js Test & Coverage
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    merge_group:
+        types:
+            - checks_requested
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    test:
+        permissions:
+            contents: read
+            id-token: write
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-node-test-matrix.yml@main

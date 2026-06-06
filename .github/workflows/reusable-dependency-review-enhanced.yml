@@ -1,0 +1,31 @@
+name: Dependency Review
+
+on:
+    workflow_call:
+concurrency:
+    group: dependency-review-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    review:
+        name: Dependency Review
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - name: Harden runner
+              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+              with:
+                  egress-policy: audit
+
+            - name: Checkout
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            - name: Review dependencies
+              uses: actions/dependency-review-action@6141b2fbf7e1b7a876165c003b94e11601eadeb6 # v4.9.0
+              with:
+                  fail-on-severity: high
+                  allow-licenses: Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, MIT
+                  deny-licenses: GPL-2.0, GPL-3.0

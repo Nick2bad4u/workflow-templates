@@ -1,3 +1,8 @@
+# Example consumer workflow after selecting or copying our auto-merge-dependabot workflow template.
+# Workflow templates are not called with `uses:`. GitHub copies the template YAML into the consumer repo.
+# In a normal repository, this file would live at .github/workflows/auto-merge-dependabot.yml.
+# Configure DEPENDABOT_AUTO_MERGE_SEMVER as a repository or organization Actions variable.
+
 name: Dependabot Auto-Merge
 
 run-name: >-
@@ -12,7 +17,7 @@ run-name: >-
 on:
     pull_request:
         branches:
-            - $default-branch
+            - main
         types:
             - opened
             - synchronize
@@ -20,7 +25,7 @@ on:
             - ready_for_review
     merge_group:
         branches:
-            - $default-branch
+            - main
         types:
             - checks_requested
 

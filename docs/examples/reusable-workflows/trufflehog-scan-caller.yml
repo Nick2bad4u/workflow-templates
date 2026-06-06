@@ -1,0 +1,19 @@
+name: Trufflehog Secret Scan
+
+on:
+    push:
+    pull_request:
+    merge_group:
+        types:
+            - checks_requested
+    schedule:
+        - cron: 44 4 * * 0
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    trufflehog:
+        permissions:
+            contents: read
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-trufflehog-scan.yml@main

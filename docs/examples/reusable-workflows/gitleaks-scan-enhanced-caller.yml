@@ -1,0 +1,19 @@
+name: Gitleaks Secret Scan
+
+on:
+    pull_request:
+    merge_group:
+        types:
+            - checks_requested
+    push:
+    schedule:
+        - cron: 12 4 * * *
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    gitleaks:
+        permissions:
+            contents: read
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-gitleaks-scan-enhanced.yml@main

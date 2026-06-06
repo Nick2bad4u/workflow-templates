@@ -1,0 +1,128 @@
+name: Validate Git-Cliff Release Notes
+
+on:
+    workflow_call:
+        inputs:
+            tag:
+                description: Release tag to validate, for example v1.2.3.
+                required: true
+                type: string
+concurrency:
+    group: release-notes-validation-${{ github.event.release.tag_name || inputs.tag || github.run_id }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    validate:
+        name: Validate release notes
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Harden runner
+              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+              with:
+                  egress-policy: audit
+
+            - name: Fetch release body
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+                  REPOSITORY: ${{ github.repository }}
+              run: |
+                  set -euo pipefail
+
+                  if [ -z "${RELEASE_TAG}" ]; then
+                    echo "::error title=Missing release tag::No release tag was provided by the event or workflow input."
+                    exit 1
+                  fi
+
+                  gh release view "${RELEASE_TAG}" \
+                    --repo "${REPOSITORY}" \
+                    --json body,tagName,url \
+                    > release.json
+
+            - name: Validate release notes heading
+              run: |
+                  set -euo pipefail
+
+                  python <<'PY'
+                  import json
+                  import re
+                  import sys
+
+                  def annotate(level: str, title: str, message: str) -> None:
+                      safe_title = title.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+                      safe_message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+                      print(f"::{level} title={safe_title}::{safe_message}")
+
+                  with open("release.json", encoding="utf-8") as release_file:
+                      release = json.load(release_file)
+
+                  tag = release["tagName"]
+                  expected = tag[1:] if tag.startswith("v") else tag
+                  body = release.get("body") or ""
+                  url = release.get("url") or ""
+
+                  print(f"Release: {url}")
+                  print(f"Tag: {tag}")
+                  print(f"Expected heading version: {expected}")
+
+                  if not body.strip():
+                      annotate("error", "Empty release notes", f"{tag} has an empty release body.")
+                      sys.exit(1)
+
+                  if re.search(r"No release notes were generated", body, re.IGNORECASE):
+                      annotate(
+                          "error",
+                          "Release notes were not generated",
+                          f"{tag} has placeholder release notes.",
+                      )
+                      sys.exit(1)
+
+                  first_heading = next(
+                      (line.strip() for line in body.splitlines() if line.startswith("## ")),
+                      "",
+                  )
+                  print(f"First heading: {first_heading or '<none>'}")
+
+                  if re.match(r"^##\s+\[Unreleased\]", first_heading):
+                      annotate(
+                          "error",
+                          "Release notes point at Unreleased",
+                          f"{tag} release body starts with an Unreleased section.",
+                      )
+                      sys.exit(1)
+
+                  heading_match = re.match(
+                      r"^##\s+\[?v?(?P<version>\d+(?:\.\d+)+(?:[-+][^\]\s]+)?)\]?",
+                      first_heading,
+                  )
+
+                  if heading_match is None:
+                      annotate(
+                          "error",
+                          "Release notes heading missing",
+                          (
+                              "Expected the first markdown heading to look like "
+                              f"'## [{expected}]', but found: {first_heading or '<none>'}."
+                          ),
+                      )
+                      sys.exit(1)
+
+                  actual = heading_match.group("version")
+                  if actual != expected:
+                      annotate(
+                          "error",
+                          "Release notes heading mismatch",
+                          f"Expected release notes for {tag}, but first heading was: {first_heading}.",
+                      )
+                      sys.exit(1)
+
+                  print(f"Release notes heading matches {tag}.")
+                  PY

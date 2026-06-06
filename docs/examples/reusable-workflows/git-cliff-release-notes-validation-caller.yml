@@ -1,0 +1,23 @@
+name: Validate Git-Cliff Release Notes
+
+on:
+    release:
+        types:
+            - published
+            - edited
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: Release tag to validate, for example v1.2.3.
+                required: true
+                type: string
+
+permissions: {}
+
+jobs:
+    validate-release-notes:
+        permissions:
+            contents: read
+        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-git-cliff-release-notes-validation.yml@main
+        with:
+            tag: ${{ github.event.release.tag_name || inputs.tag }}

@@ -1,0 +1,32 @@
+name: Gitleaks Secret Scan
+
+on:
+    workflow_call:
+concurrency:
+    group: gitleaks-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    scan:
+        name: Gitleaks Secret Scan
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - name: Harden runner
+              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+              with:
+                  egress-policy: audit
+
+            - name: Checkout
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+              with:
+                  fetch-depth: 0
+
+            - name: Run Gitleaks scan
+              uses: gitleaks/gitleaks-action@v2.2.0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITLEAKS_CONFIG: .gitleaks.toml

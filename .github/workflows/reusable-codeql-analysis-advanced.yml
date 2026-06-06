@@ -1,0 +1,44 @@
+name: CodeQL Analysis (Advanced)
+
+on:
+    workflow_call:
+concurrency:
+    group: codeql-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+    security-events: write
+
+jobs:
+    analyze:
+        name: Analyze
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        strategy:
+            fail-fast: false
+            matrix:
+                language:
+                    - javascript-typescript
+                    - github-actions
+        steps:
+            - name: Harden runner
+              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+              with:
+                  egress-policy: audit
+
+            - name: Checkout
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@1d16ed59ea56f7bae8c9c35be4a1d6b45ae4de72 # v4.32.10
+              with:
+                  languages: ${{ matrix.language }}
+
+            - name: Autobuild
+              uses: github/codeql-action/autobuild@1d16ed59ea56f7bae8c9c35be4a1d6b45ae4de72 # v4.32.10
+
+            - name: Analyze
+              uses: github/codeql-action/analyze@1d16ed59ea56f7bae8c9c35be4a1d6b45ae4de72 # v4.32.10
+              with:
+                  category: /language:${{ matrix.language }}
