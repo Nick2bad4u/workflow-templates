@@ -4,11 +4,49 @@ import nickTwoBadFourU from "eslint-config-nick2bad4u";
 const config = [
     ...nickTwoBadFourU.configs.all,
     {
-        files: [".github/**/*.yml", ".github/**/*.yaml"],
+        files: ["*.mjs", ".*.mjs"],
+        languageOptions: {
+            parserOptions: {
+                projectService: {
+                    allowDefaultProject: ["*.mjs", ".*.mjs"],
+                    defaultProject: "tsconfig.js.json",
+                },
+            },
+        },
+        name: "🧰 Root JavaScript config files: TypeScript project service",
+    },
+    {
+        files: [
+            ".github/**/*.yml",
+            ".github/**/*.yaml",
+            "docs/examples/reusable-workflows/**/*.yml",
+            "docs/examples/reusable-workflows/**/*.yaml",
+            "docs/examples/workflows/**/*.yml",
+            "docs/examples/workflows/**/*.yaml",
+        ],
         name: "⛔ GitHub Workflow YAML: Disables",
         rules: {
             "yml/no-empty-mapping-value": "off",
             "yml/sort-keys": "off",
+        },
+    },
+    {
+        files: [".github/workflows/reusable-*.yml"],
+        name: "⛔ Reusable workflow trigger-shape rules: Disables",
+        rules: {
+            "github-actions/action-name-casing": "off",
+            "github-actions/pin-action-shas": "off",
+            "github-actions/prefer-fail-fast": "off",
+            "github-actions/prefer-step-uses-style": "off",
+            "github-actions/require-action-run-name": "off",
+            "github-actions/require-codeql-actions-read": "off",
+            "github-actions/require-codeql-pull-request-trigger": "off",
+            "github-actions/require-codeql-schedule": "off",
+            "github-actions/require-dependabot-automation-pull-request-trigger":
+                "off",
+            "github-actions/require-dependency-review-pull-request-trigger": "off",
+            "github-actions/require-run-step-shell": "off",
+            "github-actions/require-secret-scan-schedule": "off",
         },
     },
     {

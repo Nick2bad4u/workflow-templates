@@ -1,5 +1,4 @@
 {
-    "$schema": "vscode://schemas/settings/workspace",
     "[markdown]": {
         "editor.defaultFormatter": "unifiedjs.vscode-remark",
         "editor.formatOnSave": true

@@ -39,11 +39,11 @@
     },
     "devDependencies": {
         "ajv": "^8.20.0",
-        "eslint-config-nick2bad4u": "^1.2.3",
+        "eslint-config-nick2bad4u": "^1.2.7",
         "prettier": "^3.8.3",
-        "prettier-config-nick2bad4u": "^1.0.13"
+        "prettier-config-nick2bad4u": "^1.0.14"
     },
-    "packageManager": "npm@11.14.1",
+    "packageManager": "npm@11.16.0",
     "engines": {
         "node": ">=22.18.0"
     }
