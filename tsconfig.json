@@ -107,11 +107,7 @@
         "test/fixtures/**"
     ],
     "include": [
-        "src/**/*.d.ts",
-        "src/**/*.ts",
-        "test/**/*.d.ts",
-        "test/**/*.ts",
-        "vite.config.ts"
+        "types/**/*.d.ts"
     ],
     "typeAcquisition": {
         "enable": true,
