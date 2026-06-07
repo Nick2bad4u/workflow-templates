@@ -1,4 +1,4 @@
-name: Dependabot Auto-Merge
+name: "Dependabot Auto-Merge"
 
 run-name: >-
     ${{
@@ -13,14 +13,14 @@ on:
     workflow_call:
         inputs:
             semver-policy:
-                description: Comma-separated semver update levels allowed for auto-merge. Defaults to the DEPENDABOT_AUTO_MERGE_SEMVER variable or patch,minor.
+                description: "Comma-separated semver update levels allowed for auto-merge. Defaults to the DEPENDABOT_AUTO_MERGE_SEMVER variable or patch,minor."
                 required: false
-                type: string
+                type: "string"
 permissions: {}
 
 defaults:
     run:
-        shell: bash
+        shell: "bash"
 
 concurrency:
     group: >-
@@ -35,35 +35,32 @@ concurrency:
 
 jobs:
     enable-auto-merge:
-        name: Enable Auto-Merge
+        name: "Enable Auto-Merge"
         if: >-
-            github.event_name == 'pull_request' &&
-            github.actor == 'dependabot[bot]' &&
-            github.event.pull_request.user.login == 'dependabot[bot]' &&
-            github.event.pull_request.draft == false
-        runs-on: ubuntu-latest
+            github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' && github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
+        runs-on: "ubuntu-latest"
         timeout-minutes: 5
         permissions:
-            contents: write
-            pull-requests: write
+            contents: "write"
+            pull-requests: "write"
 
         steps:
-            - name: Harden runner
-              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450" # v2.19.1
               with:
-                  egress-policy: audit
+                  egress-policy: "audit"
 
-            - name: Fetch Dependabot Metadata
-              id: metadata
-              uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+            - name: "Fetch Dependabot Metadata"
+              id: "metadata"
+              uses: "dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98" # v3.1.0
               with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-            - name: Evaluate Auto-Merge Policy
-              id: policy
+            - name: "Evaluate Auto-Merge Policy"
+              id: "policy"
               env:
-                  AUTO_MERGE_SEMVER: ${{ inputs.semver-policy || vars.DEPENDABOT_AUTO_MERGE_SEMVER || 'patch,minor' }}
-                  UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+                  AUTO_MERGE_SEMVER: "${{ inputs.semver-policy || vars['DEPENDABOT_AUTO_MERGE_SEMVER'] || 'patch,minor' }}"
+                  UPDATE_TYPE: "${{ steps.metadata.outputs.update-type }}"
               run: |
                   set -euo pipefail
 
@@ -141,11 +138,11 @@ jobs:
                   echo "Configured auto-merge semver policy: ${allowed_display}"
                   echo "Should auto-merge: ${should_auto_merge}"
 
-            - name: Check Repository Auto-Merge Setting
-              if: steps.policy.outputs.should-auto-merge == 'true'
+            - name: "Check Repository Auto-Merge Setting"
+              if: "steps.policy.outputs.should-auto-merge == 'true'"
               env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  REPOSITORY: ${{ github.repository }}
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  REPOSITORY: "${{ github.repository }}"
               run: |
                   set -euo pipefail
 
@@ -179,11 +176,11 @@ jobs:
                     exit 1
                   fi
 
-            - name: Enable Auto-Merge
-              if: steps.policy.outputs.should-auto-merge == 'true'
+            - name: "Enable Auto-Merge"
+              if: "steps.policy.outputs.should-auto-merge == 'true'"
               env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  PR_URL: ${{ github.event.pull_request.html_url }}
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  PR_URL: "${{ github.event.pull_request.html_url }}"
               run: |
                   set -euo pipefail
 
@@ -192,11 +189,11 @@ jobs:
                     exit 1
                   fi
 
-            - name: Log Skipped Update Type
-              if: steps.policy.outputs.should-auto-merge != 'true'
+            - name: "Log Skipped Update Type"
+              if: "steps.policy.outputs.should-auto-merge != 'true'"
               env:
-                  ALLOWED_SEMVER: ${{ steps.policy.outputs.allowed-semver }}
-                  UPDATE_SEMVER: ${{ steps.policy.outputs.update-semver }}
+                  ALLOWED_SEMVER: "${{ steps.policy.outputs.allowed-semver }}"
+                  UPDATE_SEMVER: "${{ steps.policy.outputs.update-semver }}"
               run: |
                   set -euo pipefail
 
@@ -204,11 +201,11 @@ jobs:
                   echo "Configured auto-merge semver policy: ${ALLOWED_SEMVER:-unknown}"
 
     merge-group-status:
-        name: Merge Group Status
-        if: github.event_name == 'merge_group'
-        runs-on: ubuntu-latest
+        name: "Merge Group Status"
+        if: "github.event_name == 'merge_group'"
+        runs-on: "ubuntu-latest"
         timeout-minutes: 1
 
         steps:
-            - name: Report Status
-              run: echo "Dependabot auto-merge is skipped for merge queue events."
+            - name: "Report Status"
+              run: 'echo "Dependabot auto-merge is skipped for merge queue events."'

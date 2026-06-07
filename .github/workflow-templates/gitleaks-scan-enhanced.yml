@@ -1,40 +1,40 @@
-name: Gitleaks Secret Scan
+name: "Gitleaks Secret Scan"
 
 on:
     pull_request:
     merge_group:
         types:
-            - checks_requested
+            - "checks_requested"
     push:
     schedule:
-        - cron: 12 4 * * *
+        - cron: "12 4 * * *"
     workflow_dispatch:
 
 concurrency:
-    group: gitleaks-${{ github.workflow }}-${{ github.ref }}
+    group: "gitleaks-${{ github.workflow }}-${{ github.ref }}"
     cancel-in-progress: true
 
 permissions:
-    contents: read
+    contents: "read"
 
 jobs:
     scan:
-        name: Gitleaks Secret Scan
-        runs-on: ubuntu-latest
+        name: "Gitleaks Secret Scan"
+        runs-on: "ubuntu-latest"
         timeout-minutes: 20
         steps:
-            - name: Harden runner
-              uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450" # v2.19.1
               with:
-                  egress-policy: audit
+                  egress-policy: "audit"
 
-            - name: Checkout
-              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+            - name: "Checkout"
+              uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
               with:
                   fetch-depth: 0
 
-            - name: Run Gitleaks scan
-              uses: gitleaks/gitleaks-action@v2.2.0
+            - name: "Run Gitleaks scan"
+              uses: "gitleaks/gitleaks-action@5425999620c418539c61a8143f29e346d5f6cf08" # v2.2.0
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  GITLEAKS_CONFIG: .gitleaks.toml
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  GITLEAKS_CONFIG: ".gitleaks.toml"
