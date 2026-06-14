@@ -26,7 +26,7 @@ jobs:
     enable-auto-merge:
         name: "Enable Auto-Merge"
         if: >-
-            github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' && github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
+            github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.draft == false
         runs-on: "ubuntu-latest"
         timeout-minutes: 5
         permissions:
@@ -34,10 +34,54 @@ jobs:
             pull-requests: "write"
 
         steps:
-            - name: "Harden runner"
+            - name: "Harden the runner 1 (Audit all outbound calls)"
               uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
               with:
                   egress-policy: "audit"
+
+            - name: "Validate Dependabot Pull Request"
+              env:
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  HEAD_REF: "${{ github.event.pull_request.head.ref }}"
+                  HEAD_REPOSITORY: "${{ github.event.pull_request.head.repo.full_name }}"
+                  PR_NUMBER: "${{ github.event.pull_request.number }}"
+                  REPOSITORY: "${{ github.repository }}"
+              run: |
+                  set -euo pipefail
+
+                  if [[ "${HEAD_REPOSITORY}" != "${REPOSITORY}" ]]; then
+                    echo "::error title=Unsupported Dependabot PR source::Dependabot auto-merge only supports same-repository Dependabot pull requests."
+                    exit 1
+                  fi
+
+                  if [[ "${HEAD_REF}" != dependabot/* ]]; then
+                    echo "::error title=Unexpected Dependabot branch::Dependabot auto-merge only supports dependabot/* branches."
+                    exit 1
+                  fi
+
+                  invalid_commits="$(
+                    gh api --paginate "repos/${REPOSITORY}/pulls/${PR_NUMBER}/commits" \
+                      --jq '
+                        .[]
+                        | select(
+                            (
+                              (.author.login // "") == "dependabot[bot]"
+                              or (
+                                ((.parents // []) | length) >= 2
+                                and (.commit.message | startswith("Merge branch "))
+                                and (.commit.message | contains(" into dependabot/"))
+                              )
+                            ) | not
+                          )
+                        | "\(.sha) \(.author.login // "unknown") \(.commit.message | split("\n")[0])"
+                      '
+                  )"
+
+                  if [[ -n "${invalid_commits}" ]]; then
+                    echo "::error title=Unexpected commits in Dependabot PR::Dependabot auto-merge refused commits that are not Dependabot commits or branch-update merge commits."
+                    echo "${invalid_commits}"
+                    exit 1
+                  fi
 
             - name: "Fetch Dependabot Metadata"
               id: "metadata"
@@ -65,7 +109,7 @@ jobs:
                         return 1
                         ;;
                       *)
-                        echo "::error title=Invalid auto-merge semver policy::Unsupported DEPENDABOT_AUTO_MERGE_SEMVER entry '${entry}'. Use patch, minor, major, or a comma-separated combination." >&2
+                        echo "::error title=Invalid auto-merge semver policy::Unsupported auto-merge semver policy entry '${entry}'. Configure semver-policy or DEPENDABOT_AUTO_MERGE_SEMVER with patch, minor, major, or a comma-separated combination." >&2
                         return 2
                         ;;
                     esac
@@ -89,8 +133,8 @@ jobs:
                       ;;
                   esac
 
-                  configured_values="${AUTO_MERGE_SEMVER//[[:space:]]/,}"
-                  configured_values="${configured_values//;/,}"
+                  configured_values="${AUTO_MERGE_SEMVER//;/,}"
+                  configured_values="${configured_values//[[:space:]]/}"
                   allowed_semver=()
 
                   IFS="," read -r -a configured_entries <<< "${configured_values}"
@@ -103,7 +147,7 @@ jobs:
                   done
 
                   if [ "${#allowed_semver[@]}" -eq 0 ]; then
-                    echo "::error title=Invalid auto-merge semver policy::DEPENDABOT_AUTO_MERGE_SEMVER did not contain patch, minor, or major."
+                    echo "::error title=Invalid auto-merge semver policy::Resolved auto-merge semver policy from semver-policy or DEPENDABOT_AUTO_MERGE_SEMVER did not contain patch, minor, or major."
                     exit 1
                   fi
 
@@ -196,5 +240,10 @@ jobs:
         timeout-minutes: 1
 
         steps:
+            - name: "Harden the runner 2 (Audit all outbound calls)"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
             - name: "Report Status"
               run: 'echo "Dependabot auto-merge is skipped for merge queue events."'

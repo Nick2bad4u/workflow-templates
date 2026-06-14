@@ -58,6 +58,10 @@ version-update:semver-patch,version-update:semver-minor
 
 Invalid values fail the workflow with an explicit error instead of silently changing merge behavior.
 
+## Dependabot Branch Updates
+
+The workflow runs for pull requests authored by `dependabot[bot]`, even when a maintainer updates the Dependabot branch from the base branch. Before enabling auto-merge, it verifies that the pull request comes from the same repository, uses a `dependabot/*` branch, and contains only Dependabot commits or branch-update merge commits into the Dependabot branch.
+
 ## Examples
 
 ### Patch and Minor Updates

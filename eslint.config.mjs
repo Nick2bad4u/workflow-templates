@@ -44,9 +44,20 @@ const config = [
             "github-actions/require-codeql-schedule": "off",
             "github-actions/require-dependabot-automation-pull-request-trigger":
                 "off",
-            "github-actions/require-dependency-review-pull-request-trigger": "off",
+            "github-actions/require-dependency-review-pull-request-trigger":
+                "off",
             "github-actions/require-run-step-shell": "off",
             "github-actions/require-secret-scan-schedule": "off",
+        },
+    },
+    {
+        files: [
+            ".github/workflows/*-caller.yml",
+            "docs/examples/reusable-workflows/*-caller.yml",
+        ],
+        name: "⛔ Reusable workflow caller rules: Disables",
+        rules: {
+            "github-actions/no-external-job": "off",
         },
     },
     {
