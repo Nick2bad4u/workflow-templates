@@ -22,17 +22,6 @@ defaults:
     run:
         shell: "bash"
 
-concurrency:
-    group: >-
-        dependabot-auto-merge-${{ github.workflow }}-${{
-            github.event.pull_request.number ||
-            github.event.merge_group.head_sha ||
-            github.event.merge_group.head_ref ||
-            github.ref ||
-            github.run_id
-        }}
-    cancel-in-progress: true
-
 jobs:
     enable-auto-merge:
         name: "Enable Auto-Merge"
