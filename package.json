@@ -35,7 +35,8 @@
         "schema:test:workflow-template-properties": "node ./scripts/validate-workflow-template-properties-schema-fixtures.mjs",
         "schema:update:workflow-template-properties": "node ./scripts/update-workflow-template-properties-schema.mjs",
         "typecheck": "tsc -p tsconfig.js.json --noEmit",
-        "update-deps": "npx ncu -i --install never && npm update --all --force && npm install --force"
+        "update-deps": "npx ncu -i --install never && npm update --all --force && npm install --force",
+        "update-actions": "npx actions-up --yes --style sha"
     },
     "devDependencies": {
         "ajv": "^8.20.0",
