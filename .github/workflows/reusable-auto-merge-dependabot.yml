@@ -171,6 +171,58 @@ jobs:
                   echo "Configured auto-merge semver policy: ${allowed_display}"
                   echo "Should auto-merge: ${should_auto_merge}"
 
+            - name: "Build Squash Commit Message"
+              id: "commit-message"
+              if: "steps.policy.outputs.should-auto-merge == 'true'"
+              env:
+                  DEPENDENCY_GROUP: "${{ steps.metadata.outputs.dependency-group }}"
+                  DEPENDENCY_NAMES: "${{ steps.metadata.outputs.dependency-names }}"
+                  PACKAGE_ECOSYSTEM: "${{ steps.metadata.outputs.package-ecosystem }}"
+              run: |
+                  set -euo pipefail
+
+                  sanitize() {
+                    printf '%s' "$1" |
+                      tr '\r\n' ' ' |
+                      sed -E 's/[[:space:]]+/ /g; s/^ //; s/ $//'
+                  }
+
+                  dependency_group="$(sanitize "${DEPENDENCY_GROUP:-}")"
+                  dependency_names="$(sanitize "${DEPENDENCY_NAMES:-}")"
+                  package_ecosystem="$(sanitize "${PACKAGE_ECOSYSTEM:-dependencies}")"
+
+                  emoji="⬆️"
+                  type="[build]"
+                  ecosystem_label="${package_ecosystem}"
+
+                  case "${package_ecosystem}" in
+                    github-actions)
+                      emoji="👷"
+                      type="[ci]"
+                      ecosystem_label="GitHub Actions"
+                      ;;
+                    npm)
+                      ecosystem_label="npm"
+                      ;;
+                  esac
+
+                  if [[ -n "${dependency_group}" ]]; then
+                    subject="${emoji} ${type} Update ${dependency_group} dependencies"
+                  elif [[ "${dependency_names}" == *,* ]]; then
+                    subject="${emoji} ${type} Update ${ecosystem_label} dependencies"
+                  elif [[ -n "${dependency_names}" ]]; then
+                    subject="${emoji} ${type} Update ${dependency_names}"
+                  else
+                    subject="${emoji} ${type} Update ${ecosystem_label} dependencies"
+                  fi
+
+                  if ((${#subject} > 120)); then
+                    subject="${subject:0:117}..."
+                  fi
+
+                  echo "subject=${subject}" >> "${GITHUB_OUTPUT}"
+                  echo "Squash commit subject: ${subject}"
+
             - name: "Check Repository Auto-Merge Setting"
               if: "steps.policy.outputs.should-auto-merge == 'true'"
               env:
@@ -213,11 +265,12 @@ jobs:
               if: "steps.policy.outputs.should-auto-merge == 'true'"
               env:
                   GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  MERGE_SUBJECT: "${{ steps.commit-message.outputs.subject }}"
                   PR_URL: "${{ github.event.pull_request.html_url }}"
               run: |
                   set -euo pipefail
 
-                  if ! gh pr merge --auto --squash "${PR_URL}"; then
+                  if ! gh pr merge --auto --squash --subject "${MERGE_SUBJECT}" --body "" "${PR_URL}"; then
                     echo "::error title=Auto-merge enablement failed::Failed to enable auto-merge. Check repository auto-merge, branch protection, merge method settings, and token permissions."
                     exit 1
                   fi
