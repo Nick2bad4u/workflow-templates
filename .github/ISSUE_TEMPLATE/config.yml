@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-    - name: Security report
-      url: https://github.com/Nick2bad4u/workflow-templates/security/advisories/new
-      about: Please report security vulnerabilities privately.
+    - name: "Security report"
+      url: "https://github.com/Nick2bad4u/workflow-templates/security/advisories/new"
+      about: "Please report security vulnerabilities privately."

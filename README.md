@@ -16,21 +16,21 @@ Production-ready, security-hardened GitHub Actions workflow templates for common
 
 All workflows include hardened runners, least-privilege permissions, concurrency control, and pinned action versions.
 
-| Workflow | Purpose | Triggers | Languages |
-|----------|---------|----------|-----------|
-| **Node.js Test & Coverage** | Multi-OS tests + Codecov upload | Push, PR, merge_group | JavaScript, TypeScript |
-| **npm Release** | Publish to npm + create GitHub release | Git tag, manual dispatch | JavaScript, TypeScript |
-| **CodeQL Analysis** | Security scanning (JS/TS + workflows) | Push, PR, schedule | JavaScript, TypeScript, YAML |
-| **Auto-Label PRs** | Automatic PR labeling by config | PR events | YAML |
-| **Mark Stale Issues** | Close stale issues/PRs after inactivity | Schedule, manual | YAML |
-| **Gitleaks Scan** | Detect leaked secrets (with config support) | Push, PR, schedule | YAML, Shell |
-| **Dependency Review** | Scan PR dependencies + license check | PR, merge_group | Multiple languages |
-| **Dependabot Auto-Merge** | Enable auto-merge for selected Dependabot semver PRs | PR, merge_group | Multiple languages |
-| **Trufflehog Scan** | Alt secret scanner (verified secrets only) | Multiple events | YAML, Shell |
-| **OpenSSF Scorecard** | Supply chain security audit | Multiple events | YAML |
-| **Deploy Docusaurus** | Build & deploy docs to GitHub Pages | Push (docs path), manual | JavaScript, TypeScript, Markdown |
-| **Submit IndexNow** | Notify search engines of URL changes | Manual dispatch | JavaScript, TypeScript, YAML |
-| **Git-Cliff Release Notes Validation** | Check published release notes match the tag | Release published/edited, manual | YAML |
+| Workflow                               | Purpose                                              | Triggers                         | Languages                        |
+| -------------------------------------- | ---------------------------------------------------- | -------------------------------- | -------------------------------- |
+| **Node.js Test & Coverage**            | Multi-OS tests + Codecov upload                      | Push, PR, merge_group            | JavaScript, TypeScript           |
+| **npm Release**                        | Publish to npm + create GitHub release               | Git tag, manual dispatch         | JavaScript, TypeScript           |
+| **CodeQL Analysis**                    | Security scanning (JS/TS + workflows)                | Push, PR, schedule               | JavaScript, TypeScript, YAML     |
+| **Auto-Label PRs**                     | Automatic PR labeling by config                      | PR events                        | YAML                             |
+| **Mark Stale Issues**                  | Close stale issues/PRs after inactivity              | Schedule, manual                 | YAML                             |
+| **Gitleaks Scan**                      | Detect leaked secrets (with config support)          | Push, PR, schedule               | YAML, Shell                      |
+| **Dependency Review**                  | Scan PR dependencies + license check                 | PR, merge_group                  | Multiple languages               |
+| **Dependabot Auto-Merge**              | Enable auto-merge for selected Dependabot semver PRs | PR, merge_group                  | Multiple languages               |
+| **Trufflehog Scan**                    | Alt secret scanner (verified secrets only)           | Multiple events                  | YAML, Shell                      |
+| **OpenSSF Scorecard**                  | Supply chain security audit                          | Multiple events                  | YAML                             |
+| **Deploy Docusaurus**                  | Build & deploy docs to GitHub Pages                  | Push (docs path), manual         | JavaScript, TypeScript, Markdown |
+| **Submit IndexNow**                    | Notify search engines of URL changes                 | Manual dispatch                  | JavaScript, TypeScript, YAML     |
+| **Git-Cliff Release Notes Validation** | Check published release notes match the tag          | Release published/edited, manual | YAML                             |
 
 ---
 
@@ -62,10 +62,10 @@ Reusable variants live under `.github/workflows/reusable-*.yml` and can be calle
 
 ```yaml
 jobs:
-  dependabot-auto-merge:
-    uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-auto-merge-dependabot.yml@main
-    with:
-      semver-policy: patch,minor
+ dependabot-auto-merge:
+  uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-auto-merge-dependabot.yml@main
+  with:
+   semver-policy: patch,minor
 ```
 
 Use templates when you want a copied starter workflow. Use reusable workflows when you want centrally maintained logic.
@@ -88,14 +88,14 @@ Most workflows support:
 
 ```yaml
 strategy:
-  matrix:
-    include:
-      - os: ubuntu-latest
-        node-version: 20
-      - os: ubuntu-latest
-        node-version: 22
-      - os: windows-latest
-        node-version: 22
+ matrix:
+  include:
+   - os: ubuntu-latest
+     node-version: 20
+   - os: ubuntu-latest
+     node-version: 22
+   - os: windows-latest
+     node-version: 22
 ```
 
 ---
@@ -104,15 +104,15 @@ strategy:
 
 Each workflow may require additional configuration:
 
-| Workflow | Config File | Purpose |
-|----------|-------------|---------|
-| **Auto-Label PRs** | `.github/labeler.yml` | Define PR label rules |
-| **Gitleaks Scan** | `.gitleaks.toml` (optional) | Custom secret patterns |
-| **Dependabot Auto-Merge** | Repository auto-merge + `DEPENDABOT_AUTO_MERGE_SEMVER` | Auto-merge selected semver updates after checks |
-| **Mark Stale Issues** | Built-in params | Days before stale/close |
-| **Deploy Docusaurus** | `docusaurus.config.js` | Docs site config |
-| **Submit IndexNow** | Repository secret: `INDEXNOW_KEY` | SEO notification key |
-| **Git-Cliff Release Notes Validation** | `cliff.toml` | Git-cliff release-note heading convention |
+| Workflow                               | Config File                                            | Purpose                                         |
+| -------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- |
+| **Auto-Label PRs**                     | `.github/labeler.yml`                                  | Define PR label rules                           |
+| **Gitleaks Scan**                      | `.gitleaks.toml` (optional)                            | Custom secret patterns                          |
+| **Dependabot Auto-Merge**              | Repository auto-merge + `DEPENDABOT_AUTO_MERGE_SEMVER` | Auto-merge selected semver updates after checks |
+| **Mark Stale Issues**                  | Built-in params                                        | Days before stale/close                         |
+| **Deploy Docusaurus**                  | `docusaurus.config.js`                                 | Docs site config                                |
+| **Submit IndexNow**                    | Repository secret: `INDEXNOW_KEY`                      | SEO notification key                            |
+| **Git-Cliff Release Notes Validation** | `cliff.toml`                                           | Git-cliff release-note heading convention       |
 
 See [USAGE.md](./USAGE.md) for per-workflow setup details.
 

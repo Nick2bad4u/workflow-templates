@@ -1,31 +1,31 @@
-name: Feature request
-description: Suggest an enhancement for workflow templates in this repository
+name: "Feature request"
+description: "Suggest an enhancement for workflow templates in this repository"
 title: "[Feature]: "
 labels:
-    - enhancement
+    - "enhancement"
 body:
-    - type: textarea
-      id: problem
+    - type: "textarea"
+      id: "problem"
       attributes:
-          label: Problem statement
-          description: What workflow problem are you trying to solve?
+          label: "Problem statement"
+          description: "What workflow problem are you trying to solve?"
       validations:
           required: true
 
-    - type: textarea
-      id: proposed
+    - type: "textarea"
+      id: "proposed"
       attributes:
-          label: Proposed solution
-          description: Describe the workflow template behavior and expected outcome.
+          label: "Proposed solution"
+          description: "Describe the workflow template behavior and expected outcome."
       validations:
           required: true
 
-    - type: textarea
-      id: alternatives
+    - type: "textarea"
+      id: "alternatives"
       attributes:
-          label: Alternatives considered
+          label: "Alternatives considered"
 
-    - type: textarea
-      id: extra
+    - type: "textarea"
+      id: "extra"
       attributes:
-          label: Additional context
+          label: "Additional context"

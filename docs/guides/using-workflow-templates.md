@@ -6,19 +6,19 @@ This guide is for repositories that want to adopt one of these workflow template
 
 Start from the workflow that matches the job you want to automate:
 
-| Need | Template |
-| --- | --- |
-| Node.js CI across OSes | `node-test-matrix.yml` |
-| npm package publishing | `npm-release.yml` |
-| Code scanning | `codeql-analysis-advanced.yml` |
-| Dependency and license review | `dependency-review-enhanced.yml` |
-| Dependabot auto-merge | `auto-merge-dependabot.yml` |
-| Secret scanning | `gitleaks-scan-enhanced.yml` or `trufflehog-scan.yml` |
-| PR labeling | `labeler.yml` |
-| Stale issue management | `stale-management.yml` |
-| OpenSSF Scorecard | `ossf-scorecard.yml` |
-| Docusaurus deployment | `docusaurus-deploy.yml` |
-| IndexNow notifications | `indexnow-submit.yml` |
+| Need                          | Template                                              |
+| ----------------------------- | ----------------------------------------------------- |
+| Node.js CI across OSes        | `node-test-matrix.yml`                                |
+| npm package publishing        | `npm-release.yml`                                     |
+| Code scanning                 | `codeql-analysis-advanced.yml`                        |
+| Dependency and license review | `dependency-review-enhanced.yml`                      |
+| Dependabot auto-merge         | `auto-merge-dependabot.yml`                           |
+| Secret scanning               | `gitleaks-scan-enhanced.yml` or `trufflehog-scan.yml` |
+| PR labeling                   | `labeler.yml`                                         |
+| Stale issue management        | `stale-management.yml`                                |
+| OpenSSF Scorecard             | `ossf-scorecard.yml`                                  |
+| Docusaurus deployment         | `docusaurus-deploy.yml`                               |
+| IndexNow notifications        | `indexnow-submit.yml`                                 |
 
 ## Install From GitHub UI
 
@@ -60,11 +60,11 @@ Security templates usually run without project-specific setup, but they become m
 
 Only add secrets that the selected workflow actually needs.
 
-| Template | Secret | Required |
-| --- | --- | --- |
-| `node-test-matrix.yml` | `CODECOV_TOKEN` | Only for private Codecov uploads or token-required Codecov setup |
-| `npm-release.yml` | `NPM_TOKEN` | Required for token-based npm publish; trusted publishing may remove this later |
-| `indexnow-submit.yml` | `INDEXNOW_KEY` | Required |
+| Template               | Secret          | Required                                                                       |
+| ---------------------- | --------------- | ------------------------------------------------------------------------------ |
+| `node-test-matrix.yml` | `CODECOV_TOKEN` | Only for private Codecov uploads or token-required Codecov setup               |
+| `npm-release.yml`      | `NPM_TOKEN`     | Required for token-based npm publish; trusted publishing may remove this later |
+| `indexnow-submit.yml`  | `INDEXNOW_KEY`  | Required                                                                       |
 
 Keep the workflow `permissions` block as narrow as possible. Add write permissions only when a job needs to publish, deploy, comment, label, or upload security results.
 

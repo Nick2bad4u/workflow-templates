@@ -1,38 +1,38 @@
-name: Submit IndexNow Notification
+name: "Submit IndexNow Notification"
 
 on:
     workflow_dispatch:
         inputs:
             submission_mode:
-                default: delta
-                description: Submit only changed URLs (delta) or full sitemap?
+                default: "delta"
+                description: "Submit only changed URLs (delta) or full sitemap?"
                 options:
-                    - delta
-                    - sitemap
+                    - "delta"
+                    - "sitemap"
                 required: true
-                type: choice
+                type: "choice"
             base_ref:
                 default: ""
-                description: Optional git ref for delta base.
+                description: "Optional git ref for delta base."
                 required: false
-                type: string
+                type: "string"
             head_ref:
                 default: ""
-                description: Optional git ref for delta head.
+                description: "Optional git ref for delta head."
                 required: false
-                type: string
+                type: "string"
 
 permissions: {}
 
 jobs:
     submit-indexnow:
         permissions:
-            contents: read
-            id-token: write
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-indexnow-submit.yml@main
+            contents: "read"
+            id-token: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-indexnow-submit.yml@main"
         with:
-            submission_mode: ${{ inputs.submission_mode }}
-            base_ref: ${{ inputs.base_ref }}
-            head_ref: ${{ inputs.head_ref }}
+            submission_mode: "${{ inputs.submission_mode }}"
+            base_ref: "${{ inputs.base_ref }}"
+            head_ref: "${{ inputs.head_ref }}"
         secrets:
-            INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+            INDEXNOW_KEY: "${{ secrets.INDEXNOW_KEY }}"

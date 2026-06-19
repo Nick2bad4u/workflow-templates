@@ -6,21 +6,21 @@ For centrally maintained callable workflows, see [Reusable Workflows](./docs/gui
 
 ## Table of Contents
 
-1. [Node.js Test & Coverage](#nodejs-test--coverage)
-2. [npm Release](#npm-release--github-release)
-3. [CodeQL Analysis](#codeql-analysis)
-4. [Auto-Label Pull Requests](#auto-label-pull-requests)
-5. [Stale Issues & PRs](#mark-stale-issues--prs)
-6. [Gitleaks Secret Scan](#gitleaks-secret-scan)
-7. [Dependency Review](#dependency-review)
-8. [Dependabot Auto-Merge](#dependabot-auto-merge)
-9. [Trufflehog Secret Scan](#trufflehog-secret-scan)
-10. [OpenSSF Scorecard](#openssf-scorecard)
-11. [Deploy Docusaurus](#deploy-docusaurus-to-github-pages)
-12. [IndexNow Notifications](#submit-indexnow-notification)
-13. [Git-Cliff Release Notes Validation](#git-cliff-release-notes-validation)
-
----
+- [Node.js Test & Coverage](#nodejs-test--coverage)
+- [npm Release & GitHub Release](#npm-release--github-release)
+- [CodeQL Analysis](#codeql-analysis)
+- [Auto-Label Pull Requests](#auto-label-pull-requests)
+- [Mark Stale Issues & PRs](#mark-stale-issues--prs)
+- [Gitleaks Secret Scan](#gitleaks-secret-scan)
+- [Dependency Review](#dependency-review)
+- [Dependabot Auto-Merge](#dependabot-auto-merge)
+- [Trufflehog Secret Scan](#trufflehog-secret-scan)
+- [OpenSSF Scorecard](#openssf-scorecard)
+- [Deploy Docusaurus to GitHub Pages](#deploy-docusaurus-to-github-pages)
+- [Submit IndexNow Notification](#submit-indexnow-notification)
+- [Git-Cliff Release Notes Validation](#git-cliff-release-notes-validation)
+- [General Troubleshooting](#general-troubleshooting)
+- [Resources](#resources)
 
 ## Node.js Test & Coverage
 
@@ -35,6 +35,7 @@ For centrally maintained callable workflows, see [Reusable Workflows](./docs/gui
    - `.node-version` file (optional; workflow auto-detects)
 
 2. (Optional) Add Codecov:
+
    ```bash
    npm install --save-dev @vitest/coverage-v8
    ```
@@ -50,22 +51,22 @@ For centrally maintained callable workflows, see [Reusable Workflows](./docs/gui
 
 ```yaml
 strategy:
-  matrix:
-    node-version: [20.x, 21.x, 22.x]
-    os: [ubuntu-latest, windows-latest, macos-latest]
+ matrix:
+  node-version: [20.x, 21.x, 22.x]
+  os: [ubuntu-latest, windows-latest, macos-latest]
 ```
 
 **Reduce test matrix (save costs):**
 
 ```yaml
 strategy:
-  fail-fast: false
-  matrix:
-    include:
-      - os: ubuntu-latest
-        node-version: 20.x
-      - os: ubuntu-latest
-        node-version: 22.x
+ fail-fast: false
+ matrix:
+  include:
+   - os: ubuntu-latest
+     node-version: 20.x
+   - os: ubuntu-latest
+     node-version: 22.x
 ```
 
 **Custom test script:**
@@ -107,9 +108,9 @@ strategy:
 
    ```json
    {
-     "name": "@your-org/your-package",
-     "version": "1.0.0",
-     "repository": "https://github.com/your-org/your-repo"
+    "name": "@your-org/your-package",
+    "version": "1.0.0",
+    "repository": "https://github.com/your-org/your-repo"
    }
    ```
 
@@ -128,9 +129,9 @@ strategy:
 - name: Create GitHub Release
   uses: actions/create-release@v1
   with:
-    tag_name: ${{ github.ref }}
-    release_name: Release ${{ github.ref }}
-    body: My custom release notes
+   tag_name: ${{ github.ref }}
+   release_name: Release ${{ github.ref }}
+   body: My custom release notes
 ```
 
 **Pre-publish checks:**
@@ -181,7 +182,7 @@ CodeQL runs automatically on push/PR. No special setup required!
 
 ```yaml
 env:
-  CODEQL_LANGUAGES: 'javascript,typescript,github-actions'
+ CODEQL_LANGUAGES: "javascript,typescript,github-actions"
 ```
 
 **Customize timeouts:**
@@ -190,16 +191,16 @@ env:
 - name: Create CodeQL database
   uses: github/codeql-action/database-create@v3
   with:
-    db-location: ${{ runner.temp }}/codeql_databases
-    source-root: src/
+   db-location: ${{ runner.temp }}/codeql_databases
+   source-root: src/
 ```
 
 **Schedule weekly scans:**
 
 ```yaml
 on:
-  schedule:
-    - cron: '0 2 * * 0'
+ schedule:
+  - cron: "0 2 * * 0"
 ```
 
 ### CodeQL Analysis Best Practices
@@ -221,23 +222,23 @@ on:
 
    ```yaml
    documentation:
-     - changed-files:
-         - any-glob-to-any-file: 'docs/**'
+    - changed-files:
+       - any-glob-to-any-file: "docs/**"
 
    ci:
-     - changed-files:
-         - any-glob-to-any-file:
-             - '.github/**'
-             - '.eslintrc*'
-             - 'package.json'
+    - changed-files:
+       - any-glob-to-any-file:
+          - ".github/**"
+          - ".eslintrc*"
+          - "package.json"
 
    backend:
-     - changed-files:
-         - any-glob-to-any-file: 'src/api/**'
+    - changed-files:
+       - any-glob-to-any-file: "src/api/**"
 
    frontend:
-     - changed-files:
-         - any-glob-to-any-file: 'src/components/**'
+    - changed-files:
+       - any-glob-to-any-file: "src/components/**"
    ```
 
 2. Create labels in your repo:
@@ -250,21 +251,21 @@ on:
 
 ```yaml
 bug-fix:
-  - changed-files:
-      - any-glob-to-any-file: 'src/**'
-  - changed-files:
-      - all-globs-to-any-file:
-          - '**/bug-fix-*.md'
+ - changed-files:
+    - any-glob-to-any-file: "src/**"
+ - changed-files:
+    - all-globs-to-any-file:
+       - "**/bug-fix-*.md"
 ```
 
 **Exclude certain paths:**
 
 ```yaml
 tests-only:
-  - changed-files:
-      - any-glob-to-any-file: 'test/**'
-      - all-globs-to-any-file:
-          - '!README.md'
+ - changed-files:
+    - any-glob-to-any-file: "test/**"
+    - all-globs-to-any-file:
+       - "!README.md"
 ```
 
 ### Auto-Label Pull Requests Best Practices
@@ -291,10 +292,10 @@ No setup required! Workflow runs on a daily schedule by default.
 ```yaml
 - uses: actions/stale@v9
   with:
-    days-before-stale: 30
-    days-before-close: 14
-    stale-issue-label: 'stale'
-    close-issue-label: 'closed'
+   days-before-stale: 30
+   days-before-close: 14
+   stale-issue-label: "stale"
+   close-issue-label: "closed"
 ```
 
 **Exempt certain labels:**
@@ -302,8 +303,8 @@ No setup required! Workflow runs on a daily schedule by default.
 ```yaml
 - uses: actions/stale@v9
   with:
-    exempt-issue-labels: 'pinned,security'
-    exempt-pr-labels: 'pinned,critical'
+   exempt-issue-labels: "pinned,security"
+   exempt-pr-labels: "pinned,critical"
 ```
 
 **Custom messages:**
@@ -311,10 +312,10 @@ No setup required! Workflow runs on a daily schedule by default.
 ```yaml
 - uses: actions/stale@v9
   with:
-    stale-issue-message: 'This issue is stale; closing soon.'
-    close-issue-message: 'Closed due to inactivity.'
-    stale-pr-message: 'This PR is stale; closing soon.'
-    close-pr-message: 'Closed due to inactivity.'
+   stale-issue-message: "This issue is stale; closing soon."
+   close-issue-message: "Closed due to inactivity."
+   stale-pr-message: "This PR is stale; closing soon."
+   close-pr-message: "Closed due to inactivity."
 ```
 
 ### Stale Issues & PRs Best Practices
@@ -355,8 +356,8 @@ Gitleaks runs automatically on every push/PR. No setup required!
 - name: Run Gitleaks
   uses: gitleaks/gitleaks-action@v2.2.0
   with:
-    config-path: .gitleaks.toml
-    report-path: gitleaks-report.json
+   config-path: .gitleaks.toml
+   report-path: gitleaks-report.json
 ```
 
 **Only fail on main branch:**
@@ -365,7 +366,7 @@ Gitleaks runs automatically on every push/PR. No setup required!
 - name: Run Gitleaks
   uses: gitleaks/gitleaks-action@v2.2.0
   with:
-    fail: ${{ github.ref == 'refs/heads/main' }}
+   fail: ${{ github.ref == 'refs/heads/main' }}
 ```
 
 ### Gitleaks Secret Scan Best Practices
@@ -393,8 +394,8 @@ Dependency Review runs automatically on every PR. No setup required!
 - name: Dependency Review
   uses: actions/dependency-review-action@v4
   with:
-    allow-licenses: 'Apache-2.0,MIT,ISC,BSD-2-Clause,BSD-3-Clause'
-    deny-licenses: 'GPL-3.0-only,AGPL-3.0-only'
+   allow-licenses: "Apache-2.0,MIT,ISC,BSD-2-Clause,BSD-3-Clause"
+   deny-licenses: "GPL-3.0-only,AGPL-3.0-only"
 ```
 
 **Custom severity threshold:**
@@ -403,13 +404,13 @@ Dependency Review runs automatically on every PR. No setup required!
 - name: Dependency Review
   uses: actions/dependency-review-action@v4
   with:
-    fail-on-severity: 'high'
+   fail-on-severity: "high"
 ```
 
 ### Dependency Review Best Practices and Recommendations
 
 - Keep license policy explicit if the organization has approved and denied license lists.
-- Set the severity threshold to match the repository's risk tolerance; many projects use `high` or stricter.
+- Set the severity threshold to match the repository's risk tolerance; most projects use `high` or stricter.
 - Keep Dependabot or another dependency-update workflow enabled so findings have a repair path.
 
 ---
@@ -456,7 +457,7 @@ gh pr merge --auto --merge "${PR_URL}"
 - Require the same CI and security checks that a maintainer would wait for before merging manually.
 - Keep repository auto-merge enabled; the workflow fails early with the evaluated GitHub API value when it is disabled.
 - Use merge queue support only as a status path. Auto-merge enablement happens on Dependabot pull request events.
-- See [Dependabot Auto-Merge](<./docs/guides/dependabot-auto-merge.md>) for setup examples.
+- See [Dependabot Auto-Merge](./docs/guides/dependabot-auto-merge.md) for setup examples.
 
 ---
 
@@ -477,7 +478,7 @@ Trufflehog runs automatically on every push/PR. No setup required!
 - name: Run Trufflehog
   uses: trufflesecurity/trufflehog@v3.63.0
   with:
-    extra_args: --verify
+   extra_args: --verify
 ```
 
 **Scan specific files:**
@@ -486,7 +487,7 @@ Trufflehog runs automatically on every push/PR. No setup required!
 - name: Run Trufflehog
   uses: trufflesecurity/trufflehog@v3.63.0
   with:
-    extra_args: --only-verified src/ app/
+   extra_args: --only-verified src/ app/
 ```
 
 ### Trufflehog Secret Scan Best Practices
@@ -516,8 +517,8 @@ Scorecard runs on a schedule and can be triggered manually. No setup required!
 
 ```yaml
 on:
-  schedule:
-    - cron: '0 0 * * 0'
+ schedule:
+  - cron: "0 0 * * 0"
 ```
 
 **Publish results:**
@@ -526,14 +527,15 @@ on:
 - name: Publish Scorecard Results
   uses: ossf/scorecard-action@v2.3.0
   with:
-    results-file: results.sarif
-    results-format: sarif
-    publish-results: true
+   results-file: results.sarif
+   results-format: sarif
+   publish-results: true
 ```
 
 ### Scorecard Checks
 
 The workflow evaluates:
+
 - **Branch Protection** — Require reviews/status checks?
 - **Code Review** — Are changes reviewed before merge?
 - **CII Best Practices** — Follow CII guidelines?
@@ -579,11 +581,11 @@ The workflow evaluates:
 
 ```yaml
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'docs/**'
-      - 'docusaurus.config.js'
+ push:
+  branches: [main]
+  paths:
+   - "docs/**"
+   - "docusaurus.config.js"
 ```
 
 **Deploy to custom domain:**
@@ -592,9 +594,9 @@ on:
 - name: Deploy to GitHub Pages
   uses: peaceiris/actions-gh-pages@v3
   with:
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-    publish_dir: ./build
-    cname: docs.example.com
+   github_token: ${{ secrets.GITHUB_TOKEN }}
+   publish_dir: ./build
+   cname: docs.example.com
 ```
 
 **Custom build parameters:**
@@ -603,7 +605,7 @@ on:
 - name: Build site
   run: npm run build
   env:
-    BASE_URL: /my-site/
+   BASE_URL: /my-site/
 ```
 
 ### Directory Structure
@@ -660,18 +662,18 @@ docusaurus.config.js
 
 ```yaml
 env:
-  INDEXNOW_MODE: delta
-  INDEXNOW_URLS: |
-    https://example.com/page1
-    https://example.com/page2
+ INDEXNOW_MODE: delta
+ INDEXNOW_URLS: |
+  https://example.com/page1
+  https://example.com/page2
 ```
 
 **Submit full sitemap:**
 
 ```yaml
 env:
-  INDEXNOW_MODE: sitemap
-  INDEXNOW_SITEMAP: https://example.com/sitemap.xml
+ INDEXNOW_MODE: sitemap
+ INDEXNOW_SITEMAP: https://example.com/sitemap.xml
 ```
 
 ### IndexNow Notifications Best Practices
@@ -703,32 +705,32 @@ the release step. The release workflow needs `actions: write` permission for the
 
 ```yaml
 permissions:
-  actions: write
-  contents: write
+ actions: write
+ contents: write
 
 jobs:
-  publish:
-    steps:
-      - name: Validate published release notes
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.version.outputs.tag }}
-        run: gh workflow run validate-release-notes.yml -f tag="$TAG"
+ publish:
+  steps:
+   - name: Validate published release notes
+     env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ steps.version.outputs.tag }}
+     run: gh workflow run validate-release-notes.yml -f tag="$TAG"
 ```
 
 ### Git-Cliff Release Notes Validation Configuration Options
 
 ```yaml
 on:
-  release:
-    types:
-      - published
-      - edited
-  workflow_dispatch:
-    inputs:
-      tag:
-        required: true
-        type: string
+ release:
+  types:
+   - published
+   - edited
+ workflow_dispatch:
+  inputs:
+   tag:
+    required: true
+    type: string
 ```
 
 Use the `release` trigger for releases created manually, by a personal access token, or by a GitHub App token. Use
@@ -783,16 +785,16 @@ Use the `release` trigger for releases created manually, by a personal access to
 
 ## Resources
 
-- [Using Workflow Templates](<./docs/guides/using-workflow-templates.md>)
-- [Maintaining Workflow Templates](<./docs/guides/maintaining-workflow-templates.md>)
-- [GitHub Actions Documentation](<https://docs.github.com/en/actions>)
-- [Security Hardening for Actions](<https://docs.github.com/en/actions/security-guides>)
-- [CodeQL](<https://codeql.github.com/>)
-- [Gitleaks](<https://gitleaks.io/>)
-- [Trufflehog](<https://github.com/trufflesecurity/trufflehog>)
-- [OpenSSF Scorecard](<https://securityscorecards.dev/>)
-- [Docusaurus](<https://docusaurus.io/>)
-- [IndexNow](<https://www.indexnow.org/>)
+- [Using Workflow Templates](./docs/guides/using-workflow-templates.md)
+- [Maintaining Workflow Templates](./docs/guides/maintaining-workflow-templates.md)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [Security Hardening for Actions](https://docs.github.com/en/actions/security-guides)
+- [CodeQL](https://codeql.github.com/)
+- [Gitleaks](https://gitleaks.io/)
+- [Trufflehog](https://github.com/trufflesecurity/trufflehog)
+- [OpenSSF Scorecard](https://securityscorecards.dev/)
+- [Docusaurus](https://docusaurus.io/)
+- [IndexNow](https://www.indexnow.org/)
 
 ---
 

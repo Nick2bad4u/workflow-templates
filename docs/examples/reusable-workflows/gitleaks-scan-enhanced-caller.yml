@@ -1,13 +1,13 @@
-name: Gitleaks Secret Scan
+name: "Gitleaks Secret Scan"
 
 on:
     pull_request:
     merge_group:
         types:
-            - checks_requested
+            - "checks_requested"
     push:
     schedule:
-        - cron: 12 4 * * *
+        - cron: "12 4 * * *"
     workflow_dispatch:
 
 permissions: {}
@@ -15,5 +15,5 @@ permissions: {}
 jobs:
     gitleaks:
         permissions:
-            contents: read
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-gitleaks-scan-enhanced.yml@main
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-gitleaks-scan-enhanced.yml@main"

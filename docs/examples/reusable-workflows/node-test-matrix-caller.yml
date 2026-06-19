@@ -1,14 +1,14 @@
-name: Node.js Test & Coverage
+name: "Node.js Test & Coverage"
 
 on:
     push:
         branches:
-            - main
-            - master
+            - "main"
+            - "master"
     pull_request:
     merge_group:
         types:
-            - checks_requested
+            - "checks_requested"
     workflow_dispatch:
 
 permissions: {}
@@ -16,6 +16,6 @@ permissions: {}
 jobs:
     test:
         permissions:
-            contents: read
-            id-token: write
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-node-test-matrix.yml@main
+            contents: "read"
+            id-token: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-node-test-matrix.yml@main"

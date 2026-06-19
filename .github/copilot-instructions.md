@@ -34,11 +34,11 @@ Also verify:
 - Store templates in `.github/workflow-templates/`.
 - For each template file (`name.yml`), include metadata file (`name.properties.json`).
 - Metadata:
-	- `name` (**required**)
-	- `description` (**required**)
-	- `iconName` (optional: local SVG name without extension, or `octicon <name>`)
-	- `categories` (optional)
-	- `filePatterns` (optional regex list for root-level file matching)
+  - `name` (**required**)
+  - `description` (**required**)
+  - `iconName` (optional: local SVG name without extension, or `octicon <name>`)
+  - `categories` (optional)
+  - `filePatterns` (optional regex list for root-level file matching)
 - Use `$default-branch` in template triggers when appropriate so the generated workflow maps to the target repository default branch.
 
 ## Reusable workflow guidance (GitHub docs aligned)
@@ -70,10 +70,10 @@ Also verify:
 ## Source references
 
 - Creating workflow templates for your organization:
-	- <https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates>
+  - <https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates>
 - Reuse workflows:
-	- <https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows>
+  - <https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows>
 - Quickstart for GitHub Actions:
-	- <https://docs.github.com/en/actions/get-started/quickstart>
+  - <https://docs.github.com/en/actions/get-started/quickstart>
 - Reusing workflow configurations (reference):
-	- <https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations>
+  - <https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations>

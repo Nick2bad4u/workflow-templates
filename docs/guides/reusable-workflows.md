@@ -13,21 +13,21 @@ The caller examples keep top-level `permissions: {}` and grant only the called w
 
 ## Available Workflows
 
-| Template | Reusable workflow | Caller example |
-| --- | --- | --- |
-| `auto-merge-dependabot.yml` | `.github/workflows/reusable-auto-merge-dependabot.yml` | [`auto-merge-dependabot-caller.yml`](../examples/reusable-workflows/auto-merge-dependabot-caller.yml) |
-| `codeql-analysis-advanced.yml` | `.github/workflows/reusable-codeql-analysis-advanced.yml` | [`codeql-analysis-advanced-caller.yml`](../examples/reusable-workflows/codeql-analysis-advanced-caller.yml) |
-| `dependency-review-enhanced.yml` | `.github/workflows/reusable-dependency-review-enhanced.yml` | [`dependency-review-enhanced-caller.yml`](../examples/reusable-workflows/dependency-review-enhanced-caller.yml) |
-| `docusaurus-deploy.yml` | `.github/workflows/reusable-docusaurus-deploy.yml` | [`docusaurus-deploy-caller.yml`](../examples/reusable-workflows/docusaurus-deploy-caller.yml) |
+| Template                                 | Reusable workflow                                                   | Caller example                                                                                                                  |
+| ---------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `auto-merge-dependabot.yml`              | `.github/workflows/reusable-auto-merge-dependabot.yml`              | [`auto-merge-dependabot-caller.yml`](../examples/reusable-workflows/auto-merge-dependabot-caller.yml)                           |
+| `codeql-analysis-advanced.yml`           | `.github/workflows/reusable-codeql-analysis-advanced.yml`           | [`codeql-analysis-advanced-caller.yml`](../examples/reusable-workflows/codeql-analysis-advanced-caller.yml)                     |
+| `dependency-review-enhanced.yml`         | `.github/workflows/reusable-dependency-review-enhanced.yml`         | [`dependency-review-enhanced-caller.yml`](../examples/reusable-workflows/dependency-review-enhanced-caller.yml)                 |
+| `docusaurus-deploy.yml`                  | `.github/workflows/reusable-docusaurus-deploy.yml`                  | [`docusaurus-deploy-caller.yml`](../examples/reusable-workflows/docusaurus-deploy-caller.yml)                                   |
 | `git-cliff-release-notes-validation.yml` | `.github/workflows/reusable-git-cliff-release-notes-validation.yml` | [`git-cliff-release-notes-validation-caller.yml`](../examples/reusable-workflows/git-cliff-release-notes-validation-caller.yml) |
-| `gitleaks-scan-enhanced.yml` | `.github/workflows/reusable-gitleaks-scan-enhanced.yml` | [`gitleaks-scan-enhanced-caller.yml`](../examples/reusable-workflows/gitleaks-scan-enhanced-caller.yml) |
-| `indexnow-submit.yml` | `.github/workflows/reusable-indexnow-submit.yml` | [`indexnow-submit-caller.yml`](../examples/reusable-workflows/indexnow-submit-caller.yml) |
-| `labeler.yml` | `.github/workflows/reusable-labeler.yml` | [`labeler-caller.yml`](../examples/reusable-workflows/labeler-caller.yml) |
-| `node-test-matrix.yml` | `.github/workflows/reusable-node-test-matrix.yml` | [`node-test-matrix-caller.yml`](../examples/reusable-workflows/node-test-matrix-caller.yml) |
-| `npm-release.yml` | `.github/workflows/reusable-npm-release.yml` | [`npm-release-caller.yml`](../examples/reusable-workflows/npm-release-caller.yml) |
-| `ossf-scorecard.yml` | `.github/workflows/reusable-ossf-scorecard.yml` | [`ossf-scorecard-caller.yml`](../examples/reusable-workflows/ossf-scorecard-caller.yml) |
-| `stale-management.yml` | `.github/workflows/reusable-stale-management.yml` | [`stale-management-caller.yml`](../examples/reusable-workflows/stale-management-caller.yml) |
-| `trufflehog-scan.yml` | `.github/workflows/reusable-trufflehog-scan.yml` | [`trufflehog-scan-caller.yml`](../examples/reusable-workflows/trufflehog-scan-caller.yml) |
+| `gitleaks-scan-enhanced.yml`             | `.github/workflows/reusable-gitleaks-scan-enhanced.yml`             | [`gitleaks-scan-enhanced-caller.yml`](../examples/reusable-workflows/gitleaks-scan-enhanced-caller.yml)                         |
+| `indexnow-submit.yml`                    | `.github/workflows/reusable-indexnow-submit.yml`                    | [`indexnow-submit-caller.yml`](../examples/reusable-workflows/indexnow-submit-caller.yml)                                       |
+| `labeler.yml`                            | `.github/workflows/reusable-labeler.yml`                            | [`labeler-caller.yml`](../examples/reusable-workflows/labeler-caller.yml)                                                       |
+| `node-test-matrix.yml`                   | `.github/workflows/reusable-node-test-matrix.yml`                   | [`node-test-matrix-caller.yml`](../examples/reusable-workflows/node-test-matrix-caller.yml)                                     |
+| `npm-release.yml`                        | `.github/workflows/reusable-npm-release.yml`                        | [`npm-release-caller.yml`](../examples/reusable-workflows/npm-release-caller.yml)                                               |
+| `ossf-scorecard.yml`                     | `.github/workflows/reusable-ossf-scorecard.yml`                     | [`ossf-scorecard-caller.yml`](../examples/reusable-workflows/ossf-scorecard-caller.yml)                                         |
+| `stale-management.yml`                   | `.github/workflows/reusable-stale-management.yml`                   | [`stale-management-caller.yml`](../examples/reusable-workflows/stale-management-caller.yml)                                     |
+| `trufflehog-scan.yml`                    | `.github/workflows/reusable-trufflehog-scan.yml`                    | [`trufflehog-scan-caller.yml`](../examples/reusable-workflows/trufflehog-scan-caller.yml)                                       |
 
 ## Caller Example
 

@@ -1,25 +1,25 @@
-name: CodeQL Analysis
+name: "CodeQL Analysis"
 
 on:
     push:
         branches:
-            - main
-            - master
+            - "main"
+            - "master"
     pull_request:
         branches:
-            - main
-            - master
+            - "main"
+            - "master"
     merge_group:
         types:
-            - checks_requested
+            - "checks_requested"
     schedule:
-        - cron: 19 3 * * 1
+        - cron: "19 3 * * 1"
 
 permissions: {}
 
 jobs:
     codeql:
         permissions:
-            contents: read
-            security-events: write
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-advanced.yml@main
+            contents: "read"
+            security-events: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-advanced.yml@main"

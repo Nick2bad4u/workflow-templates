@@ -1,4 +1,4 @@
-name: npm Release
+name: "npm Release"
 
 on:
     push:
@@ -7,27 +7,27 @@ on:
     workflow_dispatch:
         inputs:
             release_type:
-                default: patch
-                description: Release bump type.
+                default: "patch"
+                description: "Release bump type."
                 options:
-                    - patch
-                    - minor
-                    - major
+                    - "patch"
+                    - "minor"
+                    - "major"
                 required: false
-                type: choice
+                type: "choice"
             version:
-                description: Explicit version (x.y.z format, overrides release_type).
+                description: "Explicit version (x.y.z format, overrides release_type)."
                 required: false
-                type: string
+                type: "string"
 
 permissions: {}
 
 jobs:
     release:
         permissions:
-            contents: write
-            id-token: write
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-npm-release.yml@main
+            contents: "write"
+            id-token: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-npm-release.yml@main"
         with:
-            release_type: ${{ inputs.release_type || '' }}
-            version: ${{ inputs.version || '' }}
+            release_type: "${{ inputs.release_type || '' }}"
+            version: "${{ inputs.version || '' }}"

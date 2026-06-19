@@ -1,22 +1,22 @@
-name: Bug report
-description: Report a reproducible issue in a workflow template
+name: "Bug report"
+description: "Report a reproducible issue in a workflow template"
 title: "[Bug]: "
 labels:
-    - bug
+    - "bug"
 body:
-    - type: textarea
-      id: summary
+    - type: "textarea"
+      id: "summary"
       attributes:
-          label: Summary
-          description: What went wrong?
+          label: "Summary"
+          description: "What went wrong?"
       validations:
           required: true
 
-    - type: textarea
-      id: steps
+    - type: "textarea"
+      id: "steps"
       attributes:
-          label: Steps to reproduce
-          description: Include workflow file, trigger event, and exact failing behavior.
+          label: "Steps to reproduce"
+          description: "Include workflow file, trigger event, and exact failing behavior."
           placeholder: |
               1. Use template: node-ci.yml
               2. Trigger: pull_request
@@ -24,30 +24,30 @@ body:
       validations:
           required: true
 
-    - type: textarea
-      id: expected
+    - type: "textarea"
+      id: "expected"
       attributes:
-          label: Expected behavior
+          label: "Expected behavior"
       validations:
           required: true
 
-    - type: textarea
-      id: actual
+    - type: "textarea"
+      id: "actual"
       attributes:
-          label: Actual behavior
+          label: "Actual behavior"
       validations:
           required: true
 
-    - type: input
-      id: runner-info
+    - type: "input"
+      id: "runner-info"
       attributes:
-          label: Runner or environment details
-          placeholder: ubuntu-latest, self-hosted, local runner version, etc.
+          label: "Runner or environment details"
+          placeholder: "ubuntu-latest, self-hosted, local runner version, etc."
       validations:
           required: true
 
-    - type: textarea
-      id: additional
+    - type: "textarea"
+      id: "additional"
       attributes:
-          label: Additional context
-          description: Any logs, JSON output, or screenshots.
+          label: "Additional context"
+          description: "Any logs, JSON output, or screenshots."

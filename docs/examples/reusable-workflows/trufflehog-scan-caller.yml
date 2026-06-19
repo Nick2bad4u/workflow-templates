@@ -1,13 +1,13 @@
-name: Trufflehog Secret Scan
+name: "Trufflehog Secret Scan"
 
 on:
     push:
     pull_request:
     merge_group:
         types:
-            - checks_requested
+            - "checks_requested"
     schedule:
-        - cron: 44 4 * * 0
+        - cron: "44 4 * * 0"
     workflow_dispatch:
 
 permissions: {}
@@ -15,5 +15,5 @@ permissions: {}
 jobs:
     trufflehog:
         permissions:
-            contents: read
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-trufflehog-scan.yml@main
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-trufflehog-scan.yml@main"

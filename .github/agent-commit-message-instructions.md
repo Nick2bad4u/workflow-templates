@@ -13,11 +13,17 @@
 ## Content Guidelines
 
 - **Be as detailed as possible without being excessively wordy.**
+
 - **Prioritize source code changes above test/dev-only changes** in mixed commits.
+
 - **List source changes first**, then tests/docs/chore updates.
+
 - Parse changed code and explain behavior impact step by step.
+
 - Write like a technical changelog author.
+
 - Use relevant emojis where useful for readability, not emoji spam, but be through in parsing and describing all meaningful changes that match emojis above.
+
 - Describe all meaningful changes comprehensively.
 
 - Entire Gitmoji Table Reference below, use for ideas and consistency.

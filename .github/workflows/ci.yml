@@ -1,67 +1,66 @@
-name: Continuous Integration
+name: "Continuous Integration"
 
 run-name: >-
-    Continuous Integration • ${{ github.event_name }} •
-    ${{ github.event.pull_request.number || github.ref_name || github.sha }}
+    Continuous Integration • ${{ github.event_name }} • ${{ github.event.pull_request.number || github.ref_name || github.sha }}
 
 on:
     push:
         branches:
-            - main
+            - "main"
     pull_request:
     merge_group:
         types:
-            - checks_requested
+            - "checks_requested"
 
 concurrency:
-    group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    group: "ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
     cancel-in-progress: true
 
 permissions:
-    contents: read
+    contents: "read"
 
 jobs:
     validate:
-        name: Validate repository
-        runs-on: ubuntu-latest
+        name: "Validate repository"
+        runs-on: "ubuntu-latest"
         timeout-minutes: 15
         defaults:
             run:
-                shell: bash
+                shell: "bash"
         steps:
-            - name: Harden the runner (Audit all outbound calls)
-              uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+            - name: "Harden the runner (Audit all outbound calls)"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
               with:
-                  egress-policy: audit
+                  egress-policy: "audit"
 
-            - name: Checkout
-              uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+            - name: "Checkout"
+              uses: "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" # v6.0.3
 
-            - name: Setup Node
-              uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+            - name: "Setup Node"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
               with:
-                  node-version-file: .node-version
-                  cache: npm
-                  cache-dependency-path: package-lock.json
+                  node-version-file: ".node-version"
+                  cache: "npm"
+                  cache-dependency-path: "package-lock.json"
 
-            - name: Install dependencies
-              run: npm ci
+            - name: "Install dependencies"
+              run: "npm ci"
 
-            - name: Check generated schema is up to date
-              run: npm run schema:check:workflow-template-properties
+            - name: "Check generated schema is up to date"
+              run: "npm run schema:check:workflow-template-properties"
 
-            - name: Validate schema fixtures
-              run: npm run schema:test:workflow-template-properties
+            - name: "Validate schema fixtures"
+              run: "npm run schema:test:workflow-template-properties"
 
-            - name: Lint repository
-              run: npm run lint
+            - name: "Lint repository"
+              run: "npm run lint"
 
-            - name: Lint workflow syntax with actionlint
-              uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1.72.0
+            - name: "Lint workflow syntax with actionlint"
+              uses: "reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d" # v1.72.0
               with:
-                  fail_level: error
+                  fail_level: "error"
 
-            - name: Verify workflow template metadata files
+            - name: "Verify workflow template metadata files"
               run: |
                   set -euo pipefail
                   shopt -s nullglob

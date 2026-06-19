@@ -8,8 +8,8 @@ Every workflow template (`.yml`) must have a corresponding `.properties.json` me
 
 ```json
 {
-    "name": "Required: Display name (shown in GitHub Actions UI)",
-    "description": "Required: Short description of what the workflow does"
+ "name": "Required: Display name (shown in GitHub Actions UI)",
+ "description": "Required: Short description of what the workflow does"
 }
 ```
 
@@ -17,9 +17,9 @@ Every workflow template (`.yml`) must have a corresponding `.properties.json` me
 
 ```json
 {
-    "iconName": "Optional: Icon name (local SVG or 'octicon <name>')",
-    "categories": ["Optional: Array of category names (see below)"],
-    "filePatterns": ["Optional: Regex patterns for file matching"]
+ "iconName": "Optional: Icon name (local SVG or 'octicon <name>')",
+ "categories": ["Optional: Array of category names (see below)"],
+ "filePatterns": ["Optional: Regex patterns for file matching"]
 }
 ```
 
@@ -27,11 +27,11 @@ Every workflow template (`.yml`) must have a corresponding `.properties.json` me
 
 ```json
 {
-    "name": "Node.js Test & Coverage",
-    "description": "Run tests with coverage across multiple platforms.",
-    "iconName": "workflow-template-node.svg",
-    "categories": ["JavaScript", "TypeScript"],
-    "filePatterns": ["package.json$", "package-lock.json$"]
+ "name": "Node.js Test & Coverage",
+ "description": "Run tests with coverage across multiple platforms.",
+ "iconName": "workflow-template-node.svg",
+ "categories": ["JavaScript", "TypeScript"],
+ "filePatterns": ["package.json$", "package-lock.json$"]
 }
 ```
 
@@ -40,27 +40,29 @@ Every workflow template (`.yml`) must have a corresponding `.properties.json` me
 ## Valid Category Values
 
 ### Source 1: Linguist Languages
+
 Use language/technology identifiers from GitHub's [Linguist](https://github.com/github/linguist) project.
 
 **Recommended for these templates:**
 
-| Category | Use For |
-|----------|---------|
-| **JavaScript** | Node.js, npm, frontend, TypeScript projects |
-| **TypeScript** | TypeScript-specific workflows |
-| **YAML** | Generic GitHub Actions workflows, CI/CD |
-| **Python** | Python-based projects, scripts |
-| **Bash** / **Shell** | Shell script workflows |
-| **Dockerfile** | Container/deployment workflows |
-| **Markdown** | Documentation-related workflows |
-| **JSON** | Config-based workflows |
-| **Ruby** | Ruby/Rails projects |
-| **Go** | Go projects |
-| **Rust** | Rust projects |
-| **Java** | Java/Kotlin/JVM projects |
-| **C** / **C++** | C/C++ projects |
+| Category             | Use For                                     |
+| -------------------- | ------------------------------------------- |
+| **JavaScript**       | Node.js, npm, frontend, TypeScript projects |
+| **TypeScript**       | TypeScript-specific workflows               |
+| **YAML**             | Generic GitHub Actions workflows, CI/CD     |
+| **Python**           | Python-based projects, scripts              |
+| **Bash** / **Shell** | Shell script workflows                      |
+| **Dockerfile**       | Container/deployment workflows              |
+| **Markdown**         | Documentation-related workflows             |
+| **JSON**             | Config-based workflows                      |
+| **Ruby**             | Ruby/Rails projects                         |
+| **Go**               | Go projects                                 |
+| **Rust**             | Rust projects                               |
+| **Java**             | Java/Kotlin/JVM projects                    |
+| **C** / **C++**      | C/C++ projects                              |
 
 ### Source 2: General Category Names (from starter-workflows)
+
 - "CI/CD"
 - "Continuous Integration"
 - "Continuous Deployment"
@@ -74,6 +76,7 @@ Use language/technology identifiers from GitHub's [Linguist](https://github.com/
 - "Release"
 
 ### Source 3: Supported Tech Stacks (from starter-workflows)
+
 Check the official starter-workflows repository for tech stack category names.
 
 ---
@@ -105,6 +108,7 @@ Regular expressions (without delimiters) to match root-level files in the user's
 ```
 
 ### Pattern Tips
+
 - Use `$` for end-of-filename
 - Use `^` for start-of-filename
 - Use `.*` for any characters
@@ -115,6 +119,7 @@ Regular expressions (without delimiters) to match root-level files in the user's
 ## GitHub Actions Workflow Template Files
 
 ### Directory Structure
+
 ```folder
 .github/
 ├── workflow-templates/
@@ -127,6 +132,7 @@ Regular expressions (without delimiters) to match root-level files in the user's
 ```
 
 ### Icons
+
 - Built-in: `"iconName": "octicon check"` or other octicons
 - Custom SVG: `"iconName": "workflow-template-node.svg"` (file must exist in templates dir)
 
@@ -152,13 +158,13 @@ schemas/github-workflow-template-properties.schema.json
 
 ```json
 {
-    "name": "GitHub Actions Workflow Template Properties",
-    "description": "Schema for GitHub Actions workflow template metadata files (*.properties.json) in .github/workflow-templates/.",
-    "fileMatch": [
-        ".github/workflow-templates/*.properties.json",
-        "**/.github/workflow-templates/*.properties.json"
-    ],
-    "url": "https://raw.githubusercontent.com/Nick2bad4u/workflow-templates/main/schemas/github-workflow-template-properties.schema.json"
+ "name": "GitHub Actions Workflow Template Properties",
+ "description": "Schema for GitHub Actions workflow template metadata files (*.properties.json) in .github/workflow-templates/.",
+ "fileMatch": [
+  ".github/workflow-templates/*.properties.json",
+  "**/.github/workflow-templates/*.properties.json"
+ ],
+ "url": "https://raw.githubusercontent.com/Nick2bad4u/workflow-templates/main/schemas/github-workflow-template-properties.schema.json"
 }
 ```
 
@@ -212,6 +218,7 @@ npm run schema:test:workflow-template-properties
 ## Validation Notes
 
 ⚠️ **Important:**
+
 - `categories` values **must** be from valid Linguist language names OR general category names
 - `filePatterns` values **must** be valid regex (without delimiters)
 - The `.properties.json` filename **must** exactly match the `.yml` filename

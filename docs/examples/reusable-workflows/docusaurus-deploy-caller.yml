@@ -1,15 +1,15 @@
-name: Deploy Docusaurus
+name: "Deploy Docusaurus"
 
 on:
     push:
         branches:
-            - main
-            - master
+            - "main"
+            - "master"
         paths:
-            - docs/**
-            - docusaurus.config.js
-            - package.json
-            - package-lock.json
+            - "docs/**"
+            - "docusaurus.config.js"
+            - "package.json"
+            - "package-lock.json"
     workflow_dispatch:
 
 permissions: {}
@@ -17,7 +17,7 @@ permissions: {}
 jobs:
     deploy:
         permissions:
-            contents: read
-            pages: write
-            id-token: write
-        uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-docusaurus-deploy.yml@main
+            contents: "read"
+            pages: "write"
+            id-token: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-docusaurus-deploy.yml@main"

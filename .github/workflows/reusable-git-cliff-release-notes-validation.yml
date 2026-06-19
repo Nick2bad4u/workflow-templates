@@ -1,39 +1,39 @@
-name: Validate Git-Cliff Release Notes
+name: "Validate Git-Cliff Release Notes"
 
 on:
     workflow_call:
         inputs:
             tag:
-                description: Release tag to validate, for example v1.2.3.
+                description: "Release tag to validate, for example v1.2.3."
                 required: true
-                type: string
+                type: "string"
 concurrency:
-    group: release-notes-validation-${{ github.event.release.tag_name || inputs.tag || github.run_id }}
+    group: "release-notes-validation-${{ github.event.release.tag_name || inputs.tag || github.run_id }}"
     cancel-in-progress: true
 
 permissions:
-    contents: read
+    contents: "read"
 
 defaults:
     run:
-        shell: bash
+        shell: "bash"
 
 jobs:
     validate:
-        name: Validate release notes
-        runs-on: ubuntu-latest
+        name: "Validate release notes"
+        runs-on: "ubuntu-latest"
         timeout-minutes: 10
         steps:
-            - name: Harden runner
-              uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
               with:
-                  egress-policy: audit
+                  egress-policy: "audit"
 
-            - name: Fetch release body
+            - name: "Fetch release body"
               env:
-                  GH_TOKEN: ${{ github.token }}
-                  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
-                  REPOSITORY: ${{ github.repository }}
+                  GH_TOKEN: "${{ github.token }}"
+                  RELEASE_TAG: "${{ github.event.release.tag_name || inputs.tag }}"
+                  REPOSITORY: "${{ github.repository }}"
               run: |
                   set -euo pipefail
 
@@ -47,7 +47,7 @@ jobs:
                     --json body,tagName,url \
                     > release.json
 
-            - name: Validate release notes heading
+            - name: "Validate release notes heading"
               run: |
                   set -euo pipefail
 
