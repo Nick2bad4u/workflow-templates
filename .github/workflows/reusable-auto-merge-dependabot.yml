@@ -42,6 +42,7 @@ jobs:
                   egress-policy: "audit"
 
             - name: "Validate Dependabot Pull Request"
+              id: "validate"
               env:
                   GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
                   HEAD_REF: "${{ github.event.pull_request.head.ref }}"
@@ -50,6 +51,7 @@ jobs:
                   REPOSITORY: "${{ github.repository }}"
               run: |
                   set -euo pipefail
+                  echo "auto-merge-allowed=true" >> "${GITHUB_OUTPUT}"
 
                   if [[ "${HEAD_REPOSITORY}" != "${REPOSITORY}" ]]; then
                     echo "::error title=Unsupported Dependabot PR source::Dependabot auto-merge only supports same-repository Dependabot pull requests."
@@ -80,19 +82,22 @@ jobs:
                   )"
 
                   if [[ -n "${invalid_commits}" ]]; then
-                    echo "::error title=Unexpected commits in Dependabot PR::Dependabot auto-merge refused commits that are not Dependabot commits or branch-update merge commits."
+                    echo "::notice title=Skipping Dependabot auto-merge::Dependabot PR contains commits that are not Dependabot commits or branch-update merge commits."
                     echo "${invalid_commits}"
-                    exit 1
+                    echo "auto-merge-allowed=false" >> "${GITHUB_OUTPUT}"
+                    exit 0
                   fi
 
             - name: "Fetch Dependabot Metadata"
               id: "metadata"
+              if: "steps.validate.outputs.auto-merge-allowed == 'true'"
               uses: "dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98" # v3.1.0
               with:
                   github-token: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: "Evaluate Auto-Merge Policy"
               id: "policy"
+              if: "steps.validate.outputs.auto-merge-allowed == 'true'"
               env:
                   AUTO_MERGE_SEMVER: "${{ inputs.semver-policy || vars['DEPENDABOT_AUTO_MERGE_SEMVER'] || 'patch,minor' }}"
                   UPDATE_TYPE: "${{ steps.metadata.outputs.update-type }}"
@@ -278,7 +283,7 @@ jobs:
                   fi
 
             - name: "Log Skipped Update Type"
-              if: "steps.policy.outputs.should-auto-merge != 'true'"
+              if: "steps.validate.outputs.auto-merge-allowed == 'true' && steps.policy.outputs.should-auto-merge != 'true'"
               env:
                   ALLOWED_SEMVER: "${{ steps.policy.outputs.allowed-semver }}"
                   UPDATE_SEMVER: "${{ steps.policy.outputs.update-semver }}"
@@ -287,6 +292,13 @@ jobs:
 
                   echo "Dependabot semver update '${UPDATE_SEMVER:-unknown}' is not configured for auto-merge."
                   echo "Configured auto-merge semver policy: ${ALLOWED_SEMVER:-unknown}"
+
+            - name: "Log Skipped Repaired Pull Request"
+              if: "steps.validate.outputs.auto-merge-allowed == 'false'"
+              run: |
+                  set -euo pipefail
+
+                  echo "Dependabot auto-merge is skipped because this pull request includes non-Dependabot repair commits."
 
     merge-group-status:
         name: "Merge Group Status"
