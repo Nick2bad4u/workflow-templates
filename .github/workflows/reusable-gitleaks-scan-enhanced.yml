@@ -3,64 +3,77 @@
 name: "Gitleaks Secret Scan"
 
 on:
-    workflow_call:
+  workflow_call:
 concurrency:
-    group: "gitleaks-${{ github.workflow }}-${{ github.ref }}"
-    cancel-in-progress: true
+  group: "gitleaks-${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
 
 permissions:
-    contents: "read"
+  contents: "read"
 
 jobs:
-    scan:
-        name: "Gitleaks Secret Scan"
-        runs-on: "ubuntu-latest"
-        timeout-minutes: 20
-        steps:
-            - name: "Harden runner"
-              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
-              with:
-                  egress-policy: "audit"
+  scan:
+    name: "Gitleaks Secret Scan"
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 20
+    steps:
+      - name: "Harden runner"
+        uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+        with:
+          egress-policy: "audit"
 
-            - name: "Checkout"
-              uses: "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" # v6.0.3
-              with:
-                  fetch-depth: 0
+      - name: "Checkout"
+        uses: "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" # v6.0.3
+        with:
+          fetch-depth: 0
 
-            - name: "Setup Node"
-              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
-              with:
-                  node-version: "24"
+      - name: "Setup Node"
+        uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+        with:
+          node-version: "24"
 
-            - name: "Install shared Gitleaks config"
-              shell: "bash"
-              run: |
-                  set -euo pipefail
+      - name: "Install shared Gitleaks config"
+        shell: "bash"
+        run: |
+          set -euo pipefail
 
-                  shared_config_path="node_modules/gitleaks-config-nick2bad4u/gitleaks.toml"
+          shared_config_path="node_modules/gitleaks-config-nick2bad4u/gitleaks.toml"
 
-                  if ! grep -Fq "${shared_config_path}" .gitleaks.toml; then
-                    echo "No shared npm Gitleaks config reference found in .gitleaks.toml."
-                    exit 0
-                  fi
+          if [[ ! -f .gitleaks.toml ]]; then
+            echo "No local .gitleaks.toml found. Gitleaks will use its default config."
+            exit 0
+          fi
 
-                  if [[ -f package-lock.json ]]; then
-                    npm ci --ignore-scripts --no-audit --no-fund --force
-                  elif [[ -f package.json ]]; then
-                    npm install --ignore-scripts --no-audit --no-fund --force
-                  else
-                    echo "::error title=Missing npm manifest::.gitleaks.toml extends ${shared_config_path}, but package.json was not found."
-                    exit 1
-                  fi
+          if ! grep -Fq "${shared_config_path}" .gitleaks.toml; then
+            echo "No shared npm Gitleaks config reference found in .gitleaks.toml."
+            exit 0
+          fi
 
-                  if [[ ! -f "${shared_config_path}" ]]; then
-                    echo "::error title=Missing shared Gitleaks config::Expected ${shared_config_path} after installing npm dependencies."
-                    exit 1
-                  fi
+          if [[ -f package-lock.json ]]; then
+            npm ci --ignore-scripts --no-audit --no-fund --force
+          elif [[ -f package.json ]]; then
+            npm install --ignore-scripts --no-audit --no-fund --force
+          else
+            echo "::error title=Missing npm manifest::.gitleaks.toml extends ${shared_config_path}, but package.json was not found."
+            exit 1
+          fi
 
-            - name: "Run Gitleaks scan"
-              uses: "gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e" # v3.0.0
-              env:
-                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-                  GITLEAKS_CONFIG: ".gitleaks.toml"
-                  # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # Uncomment if using in an organization
+          if [[ ! -f "${shared_config_path}" ]]; then
+            echo "::error title=Missing shared Gitleaks config::Expected ${shared_config_path} after installing npm dependencies."
+            exit 1
+          fi
+
+      - name: "Run Gitleaks scan with local config"
+        if: "${{ hashFiles('.gitleaks.toml') != '' }}"
+        uses: "gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e" # v3.0.0
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITLEAKS_CONFIG: ".gitleaks.toml"
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # Uncomment if using in an organization
+
+      - name: "Run Gitleaks scan with default config"
+        if: "${{ hashFiles('.gitleaks.toml') == '' }}"
+        uses: "gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e" # v3.0.0
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # Uncomment if using in an organization
