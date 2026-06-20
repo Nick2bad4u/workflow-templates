@@ -112,7 +112,7 @@ Use a repository variable when one repository needs its own policy:
 DEPENDABOT_AUTO_MERGE_SEMVER=patch
 ```
 
-Use an organization variable when many repositories should share one policy. Repositories can override the organization variable with a repository variable of the same name.
+Use an organization variable when multiple repositories should share one policy. Repositories can override the organization variable with a repository variable of the same name.
 
 ## Required Protection
 

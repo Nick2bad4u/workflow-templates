@@ -2,21 +2,20 @@ name: "Stale Issues And Pull Requests"
 
 on:
     schedule:
-      - cron: "38 7 * * *"
+        - cron: "38 7 * * *"
     issues:
         types:
-          - "opened"
-          - "reopened"
-          - "edited"
+            - "opened"
+            - "reopened"
+            - "edited"
     pull_request_target:
         branches:
-          - "$default-branch"
+            - "$default-branch"
         types:
-          - "opened"
-          - "reopened"
-          - "synchronize"
+            - "opened"
+            - "reopened"
+            - "synchronize"
     workflow_dispatch:
-
 
 concurrency:
     group: "stale-${{ github.workflow }}-${{ github.ref }}"
@@ -33,18 +32,18 @@ jobs:
         runs-on: "ubuntu-latest"
         timeout-minutes: 20
         steps:
-          - name: "Harden runner"
-            uses: "step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450" # v2.19.1
-            with:
-                egress-policy: "audit"
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450" # v2.19.1
+              with:
+                  egress-policy: "audit"
 
-          - name: "Mark stale issues and pull requests"
-            uses: "actions/stale@b5d41d4e1d5dceea10e7104786b73624c18a190f" # v10.2.0
-            with:
-                repo-token: "${{ secrets.GITHUB_TOKEN }}"
-                stale-issue-message: "Issue marked stale due to inactivity"
-                stale-pr-message: "Pull request marked stale due to inactivity"
-                stale-issue-label: "no-activity"
-                stale-pr-label: "no-activity"
-                days-before-stale: 60
-                days-before-close: 14
+            - name: "Mark stale issues and pull requests"
+              uses: "actions/stale@b5d41d4e1d5dceea10e7104786b73624c18a190f" # v10.2.0
+              with:
+                  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+                  stale-issue-message: "Issue marked stale due to inactivity"
+                  stale-pr-message: "Pull request marked stale due to inactivity"
+                  stale-issue-label: "no-activity"
+                  stale-pr-label: "no-activity"
+                  days-before-stale: 60
+                  days-before-close: 14
