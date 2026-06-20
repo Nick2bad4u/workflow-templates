@@ -1,21 +1,21 @@
 # yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 
-name: "CodeQL Analysis"
+name: "CodeQL Analysis (Manual Build)"
 
 run-name: >-
     ${{
         github.event_name == 'pull_request' &&
-        format('CodeQL Analysis #{0}', github.event.pull_request.number) ||
+        format('CodeQL Analysis (Manual Build) #{0}', github.event.pull_request.number) ||
         github.event_name == 'merge_group' &&
-        format('CodeQL Analysis merge group {0}', github.sha || github.ref_name || github.run_id) ||
+        format('CodeQL Analysis (Manual Build) merge group {0}', github.sha || github.ref_name || github.run_id) ||
         github.event_name == 'schedule' &&
-        format('CodeQL Analysis scheduled {0}', github.run_id) ||
-        format('CodeQL Analysis {0}', github.ref_name || github.run_id)
+        format('CodeQL Analysis (Manual Build) scheduled {0}', github.run_id) ||
+        format('CodeQL Analysis (Manual Build) {0}', github.ref_name || github.run_id)
     }}
 
 concurrency:
     group: >-
-        codeql-analysis-${{ github.workflow }}-${{
+        codeql-analysis-build-${{ github.workflow }}-${{
             github.event.pull_request.number ||
             github.sha ||
             github.ref ||
@@ -36,16 +36,17 @@ on:
         types:
             - "checks_requested"
     schedule:
-        - cron: "19 3 * * 1"
+        - cron: "29 3 * * 1"
 
 permissions: {}
 
 jobs:
     codeql:
-        name: "CodeQL Analysis"
+        name: "CodeQL Analysis (Manual Build)"
         permissions:
             contents: "read"
             security-events: "write"
-        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-advanced.yml@main"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-build.yml@main"
         with:
-            languages: '["javascript-typescript","actions"]'
+            languages: '["java-kotlin"]'
+            build-command: "./gradlew clean build"

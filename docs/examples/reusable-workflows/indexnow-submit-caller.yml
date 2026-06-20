@@ -1,4 +1,20 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "Submit IndexNow Notification"
+
+run-name: >-
+    ${{
+        format('Submit IndexNow Notification {0}', inputs.submission_mode || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        indexnow-submit-${{ github.workflow }}-${{
+            inputs.submission_mode ||
+            github.ref ||
+            github.run_id
+        }}
+    cancel-in-progress: true
 
 on:
     workflow_dispatch:
@@ -26,6 +42,7 @@ permissions: {}
 
 jobs:
     submit-indexnow:
+        name: "Submit IndexNow Notification"
         permissions:
             contents: "read"
             id-token: "write"

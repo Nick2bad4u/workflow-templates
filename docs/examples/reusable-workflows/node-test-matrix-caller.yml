@@ -1,4 +1,27 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "Node.js Test & Coverage"
+
+run-name: >-
+    ${{
+        github.event_name == 'pull_request' &&
+        format('Node.js Test & Coverage #{0}', github.event.pull_request.number) ||
+        github.event_name == 'merge_group' &&
+        format('Node.js Test & Coverage merge group {0}', github.sha || github.ref_name || github.run_id) ||
+        github.event_name == 'workflow_dispatch' &&
+        format('Node.js Test & Coverage manual {0}', github.run_id) ||
+        format('Node.js Test & Coverage {0}', github.ref_name || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        node-test-matrix-${{ github.workflow }}-${{
+            github.event.pull_request.number ||
+            github.sha ||
+            github.ref ||
+            github.run_id
+        }}
+    cancel-in-progress: true
 
 on:
     push:
@@ -15,6 +38,7 @@ permissions: {}
 
 jobs:
     test:
+        name: "Node.js Test & Coverage"
         permissions:
             contents: "read"
             id-token: "write"

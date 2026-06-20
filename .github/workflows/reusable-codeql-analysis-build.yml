@@ -1,17 +1,20 @@
 # yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 
-name: "CodeQL Analysis (Advanced)"
+name: "CodeQL Analysis (Manual Build)"
 
 on:
     workflow_call:
         inputs:
             languages:
-                description: "JSON array of no-custom-build CodeQL language identifiers to analyze."
-                required: false
+                description: "JSON array of CodeQL language identifiers that require the supplied build command."
+                required: true
                 type: "string"
-                default: '["javascript-typescript","actions"]'
+            build-command:
+                description: "Shell command that builds the repository after CodeQL initialization."
+                required: true
+                type: "string"
 concurrency:
-    group: "codeql-${{ github.workflow }}-${{ github.ref }}"
+    group: "codeql-build-${{ github.workflow }}-${{ github.ref }}"
     cancel-in-progress: true
 
 permissions:
@@ -20,13 +23,16 @@ permissions:
 
 jobs:
     analyze:
-        name: "Analyze"
+        name: "Analyze (${{ matrix.language }})"
         runs-on: "ubuntu-latest"
-        timeout-minutes: 30
+        timeout-minutes: 60
         strategy:
             fail-fast: false
             matrix:
                 language: "${{ fromJSON(inputs.languages) }}"
+        defaults:
+            run:
+                shell: "bash"
         steps:
             - name: "Harden runner"
               uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
@@ -40,6 +46,11 @@ jobs:
               uses: "github/codeql-action/init@8aad20d150bbac5944a9f9d289da16a4b0d87c1e" # v4.36.2
               with:
                   languages: "${{ matrix.language }}"
+                  build-mode: "manual"
+
+            - name: "Run build"
+              run: |
+                  ${{ inputs.build-command }}
 
             - name: "Analyze"
               uses: "github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e" # v4.36.2

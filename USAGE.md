@@ -178,21 +178,25 @@ CodeQL runs automatically on push/PR. No special setup required!
 
 ### CodeQL Analysis Configuration Options
 
-**Scan additional languages:**
+**Set no-build CodeQL languages when using the reusable workflow:**
 
 ```yaml
-env:
- CODEQL_LANGUAGES: "javascript,typescript,github-actions"
+jobs:
+ codeql:
+  uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-advanced.yml@main
+  with:
+   languages: '["javascript-typescript","actions"]'
 ```
 
-**Customize timeouts:**
+**Use the manual-build reusable workflow for compiled or custom-build repositories:**
 
 ```yaml
-- name: Create CodeQL database
-  uses: github/codeql-action/database-create@v3
+jobs:
+ codeql:
+  uses: Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-build.yml@main
   with:
-   db-location: ${{ runner.temp }}/codeql_databases
-   source-root: src/
+   languages: '["java-kotlin"]'
+   build-command: "./gradlew clean build"
 ```
 
 **Schedule weekly scans:**

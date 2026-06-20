@@ -26,6 +26,13 @@ They are still separate from `.github/workflow-templates/*.yml`, which consumers
   - `npm run schema:test:workflow-template-properties`
 - Keep workflow template metadata presence checks in CI so every `.github/workflow-templates/*.yml` has a paired `.properties.json`.
 - Keep reusable workflows directly under `.github/workflows/`; GitHub does not support reusable workflow subdirectories.
+- Reusable workflows must include `on: workflow_call`.
+- Define explicit `inputs` and `secrets` for `workflow_call` when the caller must provide data.
+- In caller examples, invoke reusable workflows at the job level with `jobs.<job_id>.uses`, not from steps.
+- Prefer SHA pinning for cross-repository reusable workflow callers.
+- Assume `GITHUB_TOKEN` permissions can only be maintained or reduced by called workflows; never rely on a called workflow to elevate caller permissions.
+- Prefer explicit workflow outputs for data flow between caller and called workflows; do not rely on `env` propagation across workflow boundaries.
+- Avoid deep reusable workflow chains; keep nesting shallow and below GitHub platform limits.
 
 ## Validation
 

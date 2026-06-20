@@ -1,4 +1,27 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "OpenSSF Scorecard"
+
+run-name: >-
+    ${{
+        github.event_name == 'branch_protection_rule' &&
+        format('OpenSSF Scorecard branch protection {0}', github.event.rule.name || github.run_id) ||
+        github.event_name == 'schedule' &&
+        format('OpenSSF Scorecard scheduled {0}', github.run_id) ||
+        github.event_name == 'workflow_dispatch' &&
+        format('OpenSSF Scorecard manual {0}', github.run_id) ||
+        format('OpenSSF Scorecard {0}', github.ref_name || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        ossf-scorecard-${{ github.workflow }}-${{
+            github.event.rule.name ||
+            github.sha ||
+            github.ref ||
+            github.run_id
+        }}
+    cancel-in-progress: true
 
 on:
     branch_protection_rule:
@@ -18,6 +41,7 @@ permissions: {}
 
 jobs:
     scorecard:
+        name: "OpenSSF Scorecard"
         permissions:
             contents: "read"
             security-events: "write"

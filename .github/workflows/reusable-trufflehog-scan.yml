@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: "Trufflehog Secret Scan"
 
 on:
@@ -31,6 +32,10 @@ jobs:
                   path: "."
                   base: ""
                   head: "${{ github.ref_name }}"
+                  # Only fail the job for VERIFIED secrets.
+                  # Unverified/unknown results are often high-noise in OSS repos
+                  # (example strings, docs, placeholder tokens) and already
+                  # covered by other scanners (gitleaks, etc.).
                   extra_args: "--results=verified --exclude-detectors=URI"
               env:
                   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

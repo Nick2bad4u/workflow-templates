@@ -1,4 +1,6 @@
-name: "Stale Issues & Pull Requests"
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Stale Issues And Pull Requests"
 
 on:
     workflow_call:

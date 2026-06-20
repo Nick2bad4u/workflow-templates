@@ -1,4 +1,23 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "npm Release"
+
+run-name: >-
+    ${{
+        github.event_name == 'workflow_dispatch' &&
+        format('npm Release {0}', inputs.version || inputs.release_type || github.run_id) ||
+        format('npm Release {0}', github.ref_name || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        npm-release-${{ github.workflow }}-${{
+            github.ref_name ||
+            inputs.version ||
+            inputs.release_type ||
+            github.run_id
+        }}
+    cancel-in-progress: false
 
 on:
     push:
@@ -24,6 +43,7 @@ permissions: {}
 
 jobs:
     release:
+        name: "npm Release"
         permissions:
             contents: "write"
             id-token: "write"

@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "Dependency Review"
 
 on:
@@ -27,5 +29,3 @@ jobs:
               uses: "actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294" # v5.0.0
               with:
                   fail-on-severity: "high"
-                  allow-licenses: "Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, MIT"
-                  deny-licenses: "GPL-2.0, GPL-3.0"

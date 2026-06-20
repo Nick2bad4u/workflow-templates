@@ -1,4 +1,23 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "Validate Git-Cliff Release Notes"
+
+run-name: >-
+    ${{
+        github.event_name == 'release' &&
+        format('Validate Git-Cliff Release Notes {0}', github.event.release.tag_name || github.ref_name || github.run_id) ||
+        format('Validate Git-Cliff Release Notes {0}', inputs.tag || github.ref_name || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        git-cliff-release-notes-validation-${{ github.workflow }}-${{
+            github.event.release.tag_name ||
+            inputs.tag ||
+            github.ref ||
+            github.run_id
+        }}
+    cancel-in-progress: true
 
 on:
     release:
@@ -16,6 +35,7 @@ permissions: {}
 
 jobs:
     validate-release-notes:
+        name: "Validate Git-Cliff Release Notes"
         permissions:
             contents: "read"
         uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-git-cliff-release-notes-validation.yml@main"

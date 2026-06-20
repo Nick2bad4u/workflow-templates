@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
 name: "OpenSSF Scorecard"
 
 on:
@@ -36,9 +38,31 @@ jobs:
               with:
                   results_file: "scorecard-results.sarif"
                   results_format: "sarif"
+                  # (Optional) "write" PAT token. Uncomment the `repo_token` line below if:
+                  # - you want to enable the Branch-Protection check on a *public* repository, or
+                  # - you are installing Scorecards on a *private* repository
+                  # To create the PAT, follow the steps in https://github.com/ossf/scorecard-action#authentication-with-pat.
+                  # repo_token: ${{ secrets.SCORECARD_TOKEN }}
+
+                  # Public repositories:
+                  #   - Publish results to OpenSSF REST API for easy access by consumers
+                  #   - Allows the repository to include the Scorecard badge.
+                  #   - See https://github.com/ossf/scorecard-action#publishing-results.
+                  # For private repositories:
+                  #   - `publish_results` will always be set to `false`, regardless
+                  #     of the value entered here.
                   publish_results: true
 
             - name: "Upload Scorecard results"
               uses: "github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e" # v4.36.2
               with:
                   sarif_file: "scorecard-results.sarif"
+
+            # Upload the results as artifacts (optional). Commenting out will disable uploads of run results in SARIF
+            # format to the repository Actions tab.
+            - name: "Upload artifact"
+              uses: "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" # v7.0.1
+              with:
+                  name: "Results SARIF file"
+                  path: "scorecard-results.sarif"
+                  retention-days: 7
