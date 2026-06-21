@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Warn Skip Verify"
+description: "Emit a standardized warning when package verification is intentionally skipped."
+
+inputs:
+    verify-step-name:
+        description: "Name of the skipped verification step."
+        required: false
+        default: "Verify package"
+    input-name:
+        description: "Name of the workflow_dispatch input that allowed the skip."
+        required: false
+        default: "skip_verify"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Warn when package verification is skipped"
+          shell: "bash"
+          env:
+              SKIP_INPUT_NAME: "${{ inputs.input-name }}"
+              VERIFY_STEP_NAME: "${{ inputs.verify-step-name }}"
+          run: |
+              set -euo pipefail
+
+              echo "::warning::Skipping '${VERIFY_STEP_NAME}' because workflow_dispatch input '${SKIP_INPUT_NAME}' is true."
+              echo "::warning::Use this only when release checks were validated locally before dispatch."

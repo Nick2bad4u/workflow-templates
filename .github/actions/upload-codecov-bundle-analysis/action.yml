@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Upload Codecov Bundle Analysis"
+description: "Run Codecov bundle analysis for a built artifact directory."
+
+inputs:
+    dist:
+        description: "Directory passed to @codecov/bundle-analyzer."
+        required: false
+        default: "./dist"
+    bundle-name:
+        description: "Codecov bundle name. Defaults to GITHUB_REPOSITORY."
+        required: false
+        default: ""
+    upload-token:
+        description: "Codecov upload token. When empty, the action skips by default."
+        required: false
+        default: ""
+    skip-when-token-empty:
+        description: "Skip instead of failing when upload-token is empty."
+        required: false
+        default: "true"
+    continue-on-error:
+        description: "Warn instead of failing when bundle analysis upload fails."
+        required: false
+        default: "true"
+    working-directory:
+        description: "Directory where the bundle analyzer command runs."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Upload bundle analysis to Codecov"
+          shell: "bash"
+          env:
+              BUNDLE_NAME: "${{ inputs.bundle-name }}"
+              CONTINUE_ON_ERROR: "${{ inputs.continue-on-error }}"
+              DIST: "${{ inputs.dist }}"
+              SKIP_WHEN_TOKEN_EMPTY: "${{ inputs.skip-when-token-empty }}"
+              UPLOAD_TOKEN: "${{ inputs.upload-token }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              if [ -z "${UPLOAD_TOKEN}" ]; then
+                if [ "${SKIP_WHEN_TOKEN_EMPTY}" = "true" ]; then
+                  echo "::notice::Skipping Codecov bundle analysis because upload-token is empty."
+                  exit 0
+                fi
+
+                echo "upload-token is required for Codecov bundle analysis." >&2
+                exit 1
+              fi
+
+              bundle_name="${BUNDLE_NAME:-${GITHUB_REPOSITORY:-bundle}}"
+              if ! npx @codecov/bundle-analyzer "${DIST}" --bundle-name="${bundle_name}" --upload-token="${UPLOAD_TOKEN}"; then
+                if [ "${CONTINUE_ON_ERROR}" = "true" ]; then
+                  echo "::warning::Codecov bundle analysis upload failed."
+                  exit 0
+                fi
+
+                exit 1
+              fi

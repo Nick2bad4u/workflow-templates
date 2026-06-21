@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Create GitHub Release"
+description: "Create a GitHub release with pinned softprops/action-gh-release, or report a dry run."
+
+inputs:
+    tag-name:
+        description: "Release tag name."
+        required: true
+    release-name:
+        description: "GitHub release name. Defaults to tag-name."
+        required: false
+        default: ""
+    body-path:
+        description: "Path to release notes."
+        required: true
+    files:
+        description: "Newline-delimited release asset paths."
+        required: false
+        default: ""
+    draft:
+        description: "Create a draft release."
+        required: false
+        default: "false"
+    prerelease:
+        description: "Create a prerelease."
+        required: false
+        default: "false"
+    fail-on-unmatched-files:
+        description: "Fail when any configured asset path does not match a file."
+        required: false
+        default: "true"
+    generate-release-notes:
+        description: "Ask GitHub to generate release notes."
+        required: false
+        default: "false"
+    overwrite-files:
+        description: "Overwrite release assets with matching names."
+        required: false
+        default: "true"
+    dry-run:
+        description: "Report the release inputs without creating a GitHub release."
+        required: false
+        default: "false"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Report GitHub release dry run"
+          if: "${{ inputs.dry-run == 'true' }}"
+          shell: "bash"
+          env:
+              BODY_PATH: "${{ inputs.body-path }}"
+              FILES: "${{ inputs.files }}"
+              RELEASE_NAME: "${{ inputs.release-name }}"
+              TAG_NAME: "${{ inputs.tag-name }}"
+          run: |
+              set -euo pipefail
+
+              release_name="${RELEASE_NAME:-${TAG_NAME}}"
+              echo "::notice::Dry run enabled. Would create GitHub release '${release_name}' for tag '${TAG_NAME}'."
+              echo "Release notes: ${BODY_PATH}"
+              if [ -n "${FILES}" ]; then
+                echo "Release assets:"
+                printf '%s\n' "${FILES}"
+              fi
+
+        - name: "Create GitHub release"
+          if: "${{ inputs.dry-run != 'true' }}"
+          uses: "softprops/action-gh-release@2bb465e97f322d3cb2a965294d483e0d26a67aa9" # v3.0.1
+          with:
+              tag_name: "${{ inputs.tag-name }}"
+              name: "${{ inputs.release-name || inputs.tag-name }}"
+              body_path: "${{ inputs.body-path }}"
+              draft: "${{ inputs.draft }}"
+              files: "${{ inputs.files }}"
+              fail_on_unmatched_files: "${{ inputs.fail-on-unmatched-files }}"
+              generate_release_notes: "${{ inputs.generate-release-notes }}"
+              overwrite_files: "${{ inputs.overwrite-files }}"
+              prerelease: "${{ inputs.prerelease }}"

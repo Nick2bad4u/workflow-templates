@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Resolve Target Ref"
+description: "Resolve the branch/ref a release workflow should operate on, with workflow_dispatch branch validation."
+
+inputs:
+    ref:
+        description: "Optional branch/ref input from workflow_dispatch."
+        required: false
+        default: ""
+    default-branch:
+        description: "Fallback branch when workflow_dispatch does not pass a ref."
+        required: false
+        default: "main"
+    event-name:
+        description: "GitHub event name. Defaults to GITHUB_EVENT_NAME."
+        required: false
+        default: ""
+    github-ref:
+        description: "Full GitHub ref. Defaults to GITHUB_REF."
+        required: false
+        default: ""
+    github-ref-name:
+        description: "Short GitHub ref name. Defaults to GITHUB_REF_NAME."
+        required: false
+        default: ""
+
+outputs:
+    ref:
+        description: "Resolved ref to checkout or report."
+        value: "${{ steps.resolve.outputs.ref }}"
+    branch:
+        description: "Resolved branch name without refs/heads/."
+        value: "${{ steps.resolve.outputs.branch }}"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Resolve target ref"
+          id: "resolve"
+          shell: "bash"
+          env:
+              DEFAULT_BRANCH: "${{ inputs.default-branch }}"
+              EVENT_NAME: "${{ inputs.event-name }}"
+              RAW_GITHUB_REF: "${{ inputs.github-ref }}"
+              RAW_GITHUB_REF_NAME: "${{ inputs.github-ref-name }}"
+              RAW_REF: "${{ inputs.ref }}"
+          run: |
+              set -euo pipefail
+
+              event_name="${EVENT_NAME:-${GITHUB_EVENT_NAME:-}}"
+              github_ref="${RAW_GITHUB_REF:-${GITHUB_REF:-}}"
+              github_ref_name="${RAW_GITHUB_REF_NAME:-${GITHUB_REF_NAME:-}}"
+
+              if [ "${event_name}" = "workflow_dispatch" ]; then
+                branch="${RAW_REF:-}"
+                if [ -z "${branch}" ]; then
+                  branch="${DEFAULT_BRANCH}"
+                fi
+
+                branch="${branch#refs/heads/}"
+                if [[ "${branch}" == refs/tags/* ]]; then
+                  echo "workflow_dispatch ref must be a branch, not a tag: ${branch}" >&2
+                  exit 1
+                fi
+
+                {
+                  echo "ref=${branch}"
+                  echo "branch=${branch}"
+                } >> "${GITHUB_OUTPUT}"
+              else
+                {
+                  echo "ref=${github_ref}"
+                  echo "branch=${github_ref_name}"
+                } >> "${GITHUB_OUTPUT}"
+              fi

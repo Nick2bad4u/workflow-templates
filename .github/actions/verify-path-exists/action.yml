@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Verify Path Exists"
+description: "Verify that a file or directory exists, with optional non-empty file enforcement."
+
+inputs:
+    path:
+        description: "Path to verify."
+        required: true
+    description:
+        description: "Human-readable artifact description."
+        required: false
+        default: "artifact"
+    require-non-empty:
+        description: "Fail when the path is an empty file."
+        required: false
+        default: "false"
+    working-directory:
+        description: "Directory used to resolve relative paths."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Verify path exists"
+          shell: "bash"
+          env:
+              DESCRIPTION: "${{ inputs.description }}"
+              PATH_TO_VERIFY: "${{ inputs.path }}"
+              REQUIRE_NON_EMPTY: "${{ inputs.require-non-empty }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              if [ ! -e "${PATH_TO_VERIFY}" ]; then
+                echo "${DESCRIPTION} was not generated at ${PATH_TO_VERIFY}." >&2
+                exit 1
+              fi
+
+              if [ "${REQUIRE_NON_EMPTY}" = "true" ] && [ -f "${PATH_TO_VERIFY}" ] && [ ! -s "${PATH_TO_VERIFY}" ]; then
+                echo "${DESCRIPTION} exists at ${PATH_TO_VERIFY}, but it is empty." >&2
+                exit 1
+              fi

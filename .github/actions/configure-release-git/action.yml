@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Configure Release Git"
+description: "Configure Git identity and optionally refresh tags for release automation."
+
+inputs:
+    user-name:
+        description: "Git user.name for release commits."
+        required: false
+        default: "github-actions[bot]"
+    user-email:
+        description: "Git user.email for release commits."
+        required: false
+        default: "github-actions[bot]@users.noreply.github.com"
+    fetch-tags:
+        description: "Fetch tags from the remote before release work."
+        required: false
+        default: "true"
+    working-directory:
+        description: "Directory containing the Git checkout."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Configure Git"
+          shell: "bash"
+          env:
+              FETCH_TAGS: "${{ inputs.fetch-tags }}"
+              USER_EMAIL: "${{ inputs.user-email }}"
+              USER_NAME: "${{ inputs.user-name }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              git config user.name "${USER_NAME}"
+              git config user.email "${USER_EMAIL}"
+
+              if [ "${FETCH_TAGS}" = "true" ]; then
+                git fetch --tags --force
+              fi

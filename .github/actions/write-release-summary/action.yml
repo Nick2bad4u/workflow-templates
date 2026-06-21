@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Write Release Summary"
+description: "Write a standardized npm/GitHub release summary to GITHUB_STEP_SUMMARY."
+
+inputs:
+    event-name:
+        description: "GitHub event name."
+        required: false
+        default: ""
+    actor:
+        description: "GitHub actor."
+        required: false
+        default: ""
+    ref:
+        description: "Resolved ref."
+        required: false
+        default: ""
+    branch:
+        description: "Resolved source branch."
+        required: false
+        default: ""
+    package-name:
+        description: "Package name."
+        required: true
+    version:
+        description: "Release version."
+        required: true
+    tag:
+        description: "Release tag."
+        required: true
+    already-published:
+        description: "Whether the version was already published on npm."
+        required: false
+        default: "false"
+    npm-release-url:
+        description: "npm release URL."
+        required: false
+        default: ""
+    github-release-url:
+        description: "GitHub release URL."
+        required: false
+        default: ""
+    tarball-name:
+        description: "npm tarball filename."
+        required: false
+        default: ""
+    zip-name:
+        description: "Zip archive filename."
+        required: false
+        default: ""
+    heading:
+        description: "Summary heading."
+        required: false
+        default: "Release Summary"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Write release summary"
+          shell: "bash"
+          env:
+              ACTOR: "${{ inputs.actor }}"
+              ALREADY_PUBLISHED: "${{ inputs.already-published }}"
+              BRANCH: "${{ inputs.branch }}"
+              EVENT_NAME: "${{ inputs.event-name }}"
+              GITHUB_RELEASE_URL: "${{ inputs.github-release-url }}"
+              HEADING: "${{ inputs.heading }}"
+              NPM_RELEASE_URL: "${{ inputs.npm-release-url }}"
+              PACKAGE_NAME: "${{ inputs.package-name }}"
+              REF: "${{ inputs.ref }}"
+              TAG: "${{ inputs.tag }}"
+              TARBALL_NAME: "${{ inputs.tarball-name }}"
+              VERSION: "${{ inputs.version }}"
+              ZIP_NAME: "${{ inputs.zip-name }}"
+          run: |
+              set -euo pipefail
+
+              {
+                echo "## ${HEADING}"
+                echo ""
+                echo "- Event: \`${EVENT_NAME:-${GITHUB_EVENT_NAME:-unknown}}\`"
+                echo "- Actor: @${ACTOR:-${GITHUB_ACTOR:-unknown}}"
+                echo "- Ref: \`${REF:-${GITHUB_REF:-unknown}}\`"
+                echo "- Source branch: \`${BRANCH:-${GITHUB_REF_NAME:-unknown}}\`"
+                echo "- Package: \`${PACKAGE_NAME}\`"
+                echo "- Version: \`${VERSION}\`"
+                echo "- Tag: \`${TAG}\`"
+                echo "- Already published on npm: \`${ALREADY_PUBLISHED}\`"
+                echo "- npm package: ${NPM_RELEASE_URL:-not available}"
+                echo "- GitHub release: ${GITHUB_RELEASE_URL:-not available}"
+                echo "- Release assets: \`${TARBALL_NAME:-none}\`, \`${ZIP_NAME:-none}\`"
+              } >> "${GITHUB_STEP_SUMMARY}"

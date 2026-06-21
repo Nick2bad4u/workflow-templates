@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Publish npm Package"
+description: "Publish an npm package with configurable access, provenance, registry, and dry-run behavior."
+
+inputs:
+    access:
+        description: "npm publish access level."
+        required: false
+        default: "public"
+    provenance:
+        description: "Publish with npm provenance."
+        required: false
+        default: "true"
+    ignore-scripts:
+        description: "Pass --ignore-scripts to npm publish."
+        required: false
+        default: "true"
+    dry-run:
+        description: "Pass --dry-run to npm publish."
+        required: false
+        default: "false"
+    tag:
+        description: "Optional npm distribution tag."
+        required: false
+        default: ""
+    registry-url:
+        description: "Optional npm registry URL."
+        required: false
+        default: ""
+    working-directory:
+        description: "Directory containing package.json."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Publish to npm"
+          shell: "bash"
+          env:
+              ACCESS: "${{ inputs.access }}"
+              DRY_RUN: "${{ inputs.dry-run }}"
+              IGNORE_SCRIPTS: "${{ inputs.ignore-scripts }}"
+              PROVENANCE: "${{ inputs.provenance }}"
+              REGISTRY_URL: "${{ inputs.registry-url }}"
+              TAG: "${{ inputs.tag }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              args=(--access "${ACCESS}")
+              if [ "${PROVENANCE}" = "true" ]; then
+                args+=(--provenance)
+              fi
+              if [ "${IGNORE_SCRIPTS}" = "true" ]; then
+                args+=(--ignore-scripts)
+              fi
+              if [ "${DRY_RUN}" = "true" ]; then
+                args+=(--dry-run)
+              fi
+              if [ -n "${TAG}" ]; then
+                args+=(--tag "${TAG}")
+              fi
+              if [ -n "${REGISTRY_URL}" ]; then
+                args+=(--registry "${REGISTRY_URL}")
+              fi
+
+              npm publish "${args[@]}"

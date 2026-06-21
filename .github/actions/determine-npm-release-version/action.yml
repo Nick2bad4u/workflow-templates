@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Determine npm Release Version"
+description: "Resolve the npm package version, release tag, and release URLs for tag or workflow_dispatch releases."
+
+inputs:
+    version:
+        description: "Optional explicit x.y.z version for workflow_dispatch."
+        required: false
+        default: ""
+    release-type:
+        description: "npm version release type when version is empty."
+        required: false
+        default: "patch"
+    event-name:
+        description: "GitHub event name. Defaults to GITHUB_EVENT_NAME."
+        required: false
+        default: ""
+    tag-name:
+        description: "Tag name for tag-triggered releases. Defaults to GITHUB_REF_NAME."
+        required: false
+        default: ""
+    tag-prefix:
+        description: "Tag prefix to add or strip."
+        required: false
+        default: "v"
+    package-json:
+        description: "Path to package.json relative to working-directory."
+        required: false
+        default: "package.json"
+    working-directory:
+        description: "Directory containing package.json."
+        required: false
+        default: "."
+    github-server-url:
+        description: "GitHub server URL. Defaults to GITHUB_SERVER_URL."
+        required: false
+        default: ""
+    github-repository:
+        description: "owner/repo repository name. Defaults to GITHUB_REPOSITORY."
+        required: false
+        default: ""
+
+outputs:
+    version:
+        description: "Resolved package version."
+        value: "${{ steps.version.outputs.version }}"
+    tag:
+        description: "Resolved release tag."
+        value: "${{ steps.version.outputs.tag }}"
+    package_name:
+        description: "Package name from package.json."
+        value: "${{ steps.version.outputs.package_name }}"
+    npm_release_url:
+        description: "npm package release URL."
+        value: "${{ steps.version.outputs.npm_release_url }}"
+    github_release_url:
+        description: "GitHub release URL."
+        value: "${{ steps.version.outputs.github_release_url }}"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Determine release version"
+          id: "version"
+          shell: "bash"
+          env:
+              EVENT_NAME: "${{ inputs.event-name }}"
+              EXPLICIT_VERSION: "${{ inputs.version }}"
+              GITHUB_REPOSITORY_INPUT: "${{ inputs.github-repository }}"
+              GITHUB_SERVER_URL_INPUT: "${{ inputs.github-server-url }}"
+              PACKAGE_JSON: "${{ inputs.package-json }}"
+              RELEASE_TYPE: "${{ inputs.release-type }}"
+              TAG_NAME: "${{ inputs.tag-name }}"
+              TAG_PREFIX: "${{ inputs.tag-prefix }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              event_name="${EVENT_NAME:-${GITHUB_EVENT_NAME:-}}"
+              if [ "${event_name}" = "workflow_dispatch" ]; then
+                explicit_version="${EXPLICIT_VERSION:-}"
+                if [ -n "${explicit_version}" ]; then
+                  npm version "${explicit_version}" --no-git-tag-version
+                  version="${explicit_version}"
+                else
+                  release_type="${RELEASE_TYPE:-patch}"
+                  npm version "${release_type}" --no-git-tag-version
+                  version="$(node -e "const fs = require('node:fs'); const pkg = JSON.parse(fs.readFileSync(process.env.PACKAGE_JSON, 'utf8')); process.stdout.write(pkg.version);")"
+                fi
+              else
+                tag_name="${TAG_NAME:-${GITHUB_REF_NAME:-}}"
+                version="${tag_name#${TAG_PREFIX}}"
+              fi
+
+              package_name="$(node -e "const fs = require('node:fs'); const pkg = JSON.parse(fs.readFileSync(process.env.PACKAGE_JSON, 'utf8')); process.stdout.write(pkg.name);")"
+              tag="${TAG_PREFIX}${version}"
+              github_server_url="${GITHUB_SERVER_URL_INPUT:-${GITHUB_SERVER_URL:-https://github.com}}"
+              github_repository="${GITHUB_REPOSITORY_INPUT:-${GITHUB_REPOSITORY:-}}"
+              npm_release_url="https://www.npmjs.com/package/${package_name}/v/${version}"
+              github_release_url="${github_server_url}/${github_repository}/releases/tag/${tag}"
+
+              {
+                echo "version=${version}"
+                echo "tag=${tag}"
+                echo "package_name=${package_name}"
+                echo "npm_release_url=${npm_release_url}"
+                echo "github_release_url=${github_release_url}"
+              } >> "${GITHUB_OUTPUT}"

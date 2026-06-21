@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Run Vitest Coverage And JUnit"
+description: "Run Vitest with coverage, GitHub Actions output, dot output, and a JUnit report."
+
+inputs:
+    command:
+        description: "Vitest command to execute."
+        required: false
+        default: "npx vitest run --coverage --reporter=github-actions --reporter=dot --reporter=junit --outputFile=test-report.junit.xml --silent"
+    ci:
+        description: "CI environment value."
+        required: false
+        default: "true"
+    max-threads:
+        description: "MAX_THREADS value for constrained CI runs."
+        required: false
+        default: "1"
+    hanging-process-reporter:
+        description: "Enable Vitest hanging process reporters."
+        required: false
+        default: "true"
+    coverage-path:
+        description: "Expected LCOV output path."
+        required: false
+        default: "coverage/lcov.info"
+    junit-path:
+        description: "Expected JUnit report path."
+        required: false
+        default: "test-report.junit.xml"
+    working-directory:
+        description: "Directory where Vitest runs."
+        required: false
+        default: "."
+
+outputs:
+    coverage_path:
+        description: "Expected LCOV output path."
+        value: "${{ steps.paths.outputs.coverage_path }}"
+    junit_path:
+        description: "Expected JUnit report path."
+        value: "${{ steps.paths.outputs.junit_path }}"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Run tests with coverage and JUnit report"
+          shell: "bash"
+          env:
+              CI: "${{ inputs.ci }}"
+              MAX_THREADS: "${{ inputs.max-threads }}"
+              TYPEFEST_VITEST_HANGING_PROCESS_REPORTER: "${{ inputs.hanging-process-reporter }}"
+              VITEST_COMMAND: "${{ inputs.command }}"
+              VITEST_HANGING_PROCESS_REPORTER: "${{ inputs.hanging-process-reporter }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+              bash -o pipefail -euc "${VITEST_COMMAND}"
+
+        - name: "Set report paths"
+          id: "paths"
+          shell: "bash"
+          env:
+              COVERAGE_PATH: "${{ inputs.coverage-path }}"
+              JUNIT_PATH: "${{ inputs.junit-path }}"
+          run: |
+              {
+                echo "coverage_path=${COVERAGE_PATH}"
+                echo "junit_path=${JUNIT_PATH}"
+              } >> "${GITHUB_OUTPUT}"

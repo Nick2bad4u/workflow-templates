@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Create npm Release Archives"
+description: "Create npm tarball and zip release assets from npm pack output."
+
+inputs:
+    package-name:
+        description: "Package name used to build the zip basename."
+        required: true
+    version:
+        description: "Package version used to build the zip basename."
+        required: true
+    assets-dir:
+        description: "Directory for generated release assets."
+        required: false
+        default: "temp/release-assets"
+    unpack-dir:
+        description: "Temporary directory for unpacking the npm tarball."
+        required: false
+        default: "temp/release-package"
+    working-directory:
+        description: "Directory containing package.json."
+        required: false
+        default: "."
+
+outputs:
+    tarball_path:
+        description: "Path to the npm tarball."
+        value: "${{ steps.assets.outputs.tarball_path }}"
+    zip_path:
+        description: "Path to the zip archive."
+        value: "${{ steps.assets.outputs.zip_path }}"
+    tarball_name:
+        description: "npm tarball filename."
+        value: "${{ steps.assets.outputs.tarball_name }}"
+    zip_name:
+        description: "Zip archive filename."
+        value: "${{ steps.assets.outputs.zip_name }}"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Create release archives"
+          id: "assets"
+          shell: "bash"
+          env:
+              ASSETS_DIR: "${{ inputs.assets-dir }}"
+              PACKAGE_NAME: "${{ inputs.package-name }}"
+              UNPACK_DIR: "${{ inputs.unpack-dir }}"
+              VERSION: "${{ inputs.version }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              pack_metadata_path="${ASSETS_DIR}/npm-pack.json"
+              mkdir -p "${ASSETS_DIR}"
+              rm -rf "${UNPACK_DIR}"
+
+              npm pack --json --pack-destination "${ASSETS_DIR}" > "${pack_metadata_path}"
+
+              tarball_filename="$(
+                node \
+                  -e "const fs = require('node:fs');
+                  const packMetadata = JSON.parse(fs.readFileSync(process.argv[1], 'utf8'));
+                  process.stdout.write(packMetadata[0].filename);" \
+                  "${pack_metadata_path}"
+              )"
+              tarball_path="${ASSETS_DIR}/${tarball_filename}"
+              safe_package_name="$(printf '%s' "${PACKAGE_NAME}" | sed 's/^@//; s#/#-#g')"
+              zip_basename="${safe_package_name}-${VERSION}"
+
+              mkdir -p "${UNPACK_DIR}"
+              tar -xzf "${tarball_path}" -C "${UNPACK_DIR}"
+              mv "${UNPACK_DIR}/package" "${UNPACK_DIR}/${zip_basename}"
+
+              (
+                cd "${UNPACK_DIR}"
+                zip -rq "../release-assets/${zip_basename}.zip" "${zip_basename}"
+              )
+
+              {
+                echo "tarball_path=${tarball_path}"
+                echo "zip_path=${ASSETS_DIR}/${zip_basename}.zip"
+                echo "tarball_name=${tarball_filename}"
+                echo "zip_name=${zip_basename}.zip"
+              } >> "${GITHUB_OUTPUT}"

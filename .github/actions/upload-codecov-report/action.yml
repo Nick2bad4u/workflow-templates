@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Upload Codecov Report"
+description: "Upload a coverage or test-results report to Codecov through the pinned Codecov action."
+
+inputs:
+    files:
+        description: "Report file paths passed to Codecov."
+        required: true
+    flags:
+        description: "Codecov flags."
+        required: false
+        default: ""
+    name:
+        description: "Codecov upload name."
+        required: false
+        default: ""
+    report-type:
+        description: "Codecov report type, such as coverage or test_results."
+        required: false
+        default: "coverage"
+    slug:
+        description: "Repository slug. Defaults to github.repository."
+        required: false
+        default: ""
+    use-oidc:
+        description: "Use Codecov OIDC upload."
+        required: false
+        default: "true"
+    fail-ci-if-error:
+        description: "Fail CI when Codecov upload fails."
+        required: false
+        default: "true"
+    disable-search:
+        description: "Disable Codecov file discovery."
+        required: false
+        default: "true"
+    verbose:
+        description: "Enable verbose Codecov action logging."
+        required: false
+        default: "true"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Upload report to Codecov"
+          uses: "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f" # v7.0.0
+          with:
+              use_oidc: "${{ inputs.use-oidc }}"
+              slug: "${{ inputs.slug || github.repository }}"
+              files: "${{ inputs.files }}"
+              flags: "${{ inputs.flags }}"
+              name: "${{ inputs.name }}"
+              report_type: "${{ inputs.report-type }}"
+              fail_ci_if_error: "${{ inputs.fail-ci-if-error }}"
+              disable_search: "${{ inputs.disable-search }}"
+              verbose: "${{ inputs.verbose }}"

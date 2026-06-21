@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Prevent Duplicate npm Release"
+description: "Fail when workflow_dispatch selected an npm version that is already published."
+
+inputs:
+    already-published:
+        description: "Value from check-npm-version-published."
+        required: true
+    version:
+        description: "Release version."
+        required: true
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Prevent duplicate release version"
+          shell: "bash"
+          env:
+              ALREADY_PUBLISHED: "${{ inputs.already-published }}"
+              VERSION: "${{ inputs.version }}"
+          run: |
+              set -euo pipefail
+
+              if [ "${ALREADY_PUBLISHED}" = "true" ]; then
+                echo "Version ${VERSION} is already published. Choose a new release type/version." >&2
+                exit 1
+              fi

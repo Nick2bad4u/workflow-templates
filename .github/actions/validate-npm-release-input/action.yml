@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Validate npm Release Input"
+description: "Validate explicit npm release versions and release-type values."
+
+inputs:
+    version:
+        description: "Optional explicit x.y.z version."
+        required: false
+        default: ""
+    release-type:
+        description: "SemVer release type used when version is empty."
+        required: false
+        default: "patch"
+    version-pattern:
+        description: "Bash regex for explicit version validation."
+        required: false
+        default: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    allowed-release-types:
+        description: "Space-separated release types allowed when version is empty."
+        required: false
+        default: "patch minor major"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Validate release input"
+          shell: "bash"
+          env:
+              ALLOWED_RELEASE_TYPES: "${{ inputs.allowed-release-types }}"
+              RELEASE_TYPE: "${{ inputs.release-type }}"
+              VERSION: "${{ inputs.version }}"
+              VERSION_PATTERN: "${{ inputs.version-pattern }}"
+          run: |
+              set -euo pipefail
+
+              explicit_version="${VERSION:-}"
+              if [ -n "${explicit_version}" ]; then
+                if [[ ! "${explicit_version}" =~ ${VERSION_PATTERN} ]]; then
+                  echo "Invalid version input '${explicit_version}'. Use x.y.z format." >&2
+                  exit 1
+                fi
+                exit 0
+              fi
+
+              release_type="${RELEASE_TYPE:-patch}"
+              for allowed in ${ALLOWED_RELEASE_TYPES}; do
+                if [ "${release_type}" = "${allowed}" ]; then
+                  exit 0
+                fi
+              done
+
+              echo "Invalid release_type '${release_type}'. Allowed: ${ALLOWED_RELEASE_TYPES}." >&2
+              exit 1

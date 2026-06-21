@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Ensure Clean Worktree"
+description: "Fail when tracked files were modified by an earlier verification step."
+
+inputs:
+    label:
+        description: "Human-readable step or command label for error output."
+        required: false
+        default: "verification"
+    include-untracked:
+        description: "Also fail when untracked files are present."
+        required: false
+        default: "false"
+    working-directory:
+        description: "Directory containing the Git checkout."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Ensure worktree is clean"
+          shell: "bash"
+          env:
+              INCLUDE_UNTRACKED: "${{ inputs.include-untracked }}"
+              LABEL: "${{ inputs.label }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              dirty="false"
+              if ! git diff --quiet || ! git diff --cached --quiet; then
+                dirty="true"
+              fi
+
+              if [ "${INCLUDE_UNTRACKED}" = "true" ] && [ -n "$(git status --porcelain)" ]; then
+                dirty="true"
+              fi
+
+              if [ "${dirty}" = "true" ]; then
+                echo "${LABEL} modified files. Ensure the release ref is clean before continuing." >&2
+                git status --short
+                exit 1
+              fi

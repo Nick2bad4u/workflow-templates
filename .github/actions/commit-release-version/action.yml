@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Commit Release Version"
+description: "Commit package version changes, create an annotated tag, and push both to the release branch."
+
+inputs:
+    branch:
+        description: "Branch to push the release commit to."
+        required: true
+    tag:
+        description: "Release tag to create and push."
+        required: true
+    remote:
+        description: "Git remote name."
+        required: false
+        default: "origin"
+    commit-message:
+        description: "Release commit message. Defaults to chore: release <tag>."
+        required: false
+        default: ""
+    tag-message:
+        description: "Annotated tag message. Defaults to tag."
+        required: false
+        default: ""
+    dry-run:
+        description: "Validate inputs and print status without committing, tagging, or pushing."
+        required: false
+        default: "false"
+    working-directory:
+        description: "Directory containing the Git checkout."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Commit and push release version and tag"
+          shell: "bash"
+          env:
+              BRANCH: "${{ inputs.branch }}"
+              COMMIT_MESSAGE: "${{ inputs.commit-message }}"
+              DRY_RUN: "${{ inputs.dry-run }}"
+              REMOTE: "${{ inputs.remote }}"
+              TAG: "${{ inputs.tag }}"
+              TAG_MESSAGE: "${{ inputs.tag-message }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              commit_message="${COMMIT_MESSAGE:-chore: release ${TAG}}"
+              tag_message="${TAG_MESSAGE:-${TAG}}"
+
+              if git rev-parse "${TAG}" >/dev/null 2>&1; then
+                echo "Tag ${TAG} already exists locally." >&2
+                exit 1
+              fi
+
+              if git ls-remote --exit-code --tags "${REMOTE}" "refs/tags/${TAG}" >/dev/null 2>&1; then
+                echo "Tag ${TAG} already exists on ${REMOTE}." >&2
+                exit 1
+              fi
+
+              if [ "${DRY_RUN}" = "true" ]; then
+                echo "::notice::Dry run enabled. Would commit '${commit_message}', tag '${TAG}', and push to ${REMOTE}/${BRANCH}."
+                git status --short
+                exit 0
+              fi
+
+              git add -A
+              if git diff --cached --quiet; then
+                echo "No staged changes found for release commit." >&2
+                exit 1
+              fi
+
+              git commit -m "${commit_message}"
+              git tag -a "${TAG}" -m "${tag_message}"
+              git push "${REMOTE}" "HEAD:${BRANCH}"
+              git push "${REMOTE}" "${TAG}"

@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+name: "Check npm Version Published"
+description: "Check whether a package version is already available on npm."
+
+inputs:
+    package-name:
+        description: "npm package name."
+        required: true
+    version:
+        description: "Package version."
+        required: true
+    registry-url:
+        description: "Optional npm registry URL."
+        required: false
+        default: ""
+
+outputs:
+    already_published:
+        description: "true when package@version exists on npm."
+        value: "${{ steps.npm-check.outputs.already_published }}"
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Check whether version is already published"
+          id: "npm-check"
+          shell: "bash"
+          env:
+              PACKAGE_NAME: "${{ inputs.package-name }}"
+              REGISTRY_URL: "${{ inputs.registry-url }}"
+              VERSION: "${{ inputs.version }}"
+          run: |
+              set -euo pipefail
+
+              npm_args=()
+              if [ -n "${REGISTRY_URL}" ]; then
+                npm_args+=(--registry "${REGISTRY_URL}")
+              fi
+
+              if npm view "${PACKAGE_NAME}@${VERSION}" version "${npm_args[@]}" >/dev/null 2>&1; then
+                echo "already_published=true" >> "${GITHUB_OUTPUT}"
+                echo "Version ${VERSION} is already published to npm."
+              else
+                echo "already_published=false" >> "${GITHUB_OUTPUT}"
+                echo "Version ${VERSION} is available for publishing."
+              fi
