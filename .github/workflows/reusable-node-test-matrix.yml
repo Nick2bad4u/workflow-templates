@@ -16,13 +16,17 @@ permissions:
     contents: "read"
     id-token: "write"
 
+defaults:
+    run:
+        shell: "bash"
+
 jobs:
     test:
         name: "Test (${{ matrix.label }})"
         runs-on: "${{ matrix.os }}"
         timeout-minutes: 60
         strategy:
-            fail-fast: false
+            fail-fast: true
             matrix:
                 include:
                     - label: "linux"
@@ -34,9 +38,6 @@ jobs:
                     - label: "macos"
                       os: "macos-latest"
                       codecov_flag: "os-macos"
-        defaults:
-            run:
-                shell: "bash"
         env:
             CI: "true"
             CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"

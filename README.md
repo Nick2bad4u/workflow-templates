@@ -1,6 +1,6 @@
 # 🚀 GitHub Actions Workflow Templates
 
-[![latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/workflow-templates?color=cyan)](https://github.com/Nick2bad4u/workflow-templates/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/workflow-templates?color=yellow)](https://github.com/Nick2bad4u/workflow-templates/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/workflow-templates?color=green)](https://github.com/Nick2bad4u/workflow-templates/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/workflow-templates?color=red)](https://github.com/Nick2bad4u/workflow-templates/issues)
+[![Latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/workflow-templates?color=cyan)](https://github.com/Nick2bad4u/workflow-templates/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/workflow-templates?color=yellow)](https://github.com/Nick2bad4u/workflow-templates/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/workflow-templates?color=green)](https://github.com/Nick2bad4u/workflow-templates/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/workflow-templates?color=red)](https://github.com/Nick2bad4u/workflow-templates/issues)
 
 Production-ready, security-hardened GitHub Actions workflow templates for common CI/CD, testing, security, and deployment tasks.
 
@@ -41,7 +41,7 @@ All workflows include hardened runners, least-privilege permissions, concurrency
 | **Upload Release Assets To Internet Archive** | Download matching GitHub release assets and upload them to archive.org             | See template                     | YAML                                                |
 | **Codacy Coverage Upload**                    | Run Node.js coverage and upload LCOV reports to Codacy                             | See template                     | JavaScript, TypeScript, npm                         |
 | **Mega Linter**                               | Run Mega Linter and upload lint reports                                            | See template                     | YAML, code-quality                                  |
-| **Playwright End To End Tests**               | Install Node dependencies and run Playwright end-to-end tests                      | See template                     | JavaScript, TypeScript, npm                         |
+| **Playwright End-To-End Tests**               | Install Node dependencies and run Playwright end-to-end tests                      | See template                     | JavaScript, TypeScript, npm                         |
 | **GitHub Release Stats**                      | Summarize latest and aggregate GitHub release asset statistics                     | See template                     | YAML                                                |
 | **Sonar Cloud Analysis**                      | Build, test, and run SonarCloud analysis for a Node.js project                     | See template                     | JavaScript, TypeScript, code-quality                |
 | **Update Changelogs**                         | Generate changelogs with git-cliff and open a pull request                         | See template                     | Markdown, YAML                                      |

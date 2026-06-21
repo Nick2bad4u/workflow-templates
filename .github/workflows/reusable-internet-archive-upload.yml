@@ -26,6 +26,10 @@ on:
 permissions:
     contents: "read"
 
+defaults:
+    run:
+        shell: "bash"
+
 jobs:
     upload-release-assets:
         name: "Upload Release Assets"

@@ -24,6 +24,10 @@ concurrency:
     group: "pages"
     cancel-in-progress: true
 
+defaults:
+    run:
+        shell: "bash"
+
 jobs:
     build:
         name: "Build Docs Site"
@@ -33,9 +37,6 @@ jobs:
             contents: "read"
             pages: "write"
             id-token: "write"
-        defaults:
-            run:
-                shell: "bash"
         steps:
             - name: "Harden runner"
               uses: "step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e" # v2.14.2

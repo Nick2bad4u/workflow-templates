@@ -36,6 +36,10 @@ concurrency:
     group: "indexnow-manual"
     cancel-in-progress: true
 
+defaults:
+    run:
+        shell: "bash"
+
 jobs:
     submit:
         name: "Submit IndexNow Notification"
@@ -43,9 +47,6 @@ jobs:
         timeout-minutes: 60
         permissions:
             contents: "read"
-        defaults:
-            run:
-                shell: "bash"
         steps:
             - name: "Harden runner"
               uses: "step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e" # v2.14.2

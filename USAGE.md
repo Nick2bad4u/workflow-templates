@@ -29,7 +29,7 @@ For centrally maintained callable workflows, see [Reusable Workflows](./docs/gui
 - [Upload Release Assets To Internet Archive](#upload-release-assets-to-internet-archive)
 - [Codacy Coverage Upload](#codacy-coverage-upload)
 - [Mega Linter](#mega-linter)
-- [Playwright End To End Tests](#playwright-end-to-end-tests)
+- [Playwright End-To-End Tests](#playwright-end-to-end-tests)
 - [GitHub Release Stats](#github-release-stats)
 - [Sonar Cloud Analysis](#sonar-cloud-analysis)
 - [Update Changelogs](#update-changelogs)
@@ -301,7 +301,7 @@ tests-only:
 
 ### Auto-Label Pull Requests Best Practices
 
-- Create labels before enabling the workflow so early PRs do not fail or silently skip expected labels.
+- Create labels before enabling the workflow, so early PRs do not fail or silently skip expected labels.
 - Keep label rules path-based and predictable; avoid labels that imply review status or merge approval.
 - Review the labeler config when directories are renamed.
 
@@ -442,7 +442,7 @@ Dependency Review runs automatically on every PR. No setup required!
 
 - Keep license policy explicit if the organization has approved and denied license lists.
 - Set the severity threshold to match the repository's risk tolerance; most projects use `high` or stricter.
-- Keep Dependabot or another dependency-update workflow enabled so findings have a repair path.
+- Keep Dependabot or another dependency-update workflow enabled, so findings have a repair path.
 
 ---
 
@@ -484,7 +484,7 @@ gh pr merge --auto --merge "${PR_URL}"
 
 ### Dependabot Auto-Merge Best Practices
 
-- Keep semver-major updates out of the default auto-merge path unless human review is required by branch protection.
+- Keep SemVer-major updates out of the default auto-merge path unless human review is required by branch protection.
 - Require the same CI and security checks that a maintainer would wait for before merging manually.
 - Keep repository auto-merge enabled; the workflow fails early with the evaluated GitHub API value when it is disabled.
 - Use merge queue support only as a status path. Auto-merge enablement happens on Dependabot pull request events.
@@ -578,7 +578,7 @@ The workflow evaluates:
 
 ### OpenSSF Scorecard Best Practices
 
-- Upload SARIF results to code scanning so findings are visible in the Security tab.
+- Upload SARIF results to code scanning, so findings are visible in the Security tab.
 - Fix low-effort repository hygiene findings first: branch protection, pinned actions, `SECURITY.md`, and Dependabot.
 - Review score changes after workflow or release-process changes.
 
@@ -886,7 +886,7 @@ Review the template inputs, required secrets, and permissions before enabling it
 
 ---
 
-## Playwright End To End Tests
+## Playwright End-To-End Tests
 
 **File:** `playwright-e2e.yml`
 **Purpose:** Install Node dependencies and run Playwright end-to-end tests.

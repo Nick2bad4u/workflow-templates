@@ -36,8 +36,6 @@ const config = [
         rules: {
             "github-actions/action-name-casing": "off",
             "github-actions/pin-action-shas": "off",
-            "github-actions/prefer-fail-fast": "off",
-            "github-actions/prefer-step-uses-style": "off",
             "github-actions/require-action-run-name": "off",
             "github-actions/require-codeql-actions-read": "off",
             "github-actions/require-codeql-pull-request-trigger": "off",
@@ -46,7 +44,6 @@ const config = [
                 "off",
             "github-actions/require-dependency-review-pull-request-trigger":
                 "off",
-            "github-actions/require-run-step-shell": "off",
             "github-actions/require-secret-scan-schedule": "off",
         },
     },

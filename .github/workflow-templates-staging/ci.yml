@@ -15,6 +15,10 @@ on:
         types:
             - "checks_requested"
 
+defaults:
+    run:
+        shell: "bash"
+
 jobs:
     test:
         name: "Test (${{ matrix.label }})"
@@ -36,9 +40,6 @@ jobs:
                     - label: "macos"
                       os: "macos-latest"
                       codecov_flag: "os-macos"
-        defaults:
-            run:
-                shell: "bash"
         env:
             CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
 
@@ -141,9 +142,6 @@ jobs:
                     - eslint-js-version: "^9.39.1"
                       eslint-version: "^9.39.1"
                       label: "9.latest"
-        defaults:
-            run:
-                shell: "bash"
 
         steps:
             - name: "Harden the runner (Audit all outbound calls)"
