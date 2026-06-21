@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Mega Linter"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "main"
+            - "master"
+    pull_request:
+        branches:
+            - "main"
+            - "master"
+    merge_group:
+        branches:
+            - "main"
+            - "master"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "mega-linter-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    mega-linter:
+        name: "Mega Linter"
+        permissions:
+            checks: "write"
+            contents: "read"
+            pull-requests: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-mega-linter.yml@main"

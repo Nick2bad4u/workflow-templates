@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Ai Issue And Pull Request Summary"
+
+on:
+    workflow_call:
+
+permissions:
+    contents: "read"
+    issues: "write"
+    models: "read"
+    pull-requests: "write"
+
+jobs:
+    summarize:
+        name: "Summarize Conversation"
+        if: "github.event_name == 'issues' || (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]')"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 10
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Run AI inference"
+              id: "inference"
+              uses: "actions/ai-inference@a7805884c80886efc241e94a5351df715968a0ad" # v2.1.1
+              with:
+                  prompt: |
+                      Summarize this GitHub ${{ github.event_name == 'pull_request' && 'pull request' || 'issue' }} for the project maintainer.
+
+                      Title: ${{ github.event.pull_request.title || github.event.issue.title }}
+                      Body: ${{ github.event.pull_request.body || github.event.issue.body }}
+
+            - name: "Comment with summary"
+              env:
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  ISSUE_NUMBER: "${{ github.event.issue.number }}"
+                  PR_NUMBER: "${{ github.event.pull_request.number }}"
+                  RESPONSE: "${{ steps.inference.outputs.response }}"
+              run: |
+                  if [ -z "${RESPONSE}" ]; then
+                    echo "::warning::AI inference returned an empty response."
+                    exit 0
+                  fi
+                  if [ -n "${PR_NUMBER}" ]; then
+                    gh pr comment "${PR_NUMBER}" --body "${RESPONSE}"
+                  else
+                    gh issue comment "${ISSUE_NUMBER}" --body "${RESPONSE}"
+                  fi

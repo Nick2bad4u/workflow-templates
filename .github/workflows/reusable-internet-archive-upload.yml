@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Upload Release Assets To Internet Archive"
+
+on:
+    workflow_call:
+        inputs:
+            asset_patterns:
+                default: "*"
+                description: "Newline-separated release asset globs to download."
+                required: false
+                type: "string"
+            identifier_prefix:
+                default: ""
+                description: "Archive.org identifier prefix. Defaults to the repository name."
+                required: false
+                type: "string"
+        secrets:
+            IA_ACCESS_KEY:
+                description: "Internet Archive access key."
+                required: true
+            IA_SECRET_KEY:
+                description: "Internet Archive secret key."
+                required: true
+
+permissions:
+    contents: "read"
+
+jobs:
+    upload-release-assets:
+        name: "Upload Release Assets"
+        if: "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 30
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Download matching release assets"
+              id: "download"
+              env:
+                  ASSET_PATTERNS: "${{ inputs.asset_patterns || '*' }}"
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+              run: |
+                  mkdir -p release-dist
+                  tag_name="$(gh release view --json tagName --jq .tagName)"
+                  while IFS= read -r pattern; do
+                    [ -z "${pattern}" ] && continue
+                    gh release download "${tag_name}" --pattern "${pattern}" --dir release-dist --clobber
+                  done <<< "${ASSET_PATTERNS}"
+                  echo "tag_name=${tag_name}" >> "${GITHUB_OUTPUT}"
+
+            - name: "Upload release assets to Internet Archive"
+              uses: "Nick2bad4u/internet-archive-upload@369aaddeede5cca7f0be4cb39dcc89e35afbdf48" # v2.0.0
+              with:
+                  access-key: "${{ secrets.IA_ACCESS_KEY }}"
+                  secret-key: "${{ secrets.IA_SECRET_KEY }}"
+                  identifier: "${{ inputs.identifier_prefix || github.event.repository.name }}-${{ steps.download.outputs.tag_name }}"
+                  files: "release-dist/"

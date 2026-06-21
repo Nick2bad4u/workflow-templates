@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Sonar Cloud Analysis"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "main"
+            - "master"
+    pull_request:
+        branches:
+            - "main"
+            - "master"
+    merge_group:
+        branches:
+            - "main"
+            - "master"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "sonarcloud-analysis-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    sonarcloud-analysis:
+        name: "Sonar Cloud Analysis"
+        permissions:
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-sonarcloud-analysis.yml@main"
+        with:
+            node_version_file: ".node-version"
+            cache_dependency_path: "package-lock.json"
+        secrets:
+            SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"

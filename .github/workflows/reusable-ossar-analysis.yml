@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Ossar Security Analysis"
+
+on:
+    workflow_call:
+
+permissions:
+    actions: "read"
+    contents: "read"
+    security-events: "write"
+
+jobs:
+    ossar:
+        name: "OSSAR"
+        runs-on: "windows-latest"
+        timeout-minutes: 45
+        steps:
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Run OSSAR"
+              id: "ossar"
+              uses: "github/ossar-action@4e96c4f6e591eb4b991abfd459e40b136a317aea" # v2.0.0
+
+            - name: "Upload OSSAR SARIF"
+              uses: "github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e" # v4.36.2
+              with:
+                  sarif_file: "${{ steps.ossar.outputs.sarifFile }}"

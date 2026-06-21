@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "First Interaction Greeting"
+
+on:
+    workflow_call:
+
+permissions:
+    contents: "read"
+
+jobs:
+    greeting:
+        name: "Post First Interaction Greeting"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 10
+        permissions:
+            issues: "write"
+            pull-requests: "write"
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "First interaction"
+              uses: "actions/first-interaction@1c4688942c71f71d4f5502a26ea67c331730fa4d" # v3.1.0
+              with:
+                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  issue_message: "Thanks for opening your first issue. A maintainer will review it."
+                  pr_message: "Thanks for opening your first pull request. A maintainer will review it."

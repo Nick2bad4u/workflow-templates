@@ -1,0 +1,17 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "Jekyll",
+        "Ruby",
+        "Markdown",
+        "deployment"
+    ],
+    "description": "Build a Jekyll site and deploy it to GitHub Pages.",
+    "filePatterns": [
+        "_config.yml$",
+        "Gemfile$",
+        ".*\\.md$"
+    ],
+    "iconName": "octicon globe",
+    "name": "Deploy Jekyll To GitHub Pages"
+}

@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Welcome first-time issue and pull request authors.",
+    "iconName": "octicon comment-discussion",
+    "name": "First Interaction Greeting"
+}

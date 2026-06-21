@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Deploy Static Content To GitHub Pages"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "main"
+            - "master"
+    workflow_dispatch:
+
+concurrency:
+    group: "static-pages-deploy-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    static-pages-deploy:
+        name: "Deploy Static Content To GitHub Pages"
+        permissions:
+            contents: "read"
+            id-token: "write"
+            pages: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-static-pages-deploy.yml@main"

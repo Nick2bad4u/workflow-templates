@@ -1,0 +1,10 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Run Mega Linter and upload lint reports.",
+    "iconName": "octicon checklist",
+    "name": "Mega Linter"
+}

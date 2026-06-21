@@ -16,21 +16,48 @@ Production-ready, security-hardened GitHub Actions workflow templates for common
 
 All workflows include hardened runners, least-privilege permissions, concurrency control, and pinned action versions.
 
-| Workflow                               | Purpose                                              | Triggers                         | Languages                        |
-| -------------------------------------- | ---------------------------------------------------- | -------------------------------- | -------------------------------- |
-| **Node.js Test & Coverage**            | Multi-OS tests + Codecov upload                      | Push, PR, merge_group            | JavaScript, TypeScript           |
-| **npm Release**                        | Publish to npm + create GitHub release               | Git tag, manual dispatch         | JavaScript, TypeScript           |
-| **CodeQL Analysis**                    | Security scanning (JS/TS + workflows)                | Push, PR, schedule               | JavaScript, TypeScript, YAML     |
-| **Auto-Label PRs**                     | Automatic PR labeling by config                      | PR events                        | YAML                             |
-| **Mark Stale Issues**                  | Close stale issues/PRs after inactivity              | Schedule, manual                 | YAML                             |
-| **Gitleaks Scan**                      | Detect leaked secrets (with config support)          | Push, PR, schedule               | YAML, Shell                      |
-| **Dependency Review**                  | Scan PR dependencies + license check                 | PR, merge_group                  | Multiple languages               |
-| **Dependabot Auto-Merge**              | Enable auto-merge for selected Dependabot semver PRs | PR, merge_group                  | Multiple languages               |
-| **Trufflehog Scan**                    | Alt secret scanner (verified secrets only)           | Multiple events                  | YAML, Shell                      |
-| **OpenSSF Scorecard**                  | Supply chain security audit                          | Multiple events                  | YAML                             |
-| **Deploy Docusaurus**                  | Build & deploy docs to GitHub Pages                  | Push (docs path), manual         | JavaScript, TypeScript, Markdown |
-| **Submit IndexNow**                    | Notify search engines of URL changes                 | Manual dispatch                  | JavaScript, TypeScript, YAML     |
-| **Git-Cliff Release Notes Validation** | Check published release notes match the tag          | Release published/edited, manual | YAML                             |
+| Workflow                                      | Purpose                                                                            | Triggers                         | Languages                                           |
+| --------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------- | --------------------------------------------------- |
+| **Node.js Test & Coverage**                   | Multi-OS tests + Codecov upload                                                    | Push, PR, merge_group            | JavaScript, TypeScript                              |
+| **npm Release**                               | Publish to npm + create GitHub release                                             | Git tag, manual dispatch         | JavaScript, TypeScript                              |
+| **CodeQL Analysis**                           | Security scanning (JS/TS + workflows)                                              | Push, PR, schedule               | JavaScript, TypeScript, YAML                        |
+| **Auto-Label PRs**                            | Automatic PR labeling by config                                                    | PR events                        | YAML                                                |
+| **Mark Stale Issues**                         | Close stale issues/PRs after inactivity                                            | Schedule, manual                 | YAML                                                |
+| **Gitleaks Scan**                             | Detect leaked secrets (with config support)                                        | Push, PR, schedule               | YAML, Shell                                         |
+| **Dependency Review**                         | Scan PR dependencies + license check                                               | PR, merge_group                  | Multiple languages                                  |
+| **Dependabot Auto-Merge**                     | Enable auto-merge for selected Dependabot semver PRs                               | PR, merge_group                  | Multiple languages                                  |
+| **Trufflehog Scan**                           | Alt secret scanner (verified secrets only)                                         | Multiple events                  | YAML, Shell                                         |
+| **OpenSSF Scorecard**                         | Supply chain security audit                                                        | Multiple events                  | YAML                                                |
+| **Deploy Docusaurus**                         | Build & deploy docs to GitHub Pages                                                | Push (docs path), manual         | JavaScript, TypeScript, Markdown                    |
+| **Submit IndexNow**                           | Notify search engines of URL changes                                               | Manual dispatch                  | JavaScript, TypeScript, YAML                        |
+| **Git-Cliff Release Notes Validation**        | Check published release notes match the tag                                        | Release published/edited, manual | YAML                                                |
+| **Automatic Pull Request Rebase**             | Allow trusted collaborators to request a pull request rebase from an issue comment | See template                     | YAML                                                |
+| **Ps Secret Scanner Secret Scan**             | Scan a repository with the PowerShell PSSecretScanner module                       | See template                     | PowerShell, YAML                                    |
+| **Ai Issue And Pull Request Summary**         | Summarize newly opened or edited issues and pull requests with GitHub Models       | See template                     | YAML                                                |
+| **First Interaction Greeting**                | Welcome first-time issue and pull request authors                                  | See template                     | YAML                                                |
+| **Clean Old GitHub Releases**                 | Delete older GitHub releases and optionally their matching tags                    | See template                     | YAML                                                |
+| **Node Dependency Validation**                | Install dependencies, run a validation command, and upload diagnostics on failure  | See template                     | JavaScript, TypeScript, npm                         |
+| **Virus Total Release Asset Scan**            | Download release assets and scan them with VirusTotal                              | See template                     | YAML                                                |
+| **Upload Release Assets To Internet Archive** | Download matching GitHub release assets and upload them to archive.org             | See template                     | YAML                                                |
+| **Codacy Coverage Upload**                    | Run Node.js coverage and upload LCOV reports to Codacy                             | See template                     | JavaScript, TypeScript, npm                         |
+| **Mega Linter**                               | Run Mega Linter and upload lint reports                                            | See template                     | YAML, code-quality                                  |
+| **Playwright End To End Tests**               | Install Node dependencies and run Playwright end-to-end tests                      | See template                     | JavaScript, TypeScript, npm                         |
+| **GitHub Release Stats**                      | Summarize latest and aggregate GitHub release asset statistics                     | See template                     | YAML                                                |
+| **Sonar Cloud Analysis**                      | Build, test, and run SonarCloud analysis for a Node.js project                     | See template                     | JavaScript, TypeScript, code-quality                |
+| **Update Changelogs**                         | Generate changelogs with git-cliff and open a pull request                         | See template                     | Markdown, YAML                                      |
+| **Deploy Jekyll To GitHub Pages**             | Build a Jekyll site and deploy it to GitHub Pages                                  | See template                     | Jekyll, Ruby, Markdown, deployment                  |
+| **Actionlint**                                | Lint GitHub Actions workflows with actionlint                                      | See template                     | YAML, code-quality                                  |
+| **Dev Skim Security Analysis**                | Run Microsoft DevSkim and upload SARIF results                                     | See template                     | YAML, code-quality                                  |
+| **Ossar Security Analysis**                   | Run OSSAR and upload SARIF results                                                 | See template                     | YAML, code-quality                                  |
+| **Prettier Check**                            | Run Prettier in check mode for common web project files                            | See template                     | JavaScript, TypeScript, Markdown, CSS, code-quality |
+| **Repository Metrics**                        | Generate repository metrics SVG output with lowlighter/metrics                     | See template                     | YAML                                                |
+| **Microsoft Security DevOps**                 | Run Microsoft Security DevOps scanning and upload SARIF results                    | See template                     | YAML, code-quality                                  |
+| **Generate XML Sitemap**                      | Generate an XML sitemap and open a pull request with updates                       | See template                     | HTML, Markdown, deployment                          |
+| **Spellcheck**                                | Run spellcheck-github-actions and upload the spellcheck output                     | See template                     | Markdown, YAML, code-quality                        |
+| **Deploy Static Content To GitHub Pages**     | Upload static repository content and deploy it to GitHub Pages                     | See template                     | HTML, CSS, JavaScript, deployment                   |
+| **Stylelint Check**                           | Install dependencies and run Stylelint                                             | See template                     | CSS, JavaScript, TypeScript, code-quality           |
+| **Super Linter**                              | Run GitHub Super Linter against the repository                                     | See template                     | YAML, code-quality                                  |
+| **Typos Spell Check**                         | Run crate-ci typos spell checker                                                   | See template                     | Markdown, YAML, code-quality                        |
 
 ---
 

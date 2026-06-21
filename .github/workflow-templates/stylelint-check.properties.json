@@ -1,0 +1,17 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "CSS",
+        "JavaScript",
+        "TypeScript",
+        "code-quality"
+    ],
+    "description": "Install dependencies and run Stylelint.",
+    "filePatterns": [
+        "package.json$",
+        "stylelint.config.*$",
+        ".*\\.css$"
+    ],
+    "iconName": "octicon paintbrush",
+    "name": "Stylelint Check"
+}

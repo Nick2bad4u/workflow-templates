@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "GitHub Release Stats"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    schedule:
+        - cron: "47 4 * * 0"
+    workflow_run:
+        workflows:
+            - "Build and Release"
+        branches:
+            - "main"
+            - "master"
+        types:
+            - "completed"
+    workflow_dispatch:
+
+concurrency:
+    group: "release-stats-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    release-stats:
+        name: "GitHub Release Stats"
+        permissions:
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-release-stats.yml@main"

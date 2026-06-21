@@ -1,0 +1,12 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Allow trusted collaborators to request a pull request rebase from an issue comment.",
+    "filePatterns": [
+        ".github/workflows/.*\\.ya?ml$"
+    ],
+    "iconName": "octicon git-pull-request",
+    "name": "Automatic Pull Request Rebase"
+}

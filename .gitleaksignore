@@ -24,3 +24,7 @@
 6e6e7f009807ad5af960210e54390b48e058e34e:.secretlintrc.json\:stripe-access-token:135
 
 57eeedac7971be3d6e2378358fd418f94135f278:docs/Packages/Chart.js/getting-started/usage.md\:jwt:152
+
+.github/workflows/reusable-node-test-matrix.yml:nick2bad4u-sensitive-env-vars:8
+.github/workflows/reusable-sonarcloud-analysis.yml:nick2bad4u-sensitive-env-vars:19
+.github/workflows/reusable-npm-release.yml:nick2bad4u-sensitive-env-vars:17

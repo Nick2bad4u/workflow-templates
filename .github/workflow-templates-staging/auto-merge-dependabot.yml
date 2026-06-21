@@ -88,4 +88,5 @@ jobs:
         steps:
             - name: "Report Status"
               shell: "bash"
-              run: 'echo "Dependabot auto-merge is skipped for merge queue events."'
+              run: |
+                  echo "Dependabot auto-merge is skipped for merge queue events."

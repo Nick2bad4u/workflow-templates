@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Download release assets and scan them with VirusTotal.",
+    "iconName": "octicon shield-check",
+    "name": "Virus Total Release Asset Scan"
+}

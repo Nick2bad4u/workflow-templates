@@ -1,0 +1,16 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "npm"
+    ],
+    "description": "Install Node dependencies and run Playwright end-to-end tests.",
+    "filePatterns": [
+        "package.json$",
+        "playwright.config.ts$",
+        "playwright.config.js$"
+    ],
+    "iconName": "octicon browser",
+    "name": "Playwright End To End Tests"
+}

@@ -1,0 +1,15 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "npm"
+    ],
+    "description": "Install dependencies, run a validation command, and upload diagnostics on failure.",
+    "filePatterns": [
+        "package.json$",
+        "package-lock.json$"
+    ],
+    "iconName": "octicon package-dependencies",
+    "name": "Node Dependency Validation"
+}

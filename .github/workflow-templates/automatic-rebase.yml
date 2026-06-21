@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Automatic Pull Request Rebase"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    issue_comment:
+        types:
+            - "created"
+
+concurrency:
+    group: "automatic-rebase-${{ github.event.issue.number || github.run_id }}"
+    cancel-in-progress: false
+
+permissions:
+    contents: "read"
+
+defaults:
+    run:
+        shell: "bash"
+
+jobs:
+    rebase:
+        name: "Rebase Pull Request"
+        if: >-
+            github.event.issue.pull_request && (
+                contains(github.event.comment.body, '/rebase') ||
+                contains(github.event.comment.body, '/autosquash') ||
+                contains(github.event.comment.body, '/rebase-autosquash')
+            )
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 20
+        permissions:
+            contents: "write"
+            pull-requests: "read"
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Validate commenter permission"
+              env:
+                  AUTHOR_ASSOCIATION: "${{ github.event.comment.author_association }}"
+              run: |
+                  case "${AUTHOR_ASSOCIATION}" in
+                    OWNER|MEMBER|COLLABORATOR)
+                      echo "Trusted commenter association: ${AUTHOR_ASSOCIATION}"
+                      ;;
+                    *)
+                      echo "Ignoring rebase command from association: ${AUTHOR_ASSOCIATION}"
+                      exit 0
+                      ;;
+                  esac
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+              with:
+                  token: "${{ secrets.GITHUB_TOKEN }}"
+                  fetch-depth: 0
+
+            - name: "Automatic rebase"
+              uses: "cirrus-actions/rebase@b87d48154a87a85666003575337e27b8cd65f691" # 1.8
+              with:
+                  autosquash: "${{ contains(github.event.comment.body, '/autosquash') || contains(github.event.comment.body, '/rebase-autosquash') }}"
+              env:
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Clean Old GitHub Releases"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    workflow_run:
+        workflows:
+            - "Build and Release"
+        types:
+            - "completed"
+        branches:
+            - "$default-branch"
+    workflow_dispatch:
+        inputs:
+            keep_last:
+                default: "10"
+                description: "Number of most recent releases to keep."
+                required: true
+                type: "string"
+            delete_tags:
+                default: true
+                description: "Also delete matching git tags."
+                required: true
+                type: "boolean"
+
+concurrency:
+    group: "release-cleanup-${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+permissions:
+    contents: "write"
+
+defaults:
+    run:
+        shell: "bash"
+
+jobs:
+    clean-releases:
+        name: "Clean Old Releases"
+        if: "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 30
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Clean old releases"
+              env:
+                  DELETE_TAGS: "${{ inputs.delete_tags || 'true' }}"
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+                  KEEP_LAST: "${{ inputs.keep_last || '10' }}"
+              run: |
+                  mapfile -t releases < <(gh release list --limit 1000 --json tagName,publishedAt --jq 'sort_by(.publishedAt) | reverse | .[].tagName')
+                  keep_last="${KEEP_LAST:-10}"
+                  delete_tags="${DELETE_TAGS:-true}"
+                  if ! [[ "${keep_last}" =~ ^[0-9]+$ ]]; then
+                    echo "::error::keep_last must be a positive integer."
+                    exit 1
+                  fi
+                  if [ "${#releases[@]}" -le "${keep_last}" ]; then
+                    echo "Nothing to delete. Found ${#releases[@]} releases and keeping ${keep_last}."
+                    exit 0
+                  fi
+                  for tag in "${releases[@]:${keep_last}}"; do
+                    echo "Deleting release ${tag}"
+                    gh release delete "${tag}" --yes
+                    if [ "${delete_tags}" = "true" ]; then
+                      echo "Deleting tag ${tag}"
+                      gh api -X DELETE "/repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" || true
+                    fi
+                  done

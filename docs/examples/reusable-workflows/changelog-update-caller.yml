@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Update Changelogs"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    workflow_dispatch:
+        inputs:
+            cliff_config:
+                default: "cliff.toml"
+                description: "Path to the git-cliff config file."
+                required: true
+                type: "string"
+            changelog_path:
+                default: "CHANGELOG.md"
+                description: "Path to write the generated changelog."
+                required: true
+                type: "string"
+
+concurrency:
+    group: "changelog-update-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    changelog-update:
+        name: "Update Changelogs"
+        permissions:
+            contents: "write"
+            pull-requests: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-changelog-update.yml@main"
+        with:
+            cliff_config: "${{ inputs.cliff_config }}"
+            changelog_path: "${{ inputs.changelog_path }}"

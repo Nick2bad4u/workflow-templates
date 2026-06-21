@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Super Linter"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "$default-branch"
+    pull_request:
+        branches:
+            - "$default-branch"
+    merge_group:
+        branches:
+            - "$default-branch"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "super-linter-${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+permissions:
+    contents: "read"
+    statuses: "write"
+
+jobs:
+    super-linter:
+        name: "Super Linter"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 45
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+              with:
+                  fetch-depth: 0
+
+            - name: "Run Super Linter"
+              uses: "super-linter/super-linter@9e863354e3ff62e0727d37183162c4a88873df41" # v8.6.0
+              env:
+                  DEFAULT_BRANCH: "${{ github.event.repository.default_branch }}"
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

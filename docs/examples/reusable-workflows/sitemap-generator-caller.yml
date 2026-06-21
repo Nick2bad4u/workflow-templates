@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Generate XML Sitemap"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    workflow_dispatch:
+        inputs:
+            base_url_path:
+                default: "https://example.com/"
+                description: "Canonical base URL for sitemap entries."
+                required: true
+                type: "string"
+
+concurrency:
+    group: "sitemap-generator-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    sitemap-generator:
+        name: "Generate XML Sitemap"
+        permissions:
+            contents: "write"
+            pull-requests: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-sitemap-generator.yml@main"
+        with:
+            base_url_path: "${{ inputs.base_url_path }}"

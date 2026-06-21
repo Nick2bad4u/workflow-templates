@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Super Linter"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "main"
+            - "master"
+    pull_request:
+        branches:
+            - "main"
+            - "master"
+    merge_group:
+        branches:
+            - "main"
+            - "master"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "super-linter-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    super-linter:
+        name: "Super Linter"
+        permissions:
+            contents: "read"
+            statuses: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-super-linter.yml@main"

@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Generate repository metrics SVG output with lowlighter/metrics.",
+    "iconName": "octicon graph",
+    "name": "Repository Metrics"
+}

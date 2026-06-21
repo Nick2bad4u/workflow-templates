@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "GitHub Release Stats"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    schedule:
+        - cron: "47 4 * * 0"
+    workflow_run:
+        workflows:
+            - "Build and Release"
+        branches:
+            - "$default-branch"
+        types:
+            - "completed"
+    workflow_dispatch:
+
+concurrency:
+    group: "release-stats-${{ github.workflow }}-${{ github.event.workflow_run.head_branch || github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions:
+    contents: "read"
+
+defaults:
+    run:
+        shell: "bash"
+
+jobs:
+    release-stats:
+        name: "Show Release Stats"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 20
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Fetch release info and output summary"
+              env:
+                  GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+              run: |
+                  latest_json="$(gh release view --json tagName,name,publishedAt,assets,url)"
+                  latest_tag="$(jq -r .tagName <<< "${latest_json}")"
+                  latest_name="$(jq -r .name <<< "${latest_json}")"
+                  latest_date="$(jq -r .publishedAt <<< "${latest_json}")"
+                  latest_url="$(jq -r .url <<< "${latest_json}")"
+                  asset_count="$(jq '.assets | length' <<< "${latest_json}")"
+                  asset_total_size="$(jq '[.assets[].size] | add // 0' <<< "${latest_json}")"
+                  asset_total_mb="$(awk "BEGIN { printf \"%.2f\", ${asset_total_size}/1024/1024 }")"
+                  total_releases="$(gh release list --limit 1000 --json tagName --jq 'length')"
+                  all_asset_total="$(
+                    gh release list --limit 1000 --json tagName --jq '.[].tagName' |
+                      while read -r tag; do
+                        gh release view "${tag}" --json assets --jq '[.assets[].size] | add // 0'
+                      done |
+                      awk '{ total += $1 } END { print total + 0 }'
+                  )"
+                  all_asset_total_mb="$(awk "BEGIN { printf \"%.2f\", ${all_asset_total}/1024/1024 }")"
+                  {
+                    echo "## Release Stats"
+                    echo
+                    echo "- Latest release: [${latest_tag}](${latest_url})"
+                    echo "- Name: ${latest_name}"
+                    echo "- Published: ${latest_date}"
+                    echo "- Latest release assets: ${asset_count}"
+                    echo "- Latest release asset size: ${asset_total_mb} MB"
+                    echo "- Total releases: ${total_releases}"
+                    echo "- Total release asset size: ${all_asset_total_mb} MB"
+                  } >> "${GITHUB_STEP_SUMMARY}"

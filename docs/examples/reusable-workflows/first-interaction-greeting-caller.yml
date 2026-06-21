@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "First Interaction Greeting"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    issues:
+        types:
+            - "opened"
+    pull_request_target:
+        branches:
+            - "main"
+            - "master"
+        types:
+            - "opened"
+    workflow_dispatch:
+
+concurrency:
+    group: "first-interaction-greeting-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    first-interaction-greeting:
+        name: "First Interaction Greeting"
+        permissions:
+            issues: "write"
+            pull-requests: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-first-interaction-greeting.yml@main"

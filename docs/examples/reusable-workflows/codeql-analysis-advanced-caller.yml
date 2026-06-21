@@ -48,4 +48,5 @@ jobs:
             security-events: "write"
         uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-advanced.yml@main"
         with:
-            languages: '["javascript-typescript","actions"]'
+            languages: >-
+                ["javascript-typescript","actions"]

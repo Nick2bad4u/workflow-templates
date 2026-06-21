@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Dev Skim Security Analysis"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    schedule:
+        - cron: "37 1 * * 2"
+    push:
+        branches:
+            - "main"
+            - "master"
+    pull_request:
+        branches:
+            - "main"
+            - "master"
+    merge_group:
+        branches:
+            - "main"
+            - "master"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "devskim-analysis-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    devskim-analysis:
+        name: "Dev Skim Security Analysis"
+        permissions:
+            actions: "read"
+            contents: "read"
+            security-events: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-devskim-analysis.yml@main"

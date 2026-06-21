@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Summarize latest and aggregate GitHub release asset statistics.",
+    "iconName": "octicon graph",
+    "name": "GitHub Release Stats"
+}

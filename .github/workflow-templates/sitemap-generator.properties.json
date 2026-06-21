@@ -1,0 +1,11 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "HTML",
+        "Markdown",
+        "deployment"
+    ],
+    "description": "Generate an XML sitemap and open a pull request with updates.",
+    "iconName": "octicon globe",
+    "name": "Generate XML Sitemap"
+}

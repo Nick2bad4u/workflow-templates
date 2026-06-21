@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Ai Issue And Pull Request Summary"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    issues:
+        types:
+            - "opened"
+            - "edited"
+    pull_request:
+        types:
+            - "opened"
+            - "edited"
+            - "synchronize"
+    merge_group:
+        types:
+            - "checks_requested"
+
+concurrency:
+    group: "ai-issue-pr-summary-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    ai-issue-pr-summary:
+        name: "Ai Issue And Pull Request Summary"
+        permissions:
+            contents: "read"
+            issues: "write"
+            models: "read"
+            pull-requests: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-ai-issue-pr-summary.yml@main"

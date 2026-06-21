@@ -1,0 +1,10 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Run Microsoft DevSkim and upload SARIF results.",
+    "iconName": "octicon shield-check",
+    "name": "Dev Skim Security Analysis"
+}

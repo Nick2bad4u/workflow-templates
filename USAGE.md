@@ -19,6 +19,33 @@ For centrally maintained callable workflows, see [Reusable Workflows](./docs/gui
 - [Deploy Docusaurus to GitHub Pages](#deploy-docusaurus-to-github-pages)
 - [Submit IndexNow Notification](#submit-indexnow-notification)
 - [Git-Cliff Release Notes Validation](#git-cliff-release-notes-validation)
+- [Automatic Pull Request Rebase](#automatic-pull-request-rebase)
+- [Ps Secret Scanner Secret Scan](#ps-secret-scanner-secret-scan)
+- [Ai Issue And Pull Request Summary](#ai-issue-and-pull-request-summary)
+- [First Interaction Greeting](#first-interaction-greeting)
+- [Clean Old GitHub Releases](#clean-old-github-releases)
+- [Node Dependency Validation](#node-dependency-validation)
+- [Virus Total Release Asset Scan](#virus-total-release-asset-scan)
+- [Upload Release Assets To Internet Archive](#upload-release-assets-to-internet-archive)
+- [Codacy Coverage Upload](#codacy-coverage-upload)
+- [Mega Linter](#mega-linter)
+- [Playwright End To End Tests](#playwright-end-to-end-tests)
+- [GitHub Release Stats](#github-release-stats)
+- [Sonar Cloud Analysis](#sonar-cloud-analysis)
+- [Update Changelogs](#update-changelogs)
+- [Deploy Jekyll To GitHub Pages](#deploy-jekyll-to-github-pages)
+- [Actionlint](#actionlint)
+- [Dev Skim Security Analysis](#dev-skim-security-analysis)
+- [Ossar Security Analysis](#ossar-security-analysis)
+- [Prettier Check](#prettier-check)
+- [Repository Metrics](#repository-metrics)
+- [Microsoft Security DevOps](#microsoft-security-devops)
+- [Generate XML Sitemap](#generate-xml-sitemap)
+- [Spellcheck](#spellcheck)
+- [Deploy Static Content To GitHub Pages](#deploy-static-content-to-github-pages)
+- [Stylelint Check](#stylelint-check)
+- [Super Linter](#super-linter)
+- [Typos Spell Check](#typos-spell-check)
 - [General Troubleshooting](#general-troubleshooting)
 - [Resources](#resources)
 
@@ -746,6 +773,303 @@ Use the `release` trigger for releases created manually, by a personal access to
 - Keep it non-blocking by running it after the release is already published.
 - Pair it with a `changelog:release-notes` script that uses `git-cliff --current --strip all` for tag releases.
 - Leave custom GitHub-generated notes such as `## What's Changed` on repos that do not use git-cliff.
+
+---
+
+## Automatic Pull Request Rebase
+
+**File:** `automatic-rebase.yml`
+**Purpose:** Allow trusted collaborators to request a pull request rebase from an issue comment.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-automatic-rebase.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/automatic-rebase-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Ps Secret Scanner Secret Scan
+
+**File:** `pssecret-scanner.yml`
+**Purpose:** Scan a repository with the PowerShell PSSecretScanner module.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-pssecret-scanner.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/pssecret-scanner-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Ai Issue And Pull Request Summary
+
+**File:** `ai-issue-pr-summary.yml`
+**Purpose:** Summarize newly opened or edited issues and pull requests with GitHub Models.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-ai-issue-pr-summary.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/ai-issue-pr-summary-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## First Interaction Greeting
+
+**File:** `first-interaction-greeting.yml`
+**Purpose:** Welcome first-time issue and pull request authors.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-first-interaction-greeting.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/first-interaction-greeting-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Clean Old GitHub Releases
+
+**File:** `release-cleanup.yml`
+**Purpose:** Delete older GitHub releases and optionally their matching tags.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-release-cleanup.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/release-cleanup-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Node Dependency Validation
+
+**File:** `dependency-validation.yml`
+**Purpose:** Install dependencies, run a validation command, and upload diagnostics on failure.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-dependency-validation.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/dependency-validation-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Virus Total Release Asset Scan
+
+**File:** `virustotal-release-scan.yml`
+**Purpose:** Download release assets and scan them with VirusTotal.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-virustotal-release-scan.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/virustotal-release-scan-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Upload Release Assets To Internet Archive
+
+**File:** `internet-archive-upload.yml`
+**Purpose:** Download matching GitHub release assets and upload them to archive.org.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-internet-archive-upload.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/internet-archive-upload-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Codacy Coverage Upload
+
+**File:** `codacy-coverage.yml`
+**Purpose:** Run Node.js coverage and upload LCOV reports to Codacy.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-codacy-coverage.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/codacy-coverage-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Mega Linter
+
+**File:** `mega-linter.yml`
+**Purpose:** Run Mega Linter and upload lint reports.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-mega-linter.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/mega-linter-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Playwright End To End Tests
+
+**File:** `playwright-e2e.yml`
+**Purpose:** Install Node dependencies and run Playwright end-to-end tests.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-playwright-e2e.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/playwright-e2e-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## GitHub Release Stats
+
+**File:** `release-stats.yml`
+**Purpose:** Summarize latest and aggregate GitHub release asset statistics.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-release-stats.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/release-stats-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Sonar Cloud Analysis
+
+**File:** `sonarcloud-analysis.yml`
+**Purpose:** Build, test, and run SonarCloud analysis for a Node.js project.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-sonarcloud-analysis.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/sonarcloud-analysis-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Update Changelogs
+
+**File:** `changelog-update.yml`
+**Purpose:** Generate changelogs with git-cliff and open a pull request.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-changelog-update.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/changelog-update-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Deploy Jekyll To GitHub Pages
+
+**File:** `jekyll-pages-deploy.yml`
+**Purpose:** Build a Jekyll site and deploy it to GitHub Pages.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-jekyll-pages-deploy.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/jekyll-pages-deploy-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Actionlint
+
+**File:** `actionlint.yml`
+**Purpose:** Lint GitHub Actions workflows with actionlint.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-actionlint.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/actionlint-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Dev Skim Security Analysis
+
+**File:** `devskim-analysis.yml`
+**Purpose:** Run Microsoft DevSkim and upload SARIF results.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-devskim-analysis.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/devskim-analysis-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Ossar Security Analysis
+
+**File:** `ossar-analysis.yml`
+**Purpose:** Run OSSAR and upload SARIF results.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-ossar-analysis.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/ossar-analysis-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Prettier Check
+
+**File:** `prettier-check.yml`
+**Purpose:** Run Prettier in check mode for common web project files.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-prettier-check.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/prettier-check-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Repository Metrics
+
+**File:** `repository-metrics.yml`
+**Purpose:** Generate repository metrics SVG output with lowlighter/metrics.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-repository-metrics.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/repository-metrics-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Microsoft Security DevOps
+
+**File:** `microsoft-security-devops.yml`
+**Purpose:** Run Microsoft Security DevOps scanning and upload SARIF results.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-microsoft-security-devops.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/microsoft-security-devops-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Generate XML Sitemap
+
+**File:** `sitemap-generator.yml`
+**Purpose:** Generate an XML sitemap and open a pull request with updates.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-sitemap-generator.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/sitemap-generator-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Spellcheck
+
+**File:** `spellcheck.yml`
+**Purpose:** Run spellcheck-github-actions and upload the spellcheck output.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-spellcheck.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/spellcheck-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Deploy Static Content To GitHub Pages
+
+**File:** `static-pages-deploy.yml`
+**Purpose:** Upload static repository content and deploy it to GitHub Pages.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-static-pages-deploy.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/static-pages-deploy-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Stylelint Check
+
+**File:** `stylelint-check.yml`
+**Purpose:** Install dependencies and run Stylelint.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-stylelint-check.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/stylelint-check-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Super Linter
+
+**File:** `super-linter.yml`
+**Purpose:** Run GitHub Super Linter against the repository.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-super-linter.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/super-linter-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Typos Spell Check
+
+**File:** `typos-spellcheck.yml`
+**Purpose:** Run crate-ci typos spell checker.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-typos-spellcheck.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/typos-spellcheck-caller.yml`.
+
+Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
 
 ---
 

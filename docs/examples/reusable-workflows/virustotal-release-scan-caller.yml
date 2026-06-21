@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Virus Total Release Asset Scan"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    workflow_run:
+        workflows:
+            - "Build and Release"
+        types:
+            - "completed"
+        branches:
+            - "main"
+            - "master"
+    workflow_dispatch:
+        inputs:
+            file_name:
+                default: "*"
+                description: "Release asset glob passed to release-downloader."
+                required: true
+                type: "string"
+
+concurrency:
+    group: "virustotal-release-scan-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    virustotal-release-scan:
+        name: "Virus Total Release Asset Scan"
+        permissions:
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-virustotal-release-scan.yml@main"
+        with:
+            file_name: "${{ inputs.file_name || '*' }}"
+        secrets:
+            VT_API_KEY: "${{ secrets.VT_API_KEY }}"

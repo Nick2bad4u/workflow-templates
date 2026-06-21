@@ -1,0 +1,16 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "Markdown",
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Run crate-ci typos spell checker.",
+    "filePatterns": [
+        "_typos.toml$",
+        "typos.toml$",
+        ".*\\.md$"
+    ],
+    "iconName": "octicon typography",
+    "name": "Typos Spell Check"
+}

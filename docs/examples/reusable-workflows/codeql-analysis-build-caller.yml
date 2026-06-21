@@ -48,5 +48,6 @@ jobs:
             security-events: "write"
         uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-codeql-analysis-build.yml@main"
         with:
-            languages: '["java-kotlin"]'
+            languages: >-
+                ["java-kotlin"]
             build-command: "./gradlew clean build"

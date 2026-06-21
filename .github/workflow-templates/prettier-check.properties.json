@@ -1,0 +1,17 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "Markdown",
+        "CSS",
+        "code-quality"
+    ],
+    "description": "Run Prettier in check mode for common web project files.",
+    "filePatterns": [
+        "package.json$",
+        "prettier.config.*$"
+    ],
+    "iconName": "octicon typography",
+    "name": "Prettier Check"
+}

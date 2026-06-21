@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Spellcheck"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "$default-branch"
+    pull_request:
+        branches:
+            - "$default-branch"
+    merge_group:
+        branches:
+            - "$default-branch"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "spellcheck-${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+permissions:
+    contents: "read"
+
+jobs:
+    spellcheck:
+        name: "Spellcheck"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 20
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Spellcheck"
+              uses: "rojopolis/spellcheck-github-actions@e3cd8e9aec4587ec73bc0e60745aafd45c37aa2e" # 0.60.0
+              with:
+                  config_path: ".github/.spellcheck.yml"
+                  output_file: "spellcheck-output.txt"
+
+            - name: "Upload spellcheck output"
+              if: "${{ !cancelled() }}"
+              uses: "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" # v7.0.1
+              with:
+                  name: "spellcheck-output"
+                  path: "spellcheck-output.txt"
+                  if-no-files-found: "ignore"

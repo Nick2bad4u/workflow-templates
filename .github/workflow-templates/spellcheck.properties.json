@@ -1,0 +1,15 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "Markdown",
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Run spellcheck-github-actions and upload the spellcheck output.",
+    "filePatterns": [
+        ".github/.spellcheck.yml$",
+        ".*\\.md$"
+    ],
+    "iconName": "octicon typography",
+    "name": "Spellcheck"
+}

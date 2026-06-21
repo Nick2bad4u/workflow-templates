@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Summarize newly opened or edited issues and pull requests with GitHub Models.",
+    "iconName": "octicon comment-ai",
+    "name": "Ai Issue And Pull Request Summary"
+}

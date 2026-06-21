@@ -1,0 +1,13 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Lint GitHub Actions workflows with actionlint.",
+    "filePatterns": [
+        ".github/workflows/.*\\.ya?ml$"
+    ],
+    "iconName": "octicon workflow",
+    "name": "Actionlint"
+}

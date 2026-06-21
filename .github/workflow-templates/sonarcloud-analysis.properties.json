@@ -1,0 +1,15 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "code-quality"
+    ],
+    "description": "Build, test, and run SonarCloud analysis for a Node.js project.",
+    "filePatterns": [
+        "sonar-project.properties$",
+        "package.json$"
+    ],
+    "iconName": "octicon codescan",
+    "name": "Sonar Cloud Analysis"
+}

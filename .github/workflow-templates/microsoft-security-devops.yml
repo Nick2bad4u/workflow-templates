@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Microsoft Security DevOps"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    schedule:
+        - cron: "23 9 * * *"
+    push:
+        branches:
+            - "$default-branch"
+    pull_request:
+        branches:
+            - "$default-branch"
+    merge_group:
+        branches:
+            - "$default-branch"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "microsoft-security-devops-${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+permissions:
+    actions: "read"
+    contents: "read"
+    security-events: "write"
+
+jobs:
+    msdo:
+        name: "Microsoft Security DevOps"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 45
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Run Microsoft Security DevOps"
+              id: "msdo"
+              uses: "microsoft/security-devops-action@08976cb623803b1b36d7112d4ff9f59eae704de0" # v1.12.0
+
+            - name: "Upload Microsoft Security DevOps SARIF"
+              uses: "github/codeql-action/upload-sarif@8aad20d150bbac5944a9f9d289da16a4b0d87c1e" # v4.36.2
+              with:
+                  sarif_file: "${{ steps.msdo.outputs.sarifFile }}"

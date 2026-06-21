@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Automatic Pull Request Rebase"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    issue_comment:
+        types:
+            - "created"
+
+concurrency:
+    group: "automatic-rebase-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    automatic-rebase:
+        name: "Automatic Pull Request Rebase"
+        permissions:
+            contents: "write"
+            pull-requests: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-automatic-rebase.yml@main"

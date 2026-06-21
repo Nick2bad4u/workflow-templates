@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Upload Release Assets To Internet Archive"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    workflow_run:
+        workflows:
+            - "Build and Release"
+        types:
+            - "completed"
+        branches:
+            - "main"
+            - "master"
+    workflow_dispatch:
+        inputs:
+            asset_patterns:
+                default: "*"
+                description: "Newline-separated release asset globs to download."
+                required: true
+                type: "string"
+            identifier_prefix:
+                default: ""
+                description: "Archive.org identifier prefix. Defaults to the repository name."
+                required: false
+                type: "string"
+
+concurrency:
+    group: "internet-archive-upload-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    internet-archive-upload:
+        name: "Upload Release Assets To Internet Archive"
+        permissions:
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-internet-archive-upload.yml@main"
+        with:
+            asset_patterns: "${{ inputs.asset_patterns || '*' }}"
+            identifier_prefix: "${{ inputs.identifier_prefix }}"
+        secrets:
+            IA_ACCESS_KEY: "${{ secrets.IA_ACCESS_KEY }}"
+            IA_SECRET_KEY: "${{ secrets.IA_SECRET_KEY }}"

@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Clean Old GitHub Releases"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    workflow_run:
+        workflows:
+            - "Build and Release"
+        types:
+            - "completed"
+        branches:
+            - "main"
+            - "master"
+    workflow_dispatch:
+        inputs:
+            keep_last:
+                default: "10"
+                description: "Number of most recent releases to keep."
+                required: true
+                type: "string"
+            delete_tags:
+                default: true
+                description: "Also delete matching git tags."
+                required: true
+                type: "boolean"
+
+concurrency:
+    group: "release-cleanup-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    release-cleanup:
+        name: "Clean Old GitHub Releases"
+        permissions:
+            contents: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-release-cleanup.yml@main"
+        with:
+            keep_last: "${{ inputs.keep_last || '10' }}"
+            delete_tags: "${{ inputs.delete_tags || true }}"

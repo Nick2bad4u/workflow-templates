@@ -1,0 +1,14 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "Markdown",
+        "YAML"
+    ],
+    "description": "Generate changelogs with git-cliff and open a pull request.",
+    "filePatterns": [
+        "cliff.toml$",
+        "CHANGELOG.md$"
+    ],
+    "iconName": "octicon versions",
+    "name": "Update Changelogs"
+}

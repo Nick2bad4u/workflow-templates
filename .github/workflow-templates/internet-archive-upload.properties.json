@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Download matching GitHub release assets and upload them to archive.org.",
+    "iconName": "octicon archive",
+    "name": "Upload Release Assets To Internet Archive"
+}

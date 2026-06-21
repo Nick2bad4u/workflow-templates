@@ -1,0 +1,9 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML"
+    ],
+    "description": "Delete older GitHub releases and optionally their matching tags.",
+    "iconName": "octicon trash",
+    "name": "Clean Old GitHub Releases"
+}

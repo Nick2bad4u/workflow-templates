@@ -1,0 +1,17 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "deployment"
+    ],
+    "description": "Upload static repository content and deploy it to GitHub Pages.",
+    "filePatterns": [
+        "index.html$",
+        ".*\\.html$",
+        ".*\\.css$"
+    ],
+    "iconName": "octicon globe",
+    "name": "Deploy Static Content To GitHub Pages"
+}

@@ -116,7 +116,10 @@ jobs:
                         return 1
                         ;;
                       *)
-                        echo "::error title=Invalid auto-merge semver policy::Unsupported auto-merge semver policy entry '${entry}'. Configure semver-policy or DEPENDABOT_AUTO_MERGE_SEMVER with patch, minor, major, or a comma-separated combination." >&2
+                        {
+                          echo "::error title=Invalid auto-merge semver policy::Unsupported auto-merge semver policy entry '${entry}'."
+                          echo "Configure semver-policy or DEPENDABOT_AUTO_MERGE_SEMVER with patch, minor, major, or a comma-separated combination."
+                        } >&2
                         return 2
                         ;;
                     esac
@@ -313,4 +316,5 @@ jobs:
                   egress-policy: "audit"
 
             - name: "Report Status"
-              run: 'echo "Dependabot auto-merge is skipped for merge queue events."'
+              run: |
+                  echo "Dependabot auto-merge is skipped for merge queue events."

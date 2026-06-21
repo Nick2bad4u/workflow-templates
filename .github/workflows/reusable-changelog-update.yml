@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Update Changelogs"
+
+on:
+    workflow_call:
+        inputs:
+            cliff_config:
+                default: "cliff.toml"
+                description: "Path to the git-cliff config file."
+                required: false
+                type: "string"
+            changelog_path:
+                default: "CHANGELOG.md"
+                description: "Path to write the generated changelog."
+                required: false
+                type: "string"
+
+permissions:
+    contents: "write"
+    pull-requests: "write"
+
+jobs:
+    update-changelog:
+        name: "Update Changelog"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 45
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+              with:
+                  fetch-depth: 0
+
+            - name: "Setup Node"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+              with:
+                  node-version: "24"
+
+            - name: "Generate changelog"
+              env:
+                  CHANGELOG_PATH: "${{ inputs.changelog_path || 'CHANGELOG.md' }}"
+                  CLIFF_CONFIG: "${{ inputs.cliff_config || 'cliff.toml' }}"
+              run: |
+                  npx git-cliff --config "${CLIFF_CONFIG}" --verbose --output "${CHANGELOG_PATH}"
+
+            - name: "Create changelog pull request"
+              uses: "peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1" # v8.1.1
+              with:
+                  commit-message: "chore: update changelog [skip ci]"
+                  title: "chore: update changelog"
+                  body: "Automated changelog update via GitHub Actions."
+                  branch: "chore/update-changelog"
+                  add-paths: "${{ inputs.changelog_path || 'CHANGELOG.md' }}"
+                  delete-branch: false
+                  token: "${{ secrets.GITHUB_TOKEN }}"

@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Codacy Coverage Upload"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "main"
+            - "master"
+    workflow_dispatch:
+
+concurrency:
+    group: "codacy-coverage-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    codacy-coverage:
+        name: "Codacy Coverage Upload"
+        permissions:
+            contents: "read"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-codacy-coverage.yml@main"
+        with:
+            node_version_file: ".node-version"
+            cache_dependency_path: "package-lock.json"
+        secrets:
+            CODACY_PROJECT_TOKEN: "${{ secrets.CODACY_PROJECT_TOKEN }}"
+            CODACY_API_TOKEN: "${{ secrets.CODACY_API_TOKEN }}"

@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Actionlint"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        paths:
+            - ".github/**"
+    pull_request:
+        paths:
+            - ".github/**"
+    merge_group:
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "actionlint-${{ github.workflow }}-${{ github.ref || github.run_id }}"
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    actionlint:
+        name: "Actionlint"
+        permissions:
+            contents: "read"
+            pull-requests: "write"
+        uses: "Nick2bad4u/workflow-templates/.github/workflows/reusable-actionlint.yml@main"

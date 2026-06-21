@@ -1,0 +1,15 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "npm"
+    ],
+    "description": "Run Node.js coverage and upload LCOV reports to Codacy.",
+    "filePatterns": [
+        "package.json$",
+        "package-lock.json$"
+    ],
+    "iconName": "octicon graph",
+    "name": "Codacy Coverage Upload"
+}

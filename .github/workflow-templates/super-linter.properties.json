@@ -1,0 +1,10 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Run GitHub Super Linter against the repository.",
+    "iconName": "octicon checklist",
+    "name": "Super Linter"
+}

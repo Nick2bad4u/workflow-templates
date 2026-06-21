@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Typos Spell Check"
+
+on:
+    workflow_call:
+
+permissions:
+    contents: "read"
+
+jobs:
+    typos:
+        name: "Typos Spell Check"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 20
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Run typos"
+              uses: "crate-ci/typos@37bb98842b0d8c4ffebdb75301a13db0267cef89" # v1.47.2
+              with:
+                  files: "."
