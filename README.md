@@ -8,6 +8,8 @@ Production-ready, security-hardened GitHub Actions workflow templates for common
 >
 > **For reusable workflows:** See [**Reusable Workflows**](./docs/guides/reusable-workflows.md) for `jobs.<job_id>.uses` examples.
 >
+> **For composite actions:** See [**Composite Actions**](./docs/guides/composite-actions.md) for step-level reuse examples.
+>
 > **For maintainers:** See [**Maintaining Workflow Templates**](./docs/guides/maintaining-workflow-templates.md) before adding or changing templates.
 
 ---
@@ -162,6 +164,7 @@ All workflows include:
 
 ```folder
 .github/
+├── actions/                     # Composite actions for step-level workflow reuse
 ├── workflow-templates/          # Workflow templates shown in GitHub Actions UI
 │   ├── *.yml                    # Workflow definitions
 │   ├── *.properties.json        # Metadata for GitHub UI
@@ -172,6 +175,9 @@ All workflows include:
 
 docs/examples/reusable-workflows/
 └── *.yml                        # Caller workflow examples
+
+docs/examples/composite-actions/
+└── *.yml                        # Step-level composite action examples
 
 schemas/
 └── github-workflow-template-properties.schema.json  # JSON schema for validation
@@ -210,6 +216,7 @@ npm run schema:update:workflow-template-properties
 - **[USAGE.md](./USAGE.md)** — Detailed guide for each workflow
 - **[Using Workflow Templates](./docs/guides/using-workflow-templates.md)** — Consumer setup checklist
 - **[Reusable Workflows](./docs/guides/reusable-workflows.md)** — Callable workflow reference and examples
+- **[Composite Actions](./docs/guides/composite-actions.md)** — Step-level action reference and examples
 - **[Maintaining Workflow Templates](./docs/guides/maintaining-workflow-templates.md)** — Maintainer workflow and validation gates
 - **[GitHub Docs: Creating Workflow Templates](https://docs.github.com/en/actions/using-workflows/creating-starter-workflows-for-your-organization)**
 - **[GitHub Docs: Security Hardening](https://docs.github.com/en/actions/security-guides)**

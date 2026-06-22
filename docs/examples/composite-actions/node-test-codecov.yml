@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Node Test And Codecov With Composite Actions"
+
+run-name: >-
+    ${{
+        github.event_name == 'pull_request' &&
+        format('Node Test And Codecov #{0}', github.event.pull_request.number) ||
+        github.event_name == 'merge_group' &&
+        format('Node Test And Codecov merge group {0}', github.sha || github.run_id) ||
+        format('Node Test And Codecov {0}', github.ref_name || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        node-test-codecov-composite-${{ github.workflow }}-${{
+            github.event.pull_request.number ||
+            github.sha ||
+            github.ref ||
+            github.run_id
+        }}
+    cancel-in-progress: true
+
+on:
+    push:
+        branches:
+            - "main"
+            - "master"
+    pull_request:
+    merge_group:
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+permissions: {}
+
+jobs:
+    test:
+        name: "Node Test (${{ matrix.os }})"
+        runs-on: "${{ matrix.os }}"
+        timeout-minutes: 20
+        permissions:
+            contents: "read"
+            id-token: "write"
+        strategy:
+            fail-fast: true
+            matrix:
+                include:
+                    - os: "ubuntu-latest"
+                      codecov_flag: "linux"
+                    - os: "windows-latest"
+                      codecov_flag: "windows"
+        steps:
+            - name: "Checkout repository"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Setup Node.js"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+              with:
+                  cache: "npm"
+                  node-version-file: ".node-version"
+
+            - name: "Install dependencies"
+              run: "npm ci"
+
+            - name: "Build package"
+              run: "npm run build --if-present"
+
+            - name: "Run tests with coverage and JUnit report"
+              id: "vitest"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/run-vitest-coverage-junit@main"
+
+            - name: "Verify coverage artifact"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/verify-path-exists@main"
+              with:
+                  description: "coverage/lcov.info"
+                  path: "${{ steps.vitest.outputs.coverage_path }}"
+
+            - name: "Verify JUnit artifact"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/verify-path-exists@main"
+              with:
+                  description: "test-report.junit.xml"
+                  path: "${{ steps.vitest.outputs.junit_path }}"
+
+            - name: "Upload test results to Codecov"
+              if: "${{ !cancelled() }}"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/upload-codecov-report@main"
+              with:
+                  files: "${{ steps.vitest.outputs.junit_path }}"
+                  flags: "${{ matrix.codecov_flag }}"
+                  name: "vitest-junit-${{ matrix.codecov_flag }}"
+                  report-type: "test_results"
+
+            - name: "Upload coverage to Codecov"
+              if: "${{ !cancelled() }}"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/upload-codecov-report@main"
+              with:
+                  files: "${{ steps.vitest.outputs.coverage_path }}"
+                  flags: "${{ matrix.codecov_flag }}"
+                  name: "vitest-unit-coverage-${{ matrix.codecov_flag }}"
+                  report-type: "coverage"
+
+            - name: "Upload bundle analysis to Codecov"
+              if: "${{ matrix.os == 'ubuntu-latest' && hashFiles('dist/**') != '' }}"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/upload-codecov-bundle-analysis@main"
+              with:
+                  bundle-name: "${{ github.repository }}"
+                  upload-token: "${{ secrets.CODECOV_TOKEN || '' }}"

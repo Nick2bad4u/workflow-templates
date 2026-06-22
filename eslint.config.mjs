@@ -19,6 +19,8 @@ const config = [
         files: [
             ".github/**/*.yml",
             ".github/**/*.yaml",
+            "docs/examples/composite-actions/**/*.yml",
+            "docs/examples/composite-actions/**/*.yaml",
             "docs/examples/reusable-workflows/**/*.yml",
             "docs/examples/reusable-workflows/**/*.yaml",
             "docs/examples/workflows/**/*.yml",

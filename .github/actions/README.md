@@ -2,6 +2,8 @@
 
 This directory contains reusable composite actions for release automation, npm package publishing, release assets, Codecov uploads, and test report verification.
 
+See [`docs/guides/composite-actions.md`](../../docs/guides/composite-actions.md) for complete workflow examples that consume these actions.
+
 Call these actions from this repository or downstream repositories with a pinned ref:
 
 ```yaml

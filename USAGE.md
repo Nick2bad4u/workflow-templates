@@ -4,6 +4,8 @@ Detailed setup, configuration, and best practices for each workflow template.
 
 For centrally maintained callable workflows, see [Reusable Workflows](./docs/guides/reusable-workflows.md).
 
+For shared step-level building blocks, see [Composite Actions](./docs/guides/composite-actions.md).
+
 ## Table of Contents
 
 - [Node.js Test & Coverage](#nodejs-test--coverage)

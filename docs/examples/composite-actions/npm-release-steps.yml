@@ -1,0 +1,198 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "npm Release With Composite Actions"
+
+run-name: >-
+    ${{
+        github.event_name == 'workflow_dispatch' &&
+        format('npm Release {0}', inputs.version || inputs.release_type || github.run_id) ||
+        format('npm Release {0}', github.ref_name || github.run_id)
+    }}
+
+concurrency:
+    group: >-
+        npm-release-composite-${{ github.workflow }}-${{
+            github.ref_name ||
+            inputs.version ||
+            inputs.release_type ||
+            github.run_id
+        }}
+    cancel-in-progress: false
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            ref:
+                description: "Branch to release from."
+                required: false
+                type: "string"
+            release_type:
+                default: "patch"
+                description: "Release bump type when version is empty."
+                options:
+                    - "patch"
+                    - "minor"
+                    - "major"
+                required: false
+                type: "choice"
+            skip_verify:
+                default: false
+                description: "Skip npm package verification after validating locally."
+                required: false
+                type: "boolean"
+            version:
+                description: "Explicit version in x.y.z format."
+                required: false
+                type: "string"
+
+permissions: {}
+
+env:
+    DEFAULT_RELEASE_BRANCH: "main"
+    RELEASE_ASSETS_DIR: "temp/release-assets"
+    RELEASE_NOTES_PATH: "temp/release-notes.md"
+
+jobs:
+    release:
+        name: "npm Release"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 30
+        permissions:
+            contents: "write"
+            id-token: "write"
+        steps:
+            - name: "Resolve target ref"
+              id: "target_ref"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/resolve-target-ref@main"
+              with:
+                  ref: "${{ inputs.ref || '' }}"
+                  default-branch: "${{ env.DEFAULT_RELEASE_BRANCH }}"
+
+            - name: "Checkout release ref"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+              with:
+                  fetch-depth: 0
+                  persist-credentials: true
+                  ref: "${{ steps.target_ref.outputs.ref }}"
+
+            - name: "Setup Node.js"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+              with:
+                  cache: "npm"
+                  node-version-file: ".node-version"
+                  registry-url: "https://registry.npmjs.org"
+
+            - name: "Install dependencies"
+              run: "npm ci"
+
+            - name: "Configure Git for release automation"
+              if: "github.event_name == 'workflow_dispatch'"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/configure-release-git@main"
+
+            - name: "Validate workflow_dispatch release input"
+              if: "github.event_name == 'workflow_dispatch'"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/validate-npm-release-input@main"
+              with:
+                  release-type: "${{ inputs.release_type || 'patch' }}"
+                  version: "${{ inputs.version || '' }}"
+
+            - name: "Validate tag matches package version"
+              if: "startsWith(github.ref, 'refs/tags/v')"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/validate-package-tag@main"
+              with:
+                  tag-name: "${{ github.ref_name }}"
+
+            - name: "Warn when package verification is skipped"
+              if: "${{ github.event_name == 'workflow_dispatch' && inputs.skip_verify }}"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/warn-skip-verify@main"
+
+            - name: "Verify package"
+              if: "${{ github.event_name != 'workflow_dispatch' || !inputs.skip_verify }}"
+              run: "npm run release:check"
+
+            - name: "Ensure verification did not modify tracked files"
+              if: "startsWith(github.ref, 'refs/tags/v')"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/ensure-clean-worktree@main"
+              with:
+                  label: "release:check"
+
+            - name: "Determine release version"
+              id: "version"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/determine-npm-release-version@main"
+              with:
+                  event-name: "${{ github.event_name }}"
+                  release-type: "${{ inputs.release_type || 'patch' }}"
+                  tag-name: "${{ github.ref_name }}"
+                  version: "${{ inputs.version || '' }}"
+
+            - name: "Check whether version is already published"
+              id: "npm_check"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/check-npm-version-published@main"
+              with:
+                  package-name: "${{ steps.version.outputs.package_name }}"
+                  version: "${{ steps.version.outputs.version }}"
+
+            - name: "Prevent duplicate workflow_dispatch release version"
+              if: "github.event_name == 'workflow_dispatch'"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/prevent-duplicate-npm-release@main"
+              with:
+                  already-published: "${{ steps.npm_check.outputs.already_published }}"
+                  version: "${{ steps.version.outputs.version }}"
+
+            - name: "Commit and push release version and tag"
+              if: "github.event_name == 'workflow_dispatch'"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/commit-release-version@main"
+              with:
+                  branch: "${{ steps.target_ref.outputs.branch }}"
+                  tag: "${{ steps.version.outputs.tag }}"
+
+            - name: "Generate release notes from git-cliff"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/generate-git-cliff-release-notes@main"
+              with:
+                  output-path: "${{ env.RELEASE_NOTES_PATH }}"
+
+            - name: "Publish to npm"
+              if: "steps.npm_check.outputs.already_published != 'true'"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/publish-npm-package@main"
+              env:
+                  NODE_AUTH_TOKEN: "${{ secrets.NPM_TOKEN }}"
+
+            - name: "Create release archives"
+              id: "release_assets"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/create-npm-release-archives@main"
+              with:
+                  assets-dir: "${{ env.RELEASE_ASSETS_DIR }}"
+                  package-name: "${{ steps.version.outputs.package_name }}"
+                  version: "${{ steps.version.outputs.version }}"
+
+            - name: "Create GitHub release"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/create-github-release@main"
+              with:
+                  body-path: "${{ env.RELEASE_NOTES_PATH }}"
+                  files: |
+                      ${{ steps.release_assets.outputs.tarball_path }}
+                      ${{ steps.release_assets.outputs.zip_path }}
+                  release-name: "${{ steps.version.outputs.tag }}"
+                  tag-name: "${{ steps.version.outputs.tag }}"
+              env:
+                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+            - name: "Release summary"
+              if: "${{ !cancelled() }}"
+              uses: "Nick2bad4u/workflow-templates/.github/actions/write-release-summary@main"
+              with:
+                  actor: "${{ github.actor }}"
+                  already-published: "${{ steps.npm_check.outputs.already_published }}"
+                  branch: "${{ steps.target_ref.outputs.branch }}"
+                  event-name: "${{ github.event_name }}"
+                  github-release-url: "${{ steps.version.outputs.github_release_url }}"
+                  npm-release-url: "${{ steps.version.outputs.npm_release_url }}"
+                  package-name: "${{ steps.version.outputs.package_name }}"
+                  ref: "${{ steps.target_ref.outputs.ref }}"
+                  tag: "${{ steps.version.outputs.tag }}"
+                  tarball-name: "${{ steps.release_assets.outputs.tarball_name }}"
+                  version: "${{ steps.version.outputs.version }}"
+                  zip-name: "${{ steps.release_assets.outputs.zip_name }}"
