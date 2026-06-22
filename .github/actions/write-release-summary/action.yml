@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+# yaml-language-server: $schema=https://www.schemastore.org/github-action.json
 
 name: "Write Release Summary"
 description: "Write a standardized npm/GitHub release summary to GITHUB_STEP_SUMMARY."

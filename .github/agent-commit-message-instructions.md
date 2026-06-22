@@ -119,7 +119,7 @@
 | coffin                    | ⚰️    | Remove dead code                       |
 | test_tube                 | 🧪    | Add a failing test                     |
 | necktie                   | 👔    | Add or update business logic           |
-| stethoscope               | 🩺    | Add or update healthcheck              |
+| stethoscope               | 🩺    | Add or update health check             |
 | bricks                    | 🧱    | Infrastructure-related changes         |
 | technologist              | 🧑‍💻    | Improve developer experience           |
 | money_with_wings          | 💸    | Sponsorship/money infrastructure       |

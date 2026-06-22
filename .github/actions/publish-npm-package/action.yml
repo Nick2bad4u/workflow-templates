@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+# yaml-language-server: $schema=https://www.schemastore.org/github-action.json
 
 name: "Publish npm Package"
 description: "Publish an npm package with configurable access, provenance, registry, and dry-run behavior."

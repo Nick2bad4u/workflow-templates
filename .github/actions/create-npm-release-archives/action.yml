@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+# yaml-language-server: $schema=https://www.schemastore.org/github-action.json
 
 name: "Create npm Release Archives"
 description: "Create npm tarball and zip release assets from npm pack output."

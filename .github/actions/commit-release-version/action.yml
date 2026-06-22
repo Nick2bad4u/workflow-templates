@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+# yaml-language-server: $schema=https://www.schemastore.org/github-action.json
 
 name: "Commit Release Version"
 description: "Commit package version changes, create an annotated tag, and push both to the release branch."
