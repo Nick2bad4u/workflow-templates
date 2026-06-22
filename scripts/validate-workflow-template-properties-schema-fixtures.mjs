@@ -75,7 +75,8 @@ async function main() {
     const schemaDocument = /** @type {Record<string, unknown>} */ (
         await readJson(schemaPath)
     );
-    const { $schema: _metaSchema, ...schema } = schemaDocument;
+    const schema = { ...schemaDocument };
+    delete schema.$schema;
     const ajv = new Ajv({
         allErrors: true,
         strict: false,

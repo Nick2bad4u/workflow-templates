@@ -50,8 +50,11 @@ jobs:
                   build-mode: "manual"
 
             - name: "Run build"
+              env:
+                  BUILD_COMMAND: "${{ inputs.build-command }}"
               run: |
-                  ${{ inputs.build-command }}
+                  set -euo pipefail
+                  bash -euo pipefail -c "${BUILD_COMMAND}"
 
             - name: "Analyze"
               uses: "github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e" # v4.36.2

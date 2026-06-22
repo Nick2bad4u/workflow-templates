@@ -117,7 +117,7 @@ function parseStarterWorkflowCategories(markdown) {
             break;
         }
 
-        const match = line.match(/^\*\s+(.+?)\s*$/u);
+        const match = /^\*\s+(.+?)\s*$/u.exec(line);
         if (match?.[1]) {
             categories.push(match[1].trim());
             continue;
@@ -180,7 +180,7 @@ function parseTechStacks(yaml) {
             continue;
         }
 
-        const match = line.match(/^\s*-\s+(.+?)\s*$/u);
+        const match = /^\s*-\s+(.+?)\s*$/u.exec(line);
         if (match?.[1]) {
             techStacks.push(match[1].trim());
             continue;
@@ -369,7 +369,7 @@ function buildSchema({
                     examples: [
                         "package.json$",
                         "^Dockerfile",
-                        ".*\\.md$",
+                        String.raw`.*\.md$`,
                         "docusaurus.config.ts$",
                     ],
                 },
@@ -502,7 +502,7 @@ async function main() {
 
         if (obj !== null && typeof obj === "object") {
             return Object.keys(obj)
-                .sort()
+                .sort((a, b) => a.localeCompare(b))
                 .reduce(
                     /** @returns {JsonObject} */ (result, key) => {
                         result[key] = sortKeys(obj[key]);

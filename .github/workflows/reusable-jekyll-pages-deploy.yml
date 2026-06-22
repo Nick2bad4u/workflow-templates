@@ -5,16 +5,15 @@ name: "Deploy Jekyll To GitHub Pages"
 on:
     workflow_call:
 
-permissions:
-    contents: "read"
-    id-token: "write"
-    pages: "write"
+permissions: {}
 
 jobs:
     build:
         name: "Build Jekyll Site"
         runs-on: "ubuntu-latest"
         timeout-minutes: 30
+        permissions:
+            contents: "read"
         steps:
             - name: "Harden runner"
               uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
@@ -41,6 +40,9 @@ jobs:
         needs: "build"
         runs-on: "ubuntu-latest"
         timeout-minutes: 30
+        permissions:
+            id-token: "write"
+            pages: "write"
         environment:
             name: "github-pages"
             url: "${{ steps.deployment.outputs.page_url }}"
