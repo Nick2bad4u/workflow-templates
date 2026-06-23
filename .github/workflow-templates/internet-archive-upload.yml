@@ -52,8 +52,11 @@ jobs:
               id: "download"
               env:
                   ASSET_PATTERNS: "${{ inputs.asset_patterns || '*' }}"
+                  GH_REPO: "${{ github.repository }}"
                   GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
               run: |
+                  set -euo pipefail
+
                   mkdir -p release-dist
                   tag_name="$(gh release view --json tagName --jq .tagName)"
                   while IFS= read -r pattern; do

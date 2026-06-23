@@ -30,6 +30,7 @@ defaults:
 jobs:
     release-stats:
         name: "Show Release Stats"
+        if: "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'"
         runs-on: "ubuntu-latest"
         timeout-minutes: 20
         steps:
@@ -40,9 +41,16 @@ jobs:
 
             - name: "Fetch release info and output summary"
               env:
+                  GH_REPO: "${{ github.repository }}"
                   GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
               run: |
-                  latest_json="$(gh release view --json tagName,name,publishedAt,assets,url)"
+                  set -euo pipefail
+
+                  if ! latest_json="$(gh release view --json tagName,name,publishedAt,assets,url)"; then
+                    echo "::warning::No GitHub release was found to summarize."
+                    exit 0
+                  fi
+
                   latest_tag="$(jq -r .tagName <<< "${latest_json}")"
                   latest_name="$(jq -r .name <<< "${latest_json}")"
                   latest_date="$(jq -r .publishedAt <<< "${latest_json}")"

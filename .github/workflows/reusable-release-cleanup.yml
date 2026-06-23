@@ -38,13 +38,16 @@ jobs:
             - name: "Clean old releases"
               env:
                   DELETE_TAGS: "${{ inputs.delete_tags || 'true' }}"
+                  GH_REPO: "${{ github.repository }}"
                   GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
                   KEEP_LAST: "${{ inputs.keep_last || '10' }}"
               run: |
+                  set -euo pipefail
+
                   mapfile -t releases < <(gh release list --limit 1000 --json tagName,publishedAt --jq 'sort_by(.publishedAt) | reverse | .[].tagName')
                   keep_last="${KEEP_LAST:-10}"
                   delete_tags="${DELETE_TAGS:-true}"
-                  if ! [[ "${keep_last}" =~ ^[0-9]+$ ]]; then
+                  if ! [[ "${keep_last}" =~ ^[1-9][0-9]*$ ]]; then
                     echo "::error::keep_last must be a positive integer."
                     exit 1
                   fi

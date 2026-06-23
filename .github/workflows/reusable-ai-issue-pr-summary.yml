@@ -39,11 +39,14 @@ jobs:
 
             - name: "Comment with summary"
               env:
+                  GH_REPO: "${{ github.repository }}"
                   GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
                   ISSUE_NUMBER: "${{ github.event.issue.number }}"
                   PR_NUMBER: "${{ github.event.pull_request.number }}"
                   RESPONSE: "${{ steps.inference.outputs.response }}"
               run: |
+                  set -euo pipefail
+
                   if [ -z "${RESPONSE}" ]; then
                     echo "::warning::AI inference returned an empty response."
                     exit 0
