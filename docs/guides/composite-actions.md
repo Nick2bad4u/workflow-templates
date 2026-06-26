@@ -34,6 +34,18 @@ The examples use `@main` because these actions are maintained from this
 repository. Use a pinned tag or commit SHA for repositories you do not control
 or for release workflows that need a fixed automation contract.
 
+Each action directory includes a generated `README.md` with its current inputs,
+outputs, and a minimal usage example. After editing any `.github/actions/*/action.yml`,
+refresh and check those READMEs with:
+
+```bash
+npm run docs:actions:update
+npm run docs:actions:check
+```
+
+CI installs `reakaleek/gh-action-readme` at `v0.7.1` and runs the check command
+to fail pull request validation when action metadata drifts.
+
 ## Action Inventory
 
 | Action | Purpose |

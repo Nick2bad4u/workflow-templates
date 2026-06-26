@@ -4,6 +4,15 @@ This directory contains reusable composite actions for release automation, npm p
 
 See [`docs/guides/composite-actions.md`](../../docs/guides/composite-actions.md) for complete workflow examples that consume these actions.
 
+Each action directory has its own generated `README.md`. The generated
+sections are maintained from `action.yml` with
+[`gh-action-readme`](https://github.com/reakaleek/gh-action-readme):
+
+```bash
+npm run docs:actions:update
+npm run docs:actions:check
+```
+
 Call these actions from this repository or downstream repositories with a pinned ref:
 
 ```yaml

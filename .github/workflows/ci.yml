@@ -47,6 +47,14 @@ jobs:
             - name: "Install dependencies"
               run: "npm ci"
 
+            - name: "Install gh-action-readme"
+              run: "gh extension install reakaleek/gh-action-readme --pin v0.7.1"
+              env:
+                  GH_TOKEN: "${{ github.token }}"
+
+            - name: "Check composite action README drift"
+              run: "npm run docs:actions:check"
+
             - name: "Check generated schema is up to date"
               run: "npm run schema:check:workflow-template-properties"
 

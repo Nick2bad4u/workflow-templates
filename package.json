@@ -23,6 +23,8 @@
         "changelog:generate": "npx git-cliff --config cliff.toml --output CHANGELOG.md",
         "changelog:preview": "npx git-cliff --config cliff.toml --unreleased",
         "changelog:release-notes": "npx git-cliff --config cliff.toml --current --strip all",
+        "docs:actions:check": "node ./scripts/action-readmes.mjs",
+        "docs:actions:update": "node ./scripts/action-readmes.mjs --write",
         "format": "npx prettier . --write",
         "format:check": "npx prettier . --check",
         "lint": "npx cross-env NODE_OPTIONS=--max_old_space_size=8192 npx eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache",
