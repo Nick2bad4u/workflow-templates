@@ -3,15 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * @typedef {Record<string, JsonValue>} JsonObject
- */
-
-/**
- * @typedef {JsonValue[]} JsonArray
- */
-
-/**
- * @typedef {string | number | boolean | null | JsonObject | JsonArray} JsonValue
+ * @typedef {Record<string, unknown>} JsonObject
  */
 
 /**
@@ -117,9 +109,9 @@ function parseStarterWorkflowCategories(markdown) {
             break;
         }
 
-        const match = /^\*\s+(.+?)\s*$/u.exec(line);
-        if (match?.[1]) {
-            categories.push(match[1].trim());
+        const trimmedLine = line.trim();
+        if (trimmedLine.startsWith("* ")) {
+            categories.push(trimmedLine.slice(2).trim());
             continue;
         }
 
@@ -180,9 +172,9 @@ function parseTechStacks(yaml) {
             continue;
         }
 
-        const match = /^\s*-\s+(.+?)\s*$/u.exec(line);
-        if (match?.[1]) {
-            techStacks.push(match[1].trim());
+        const trimmedLine = line.trimStart();
+        if (trimmedLine.startsWith("- ")) {
+            techStacks.push(trimmedLine.slice(2).trim());
             continue;
         }
 
@@ -214,12 +206,72 @@ function uniqueSorted(values) {
  * @returns {string}
  */
 function iconComponentToOcticonName(componentName) {
-    const base = componentName.replace(/Icon$/u, "");
+    const base = componentName.endsWith("Icon")
+        ? componentName.slice(0, -4)
+        : componentName;
+    const parts = [];
+    let currentPart = "";
 
-    return base
-        .replace(/([A-Z]+)([A-Z][a-z])/gu, "$1-$2")
-        .replace(/([a-z0-9])([A-Z])/gu, "$1-$2")
-        .toLowerCase();
+    for (let index = 0; index < base.length; index += 1) {
+        const character = base[index];
+        const previousCharacter = base[index - 1] ?? "";
+        const nextCharacter = base[index + 1] ?? "";
+        const startsWord =
+            index > 0 &&
+            isUppercaseLetter(character) &&
+            (isLowercaseLetterOrDigit(previousCharacter) ||
+                (isUppercaseLetter(previousCharacter) &&
+                    isLowercaseLetter(nextCharacter)));
+
+        if (startsWord) {
+            parts.push(currentPart);
+            currentPart = character;
+            continue;
+        }
+
+        currentPart += character;
+    }
+
+    if (currentPart) {
+        parts.push(currentPart);
+    }
+
+    return parts.join("-").toLowerCase();
+}
+
+/**
+ * Check whether a character is an uppercase ASCII letter.
+ *
+ * @param {string} character
+ *
+ * @returns {boolean}
+ */
+function isUppercaseLetter(character) {
+    return character >= "A" && character <= "Z";
+}
+
+/**
+ * Check whether a character is a lowercase ASCII letter.
+ *
+ * @param {string} character
+ *
+ * @returns {boolean}
+ */
+function isLowercaseLetter(character) {
+    return character >= "a" && character <= "z";
+}
+
+/**
+ * Check whether a character is a lowercase ASCII letter or digit.
+ *
+ * @param {string} character
+ *
+ * @returns {boolean}
+ */
+function isLowercaseLetterOrDigit(character) {
+    return (
+        isLowercaseLetter(character) || (character >= "0" && character <= "9")
+    );
 }
 
 /**
@@ -491,9 +543,9 @@ async function main() {
     /**
      * Recursively sort all object keys to match Prettier's alphabetical format.
      *
-     * @param {JsonObject | JsonArray} obj
+     * @param {unknown} obj
      *
-     * @returns {JsonObject | JsonArray}
+     * @returns {unknown}
      */
     function sortKeys(obj) {
         if (Array.isArray(obj)) {
@@ -501,11 +553,13 @@ async function main() {
         }
 
         if (obj !== null && typeof obj === "object") {
+            const object = /** @type {JsonObject} */ (obj);
+
             return Object.keys(obj)
                 .sort((a, b) => a.localeCompare(b))
                 .reduce(
                     /** @returns {JsonObject} */ (result, key) => {
-                        result[key] = sortKeys(obj[key]);
+                        result[key] = sortKeys(object[key]);
                         return result;
                     },
                     {}

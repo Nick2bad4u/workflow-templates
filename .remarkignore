@@ -64,3 +64,4 @@ test/fixtures/
 
 # Generated Action readmes from gh action-readme extension
 .github/actions/**/README.md
+.gitleaksignore
