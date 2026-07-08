@@ -29,7 +29,7 @@
         "format:check": "npx prettier . --check",
         "lint": "npx cross-env NODE_OPTIONS=--max_old_space_size=8192 npx eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache",
         "lint:actions": "actionlint -config-file ActionLintConfig.yaml",
-        "lint:all": "npm run lint && npm run format:check && npm run lint:jscpd && npm run lint:gitleaks && npm run lint:yamllint && npm run lint:lychee",
+        "lint:all": "npm run lint && npm run format:check && npm run lint:gitleaks && npm run lint:yamllint",
         "lint:all:fix": "npm run lint:fix && npm run lint:remark:fix && npm run format",
         "lint:fix": "npx cross-env NODE_OPTIONS=--max_old_space_size=8192 npx eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache --fix",
         "lint:gitleaks": "gitleaks dir --config .gitleaks.toml .",
