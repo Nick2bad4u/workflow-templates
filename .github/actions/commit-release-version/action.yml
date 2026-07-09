@@ -17,11 +17,9 @@ inputs:
     commit-message:
         description: "Release commit message. Defaults to chore: release <tag>."
         required: false
-        default: ""
     tag-message:
         description: "Annotated tag message. Defaults to tag."
         required: false
-        default: ""
     dry-run:
         description: "Validate inputs and print status without committing, tagging, or pushing."
         required: false

@@ -13,7 +13,6 @@ inputs:
     registry-url:
         description: "Optional npm registry URL."
         required: false
-        default: ""
 
 outputs:
     already_published:

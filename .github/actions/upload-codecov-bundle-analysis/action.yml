@@ -11,11 +11,9 @@ inputs:
     bundle-name:
         description: "Codecov bundle name. Defaults to GITHUB_REPOSITORY."
         required: false
-        default: ""
     upload-token:
         description: "Codecov upload token. When empty, the action skips by default."
         required: false
-        default: ""
     skip-when-token-empty:
         description: "Skip instead of failing when upload-token is empty."
         required: false

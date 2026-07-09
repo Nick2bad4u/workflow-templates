@@ -11,12 +11,10 @@ on:
                 required: false
                 type: "string"
             base_ref:
-                default: ""
                 description: "Optional git ref for delta base (defaults to HEAD^)."
                 required: false
                 type: "string"
             head_ref:
-                default: ""
                 description: "Optional git ref for delta head (defaults to HEAD)."
                 required: false
                 type: "string"

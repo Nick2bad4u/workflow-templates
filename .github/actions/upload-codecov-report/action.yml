@@ -10,11 +10,9 @@ inputs:
     flags:
         description: "Codecov flags."
         required: false
-        default: ""
     name:
         description: "Codecov upload name."
         required: false
-        default: ""
     report-type:
         description: "Codecov report type, such as coverage or test_results."
         required: false
@@ -22,7 +20,6 @@ inputs:
     slug:
         description: "Repository slug. Defaults to github.repository."
         required: false
-        default: ""
     use-oidc:
         description: "Use Codecov OIDC upload."
         required: false

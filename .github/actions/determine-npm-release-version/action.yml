@@ -7,7 +7,6 @@ inputs:
     version:
         description: "Optional explicit x.y.z version for workflow_dispatch."
         required: false
-        default: ""
     release-type:
         description: "npm version release type when version is empty."
         required: false
@@ -15,11 +14,9 @@ inputs:
     event-name:
         description: "GitHub event name. Defaults to GITHUB_EVENT_NAME."
         required: false
-        default: ""
     tag-name:
         description: "Tag name for tag-triggered releases. Defaults to GITHUB_REF_NAME."
         required: false
-        default: ""
     tag-prefix:
         description: "Tag prefix to add or strip."
         required: false
@@ -35,11 +32,9 @@ inputs:
     github-server-url:
         description: "GitHub server URL. Defaults to GITHUB_SERVER_URL."
         required: false
-        default: ""
     github-repository:
         description: "owner/repo repository name. Defaults to GITHUB_REPOSITORY."
         required: false
-        default: ""
 
 outputs:
     version:

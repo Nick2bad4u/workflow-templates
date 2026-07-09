@@ -28,12 +28,10 @@ on:
                 required: true
                 type: "choice"
             base_ref:
-                default: ""
                 description: "Optional git ref for delta base."
                 required: false
                 type: "string"
             head_ref:
-                default: ""
                 description: "Optional git ref for delta head."
                 required: false
                 type: "string"

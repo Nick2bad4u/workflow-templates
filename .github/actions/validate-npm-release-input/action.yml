@@ -7,7 +7,6 @@ inputs:
     version:
         description: "Optional explicit x.y.z version."
         required: false
-        default: ""
     release-type:
         description: "SemVer release type used when version is empty."
         required: false

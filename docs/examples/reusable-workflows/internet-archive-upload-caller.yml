@@ -21,7 +21,6 @@ on:
                 required: true
                 type: "string"
             identifier_prefix:
-                default: ""
                 description: "Archive.org identifier prefix. Defaults to the repository name."
                 required: false
                 type: "string"

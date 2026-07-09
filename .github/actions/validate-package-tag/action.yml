@@ -7,7 +7,6 @@ inputs:
     tag-name:
         description: "Tag name to validate. Defaults to GITHUB_REF_NAME."
         required: false
-        default: ""
     tag-prefix:
         description: "Prefix to strip before comparing to package.json."
         required: false

@@ -7,19 +7,15 @@ inputs:
     event-name:
         description: "GitHub event name."
         required: false
-        default: ""
     actor:
         description: "GitHub actor."
         required: false
-        default: ""
     ref:
         description: "Resolved ref."
         required: false
-        default: ""
     branch:
         description: "Resolved source branch."
         required: false
-        default: ""
     package-name:
         description: "Package name."
         required: true
@@ -36,19 +32,15 @@ inputs:
     npm-release-url:
         description: "npm release URL."
         required: false
-        default: ""
     github-release-url:
         description: "GitHub release URL."
         required: false
-        default: ""
     tarball-name:
         description: "npm tarball filename."
         required: false
-        default: ""
     zip-name:
         description: "Zip archive filename."
         required: false
-        default: ""
     heading:
         description: "Summary heading."
         required: false

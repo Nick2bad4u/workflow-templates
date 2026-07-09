@@ -20,7 +20,6 @@ on:
                 required: true
                 type: "string"
             identifier_prefix:
-                default: ""
                 description: "Archive.org identifier prefix."
                 required: true
                 type: "string"

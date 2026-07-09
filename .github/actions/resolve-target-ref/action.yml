@@ -7,7 +7,6 @@ inputs:
     ref:
         description: "Optional branch/ref input from workflow_dispatch."
         required: false
-        default: ""
     default-branch:
         description: "Fallback branch when workflow_dispatch does not pass a ref."
         required: false
@@ -15,15 +14,12 @@ inputs:
     event-name:
         description: "GitHub event name. Defaults to GITHUB_EVENT_NAME."
         required: false
-        default: ""
     github-ref:
         description: "Full GitHub ref. Defaults to GITHUB_REF."
         required: false
-        default: ""
     github-ref-name:
         description: "Short GitHub ref name. Defaults to GITHUB_REF_NAME."
         required: false
-        default: ""
 
 outputs:
     ref:

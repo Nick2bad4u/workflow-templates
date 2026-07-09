@@ -17,17 +17,14 @@ on:
                 required: true
                 type: "choice"
             base_ref:
-                default: ""
                 description: "Optional older git ref/SHA for delta mode. Defaults to HEAD^."
                 required: false
                 type: "string"
             head_ref:
-                default: ""
                 description: "Optional newer git ref/SHA for delta mode. Defaults to HEAD."
                 required: false
                 type: "string"
             content_paths_json:
-                default: ""
                 description: "Optional JSON string array of repo-relative paths to constrain delta scanning."
                 required: false
                 type: "string"

@@ -10,14 +10,12 @@ inputs:
     release-name:
         description: "GitHub release name. Defaults to tag-name."
         required: false
-        default: ""
     body-path:
         description: "Path to release notes."
         required: true
     files:
         description: "Newline-delimited release asset paths."
         required: false
-        default: ""
     draft:
         description: "Create a draft release."
         required: false

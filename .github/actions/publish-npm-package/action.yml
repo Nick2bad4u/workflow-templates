@@ -23,11 +23,9 @@ inputs:
     tag:
         description: "Optional npm distribution tag."
         required: false
-        default: ""
     registry-url:
         description: "Optional npm registry URL."
         required: false
-        default: ""
     working-directory:
         description: "Directory containing package.json."
         required: false
