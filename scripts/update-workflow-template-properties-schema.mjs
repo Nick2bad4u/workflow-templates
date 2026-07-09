@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 
 /**
@@ -45,6 +46,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const OCTICONS_REACT_VERSION = process.env.OCTICONS_REACT_VERSION || "19.25.0";
+const FETCH_MAX_ATTEMPTS = 4;
+const FETCH_RETRY_STATUS_CODES = new Set([
+    408,
+    429,
+    500,
+    502,
+    503,
+    504,
+]);
 const schemaOutputPath = path.join(
     repoRoot,
     "schemas",
@@ -61,6 +71,131 @@ const SOURCES = {
     octiconsReactEsm: `https://unpkg.com/@primer/octicons-react@${OCTICONS_REACT_VERSION}/dist/index.esm.mjs`,
 };
 
+class FetchTextError extends Error {
+    /**
+     * @param {string} url
+     * @param {Response} response
+     */
+    constructor(url, response) {
+        super(
+            `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+        );
+        this.name = "FetchTextError";
+        this.status = response.status;
+    }
+}
+
+/**
+ * Return the available GitHub API token.
+ *
+ * @returns {string}
+ */
+function getGitHubToken() {
+    return process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
+}
+
+/**
+ * Return request headers for a text fetch.
+ *
+ * @param {string} url
+ * @param {string} accept
+ *
+ * @returns {Record<string, string>}
+ */
+function getFetchHeaders(url, accept) {
+    const headers = {
+        "user-agent": "workflow-templates-schema-updater",
+        accept,
+    };
+    const token = getGitHubToken();
+
+    if (token && new URL(url).hostname === "api.github.com") {
+        headers.authorization = `Bearer ${token}`;
+    }
+
+    return headers;
+}
+
+/**
+ * Convert a raw.githubusercontent.com URL to a GitHub API raw-content URL.
+ *
+ * @param {string} url
+ *
+ * @returns {string | null}
+ */
+function getGitHubApiRawContentUrl(url) {
+    const parsedUrl = new URL(url);
+
+    if (parsedUrl.hostname !== "raw.githubusercontent.com") {
+        return null;
+    }
+
+    const [
+        owner,
+        repo,
+        ref,
+        ...pathParts
+    ] = parsedUrl.pathname.split("/").filter(Boolean);
+
+    if (!owner || !repo || !ref || pathParts.length === 0) {
+        return null;
+    }
+
+    const contentPath = pathParts.map(encodeURIComponent).join("/");
+    const apiUrl = new URL(
+        `/repos/${owner}/${repo}/contents/${contentPath}`,
+        "https://api.github.com"
+    );
+    apiUrl.searchParams.set("ref", ref);
+
+    return apiUrl.href;
+}
+
+/**
+ * Fetch a UTF-8 text resource once.
+ *
+ * @param {string} url
+ * @param {string} accept
+ *
+ * @returns {Promise<string>}
+ */
+async function fetchTextOnce(url, accept) {
+    const response = await fetch(url, {
+        headers: getFetchHeaders(url, accept),
+    });
+
+    if (!response.ok) {
+        throw new FetchTextError(url, response);
+    }
+
+    return response.text();
+}
+
+/**
+ * Return whether a fetch error should be retried.
+ *
+ * @param {unknown} error
+ *
+ * @returns {boolean}
+ */
+function shouldRetryFetch(error) {
+    return (
+        error instanceof FetchTextError &&
+        FETCH_RETRY_STATUS_CODES.has(error.status)
+    );
+}
+
+/**
+ * Return the retry delay for a fetch attempt.
+ *
+ * @param {number} attemptIndex
+ *
+ * @returns {number}
+ */
+function getFetchRetryDelayMs(attemptIndex) {
+    return Math.min(1000 * 2 ** attemptIndex, 8000);
+}
+
 /**
  * Fetch a UTF-8 text resource.
  *
@@ -69,20 +204,50 @@ const SOURCES = {
  * @returns {Promise<string>}
  */
 async function fetchText(url) {
-    const response = await fetch(url, {
-        headers: {
-            "user-agent": "workflow-templates-schema-updater",
-            accept: "text/plain, text/markdown, application/yaml, text/yaml, */*",
-        },
-    });
+    const githubApiUrl = getGitHubApiRawContentUrl(url);
+    const textAccept =
+        "text/plain, text/markdown, application/yaml, text/yaml, */*";
+    const githubRawAccept = "application/vnd.github.raw, text/plain, */*";
+    const urls =
+        githubApiUrl && getGitHubToken()
+            ? [
+                  [githubApiUrl, githubRawAccept],
+                  [url, textAccept],
+              ]
+            : [
+                  [url, textAccept],
+                  ...(githubApiUrl ? [[githubApiUrl, githubRawAccept]] : []),
+              ];
+    let lastError;
 
-    if (!response.ok) {
-        throw new Error(
-            `Failed to fetch ${url}: ${response.status} ${response.statusText}`
-        );
+    for (
+        let attemptIndex = 0;
+        attemptIndex < FETCH_MAX_ATTEMPTS;
+        attemptIndex += 1
+    ) {
+        for (const [candidateUrl, accept] of urls) {
+            try {
+                return await fetchTextOnce(candidateUrl, accept);
+            } catch (error) {
+                lastError = error;
+
+                if (!shouldRetryFetch(error)) {
+                    break;
+                }
+            }
+        }
+
+        if (
+            !shouldRetryFetch(lastError) ||
+            attemptIndex === FETCH_MAX_ATTEMPTS - 1
+        ) {
+            break;
+        }
+
+        await sleep(getFetchRetryDelayMs(attemptIndex));
     }
 
-    return response.text();
+    throw lastError;
 }
 
 /**
