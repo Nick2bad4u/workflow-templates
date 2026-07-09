@@ -1,0 +1,170 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "Lychee Link Check"
+
+on:
+    workflow_call:
+        inputs:
+            node-version:
+                description: "Node.js version used to install the shared Lychee config package."
+                required: false
+                type: "string"
+                default: "24"
+            cache-dependency-path:
+                description: "Dependency lockfile path used by npm and Lychee cache keys."
+                required: false
+                type: "string"
+                default: "package-lock.json"
+            install-command:
+                description: "Command used to install dependencies before running Lychee."
+                required: false
+                type: "string"
+                default: "npm ci --no-audit --no-fund"
+            lychee-cache-path:
+                description: "Lychee result cache path configured by the shared Lychee config."
+                required: false
+                type: "string"
+                default: ".lycheecache"
+            lychee-args:
+                description: "Arguments passed to lycheeverse/lychee-action for the full link check."
+                required: false
+                type: "string"
+                default: "--config node_modules/lychee-config-nick2bad4u/lychee.toml ."
+            lychee-smoke-args:
+                description: "Arguments passed to lycheeverse/lychee-action for input discovery."
+                required: false
+                type: "string"
+                default: "--config node_modules/lychee-config-nick2bad4u/lychee.toml --dump-inputs README.md"
+            lychee-version:
+                description: "Lychee binary version installed by lycheeverse/lychee-action."
+                required: false
+                type: "string"
+                default: "v0.24.2"
+            run-smoke:
+                description: "Run the Lychee smoke command before the full link check."
+                required: false
+                type: "boolean"
+                default: false
+            working-directory:
+                description: "Directory where npm install and Lychee commands run."
+                required: false
+                type: "string"
+                default: "."
+
+permissions:
+    contents: "read"
+
+defaults:
+    run:
+        shell: "bash"
+
+jobs:
+    lychee:
+        name: "Lychee Link Check"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 30
+        env:
+            LYCHEE_CACHE_PATH: "${{ inputs.lychee-cache-path }}"
+            WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Setup Node"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+              with:
+                  node-version: "${{ inputs.node-version }}"
+                  cache: "npm"
+                  cache-dependency-path: "${{ inputs.cache-dependency-path }}"
+
+            - name: "Install dependencies"
+              env:
+                  INSTALL_COMMAND: "${{ inputs.install-command }}"
+              run: |
+                  set -euo pipefail
+
+                  cd "${WORKING_DIRECTORY}"
+                  bash -o pipefail -euc "${INSTALL_COMMAND}"
+
+            - name: "Set Lychee cache key"
+              id: "lychee-cache-key"
+              env:
+                  CACHE_DEPENDENCY_HASH: "${{ hashFiles(inputs.cache-dependency-path) }}"
+              run: |
+                  set -euo pipefail
+
+                  week="$(date -u +'%G-W%V')"
+                  dependency_hash="${CACHE_DEPENDENCY_HASH:-no-dependency-hash}"
+
+                  {
+                    echo "dependency_hash=${dependency_hash}"
+                    echo "week=${week}"
+                  } >> "${GITHUB_OUTPUT}"
+
+            - name: "Restore Lychee cache"
+              uses: "actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25" # v5
+              with:
+                  path: "${{ inputs.lychee-cache-path }}"
+                  key: "lychee-${{ runner.os }}-${{ steps.lychee-cache-key.outputs.dependency_hash }}-${{ steps.lychee-cache-key.outputs.week }}-${{ github.run_id }}-${{ github.run_attempt }}"
+                  restore-keys: |
+                      lychee-${{ runner.os }}-${{ steps.lychee-cache-key.outputs.dependency_hash }}-${{ steps.lychee-cache-key.outputs.week }}-
+                      lychee-${{ runner.os }}-${{ steps.lychee-cache-key.outputs.dependency_hash }}-
+
+            - name: "Verify Lychee config"
+              env:
+                  CONFIG_PATH: "node_modules/lychee-config-nick2bad4u/lychee.toml"
+              run: |
+                  set -euo pipefail
+
+                  cd "${WORKING_DIRECTORY}"
+
+                  if [ ! -f "${CONFIG_PATH}" ]; then
+                    echo "Lychee config was not found at ${CONFIG_PATH}." >&2
+                    echo "Install lychee-config-nick2bad4u before running this workflow." >&2
+                    exit 1
+                  fi
+
+            - name: "Smoke-check Lychee inputs"
+              if: "${{ inputs.run-smoke }}"
+              uses: "lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411" # v2
+              with:
+                  args: "${{ inputs.lychee-smoke-args }}"
+                  fail: "true"
+                  failIfEmpty: "false"
+                  lycheeVersion: "${{ inputs.lychee-version }}"
+                  workingDirectory: "${{ inputs.working-directory }}"
+
+            - name: "Run Lychee"
+              uses: "lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411" # v2
+              with:
+                  args: "${{ inputs.lychee-args }}"
+                  fail: "true"
+                  failIfEmpty: "false"
+                  lycheeVersion: "${{ inputs.lychee-version }}"
+                  workingDirectory: "${{ inputs.working-directory }}"
+
+            - name: "Check Lychee cache path"
+              id: "lychee-cache-path"
+              if: "${{ !cancelled() }}"
+              run: |
+                  set -euo pipefail
+
+                  cd "${WORKING_DIRECTORY}"
+
+                  if [ -e "${LYCHEE_CACHE_PATH}" ]; then
+                    echo "exists=true" >> "${GITHUB_OUTPUT}"
+                  else
+                    echo "exists=false" >> "${GITHUB_OUTPUT}"
+                  fi
+
+            - name: "Save Lychee cache"
+              if: "${{ !cancelled() && steps.lychee-cache-path.outputs.exists == 'true' }}"
+              uses: "actions/cache/save@caa296126883cff596d87d8935842f9db880ef25" # v5
+              with:
+                  path: "${{ inputs.lychee-cache-path }}"
+                  key: "lychee-${{ runner.os }}-${{ steps.lychee-cache-key.outputs.dependency_hash }}-${{ steps.lychee-cache-key.outputs.week }}-${{ github.run_id }}-${{ github.run_attempt }}"

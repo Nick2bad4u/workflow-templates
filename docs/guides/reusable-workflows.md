@@ -48,6 +48,8 @@ The caller examples keep top-level `permissions: {}` and grant only the called w
 | `devskim-analysis.yml` | `.github/workflows/reusable-devskim-analysis.yml` | [`devskim-analysis-caller.yml`](../examples/reusable-workflows/devskim-analysis-caller.yml) |
 | `ossar-analysis.yml` | `.github/workflows/reusable-ossar-analysis.yml` | [`ossar-analysis-caller.yml`](../examples/reusable-workflows/ossar-analysis-caller.yml) |
 | `prettier-check.yml` | `.github/workflows/reusable-prettier-check.yml` | [`prettier-check-caller.yml`](../examples/reusable-workflows/prettier-check-caller.yml) |
+| `lychee-link-check.yml` | `.github/workflows/reusable-lychee-link-check.yml` | [`lychee-link-check-caller.yml`](../examples/reusable-workflows/lychee-link-check-caller.yml) |
+| `jscpd-copy-paste-detection.yml` | `.github/workflows/reusable-jscpd-copy-paste-detection.yml` | [`jscpd-copy-paste-detection-caller.yml`](../examples/reusable-workflows/jscpd-copy-paste-detection-caller.yml) |
 | `repository-metrics.yml` | `.github/workflows/reusable-repository-metrics.yml` | [`repository-metrics-caller.yml`](../examples/reusable-workflows/repository-metrics-caller.yml) |
 | `microsoft-security-devops.yml` | `.github/workflows/reusable-microsoft-security-devops.yml` | [`microsoft-security-devops-caller.yml`](../examples/reusable-workflows/microsoft-security-devops-caller.yml) |
 | `sitemap-generator.yml` | `.github/workflows/reusable-sitemap-generator.yml` | [`sitemap-generator-caller.yml`](../examples/reusable-workflows/sitemap-generator-caller.yml) |

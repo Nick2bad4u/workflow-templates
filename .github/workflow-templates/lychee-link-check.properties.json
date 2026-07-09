@@ -1,0 +1,17 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "Markdown",
+        "HTML",
+        "YAML",
+        "code-quality"
+    ],
+    "description": "Check repository links with Lychee and the shared lychee-config-nick2bad4u package.",
+    "filePatterns": [
+        "package.json$",
+        "README.md$",
+        "lychee.toml$"
+    ],
+    "iconName": "octicon link",
+    "name": "Lychee Link Check"
+}

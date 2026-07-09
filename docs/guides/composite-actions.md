@@ -65,6 +65,8 @@ to fail pull request validation when action metadata drifts.
 | `create-npm-release-archives` | Creates npm tarball and zip release assets. |
 | `create-github-release` | Creates a GitHub release through pinned `softprops/action-gh-release`. |
 | `write-release-summary` | Writes a standardized release summary to `GITHUB_STEP_SUMMARY`. |
+| `run-lychee-link-check` | Runs Lychee with the shared `lychee-config-nick2bad4u` package. |
+| `run-jscpd-duplicate-check` | Runs JSCPD with the shared `jscpd-config-nick2bad4u` package. |
 | `run-vitest-coverage-junit` | Runs Vitest with coverage and JUnit output. |
 | `verify-path-exists` | Verifies generated artifacts such as LCOV or JUnit files. |
 | `upload-codecov-report` | Uploads coverage or test-result reports through pinned Codecov. |

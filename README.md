@@ -52,6 +52,8 @@ All workflows include hardened runners, least-privilege permissions, concurrency
 | **Dev Skim Security Analysis**                | Run Microsoft DevSkim and upload SARIF results                                     | See template                     | YAML, code-quality                                  |
 | **Ossar Security Analysis**                   | Run OSSAR and upload SARIF results                                                 | See template                     | YAML, code-quality                                  |
 | **Prettier Check**                            | Run Prettier in check mode for common web project files                            | See template                     | JavaScript, TypeScript, Markdown, CSS, code-quality |
+| **Lychee Link Check**                         | Check repository links with Lychee and the shared config package                   | See template                     | Markdown, HTML, YAML, code-quality                  |
+| **JSCPD Copy/Paste Detection**                | Detect copied and pasted code with JSCPD and the shared config package             | See template                     | JavaScript, TypeScript, code-quality                |
 | **Repository Metrics**                        | Generate repository metrics SVG output with lowlighter/metrics                     | See template                     | YAML                                                |
 | **Microsoft Security DevOps**                 | Run Microsoft Security DevOps scanning and upload SARIF results                    | See template                     | YAML, code-quality                                  |
 | **Generate XML Sitemap**                      | Generate an XML sitemap and open a pull request with updates                       | See template                     | HTML, Markdown, deployment                          |
@@ -133,15 +135,17 @@ strategy:
 
 Each workflow may require additional configuration:
 
-| Workflow                               | Config File                                            | Purpose                                         |
-| -------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- |
-| **Auto-Label PRs**                     | `.github/labeler.yml`                                  | Define PR label rules                           |
-| **Gitleaks Scan**                      | `.gitleaks.toml` (optional)                            | Custom secret patterns                          |
-| **Dependabot Auto-Merge**              | Repository auto-merge + `DEPENDABOT_AUTO_MERGE_SEMVER` | Auto-merge selected semver updates after checks |
-| **Mark Stale Issues**                  | Built-in params                                        | Days before stale/close                         |
-| **Deploy Docusaurus**                  | `docusaurus.config.js`                                 | Docs site config                                |
-| **Submit IndexNow**                    | Repository secret: `INDEXNOW_KEY`                      | SEO notification key                            |
-| **Git-Cliff Release Notes Validation** | `cliff.toml`                                           | Git-cliff release-note heading convention       |
+| Workflow                               | Config File                                                | Purpose                                         |
+| -------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------- |
+| **Auto-Label PRs**                     | `.github/labeler.yml`                                      | Define PR label rules                           |
+| **Gitleaks Scan**                      | `.gitleaks.toml` (optional)                                | Custom secret patterns                          |
+| **Dependabot Auto-Merge**              | Repository auto-merge + `DEPENDABOT_AUTO_MERGE_SEMVER`     | Auto-merge selected semver updates after checks |
+| **Mark Stale Issues**                  | Built-in params                                            | Days before stale/close                         |
+| **Deploy Docusaurus**                  | `docusaurus.config.js`                                     | Docs site config                                |
+| **Submit IndexNow**                    | Repository secret: `INDEXNOW_KEY`                          | SEO notification key                            |
+| **Git-Cliff Release Notes Validation** | `cliff.toml`                                               | Git-cliff release-note heading convention       |
+| **Lychee Link Check**                  | `lychee-config-nick2bad4u` + optional `lint:lychee` script | Shared link-check config and seven-day cache    |
+| **JSCPD Copy/Paste Detection**         | `jscpd-config-nick2bad4u` + `lint:jscpd` script            | Shared duplicate-code detection config          |
 
 See [USAGE.md](./USAGE.md) for per-workflow setup details.
 

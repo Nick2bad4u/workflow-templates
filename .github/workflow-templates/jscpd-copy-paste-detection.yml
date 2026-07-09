@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "JSCPD Copy/Paste Detection"
+
+run-name: "${{ github.workflow }} (${{ github.ref_name || github.run_id }})"
+
+on:
+    push:
+        branches:
+            - "$default-branch"
+    pull_request:
+        branches:
+            - "$default-branch"
+    merge_group:
+        branches:
+            - "$default-branch"
+        types:
+            - "checks_requested"
+    workflow_dispatch:
+
+concurrency:
+    group: "jscpd-copy-paste-detection-${{ github.workflow }}-${{ github.ref }}"
+    cancel-in-progress: true
+
+permissions:
+    contents: "read"
+
+defaults:
+    run:
+        shell: "bash"
+
+jobs:
+    jscpd:
+        name: "JSCPD Copy/Paste Detection"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 30
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Setup Node"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+              with:
+                  node-version: "24"
+                  cache: "npm"
+                  cache-dependency-path: "package-lock.json"
+
+            - name: "Install dependencies"
+              run: "npm ci --no-audit --no-fund"
+
+            - name: "Run JSCPD"
+              env:
+                  CONFIG_PATH: "node_modules/jscpd-config-nick2bad4u/jscpd.json"
+                  JSCPD_COMMAND: "npm run lint:jscpd"
+              run: |
+                  set -euo pipefail
+
+                  if [ ! -f "${CONFIG_PATH}" ]; then
+                    echo "JSCPD config was not found at ${CONFIG_PATH}." >&2
+                    echo "Install jscpd-config-nick2bad4u before running this workflow." >&2
+                    exit 1
+                  fi
+
+                  bash -o pipefail -euc "${JSCPD_COMMAND}"

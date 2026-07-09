@@ -40,6 +40,8 @@ For shared step-level building blocks, see [Composite Actions](./docs/guides/com
 - [Dev Skim Security Analysis](#dev-skim-security-analysis)
 - [Ossar Security Analysis](#ossar-security-analysis)
 - [Prettier Check](#prettier-check)
+- [Lychee Link Check](#lychee-link-check)
+- [JSCPD Copy/Paste Detection](#jscpd-copypaste-detection)
 - [Repository Metrics](#repository-metrics)
 - [Microsoft Security DevOps](#microsoft-security-devops)
 - [Generate XML Sitemap](#generate-xml-sitemap)
@@ -984,6 +986,28 @@ Review the template inputs, required secrets, and permissions before enabling it
 Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-prettier-check.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/prettier-check-caller.yml`.
 
 Review the template inputs, required secrets, and permissions before enabling it in a consumer repository.
+
+---
+
+## Lychee Link Check
+
+**File:** `lychee-link-check.yml`
+**Purpose:** Check repository links with Lychee and the shared `lychee-config-nick2bad4u` package.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-lychee-link-check.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/lychee-link-check-caller.yml`.
+
+The consumer repository should install `lychee-config-nick2bad4u`. The workflow runs Lychee through the pinned `lycheeverse/lychee-action`, while optional `lint:lychee` and `lint:lychee:smoke` package scripts provide local parity when the Lychee CLI is available on `PATH`. The workflow restores and saves `.lycheecache` with weekly restore keys so the GitHub Actions cache aligns with the shared config's seven-day `max_cache_age`.
+
+---
+
+## JSCPD Copy/Paste Detection
+
+**File:** `jscpd-copy-paste-detection.yml`
+**Purpose:** Detect copied and pasted code with JSCPD and the shared `jscpd-config-nick2bad4u` package.
+
+Use the workflow template for a copied starter workflow, or call `.github/workflows/reusable-jscpd-copy-paste-detection.yml` from a consumer workflow. The reusable caller example is `docs/examples/reusable-workflows/jscpd-copy-paste-detection-caller.yml`.
+
+The consumer repository should install `jscpd-config-nick2bad4u` and expose a `lint:jscpd` package script that runs `jscpd --config node_modules/jscpd-config-nick2bad4u/jscpd.json`.
 
 ---
 

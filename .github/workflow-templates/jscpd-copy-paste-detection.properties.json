@@ -1,0 +1,15 @@
+{
+    "$schema": "../../schemas/github-workflow-template-properties.schema.json",
+    "categories": [
+        "JavaScript",
+        "TypeScript",
+        "code-quality"
+    ],
+    "description": "Detect copied and pasted code with JSCPD and the shared jscpd-config-nick2bad4u package.",
+    "filePatterns": [
+        "package.json$",
+        "jscpd.*$"
+    ],
+    "iconName": "octicon duplicate",
+    "name": "JSCPD Copy/Paste Detection"
+}

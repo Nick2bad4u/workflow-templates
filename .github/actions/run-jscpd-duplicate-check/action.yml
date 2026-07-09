@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-action.json
+
+name: "Run JSCPD Duplicate Check"
+description: "Run JSCPD with the shared repository config installed from npm dependencies."
+
+inputs:
+    command:
+        description: "JSCPD command to execute."
+        required: false
+        default: "npm run lint:jscpd"
+    config-path:
+        description: "Expected JSCPD config path."
+        required: false
+        default: "node_modules/jscpd-config-nick2bad4u/jscpd.json"
+    working-directory:
+        description: "Directory where JSCPD runs."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Run JSCPD"
+          shell: "bash"
+          env:
+              CONFIG_PATH: "${{ inputs.config-path }}"
+              JSCPD_COMMAND: "${{ inputs.command }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              if [ ! -f "${CONFIG_PATH}" ]; then
+                echo "JSCPD config was not found at ${CONFIG_PATH}." >&2
+                echo "Install jscpd-config-nick2bad4u before calling this action." >&2
+                exit 1
+              fi
+
+              bash -o pipefail -euc "${JSCPD_COMMAND}"

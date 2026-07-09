@@ -1,6 +1,6 @@
 # Composite Actions
 
-This directory contains reusable composite actions for release automation, npm package publishing, release assets, Codecov uploads, and test report verification.
+This directory contains reusable composite actions for release automation, npm package publishing, release assets, code-quality checks, Codecov uploads, and test report verification.
 
 See [`docs/guides/composite-actions.md`](../../docs/guides/composite-actions.md) for complete workflow examples that consume these actions.
 
@@ -43,6 +43,13 @@ Use a commit SHA or tag outside repositories you control. `@main` is only approp
 | `create-npm-release-archives`      | Creates npm tarball and zip release assets.                                 |
 | `create-github-release`            | Creates a GitHub release through pinned `softprops/action-gh-release`.      |
 | `write-release-summary`            | Writes a standardized release summary.                                      |
+
+## Code Quality Actions
+
+| Action                      | Purpose                                                         |
+| --------------------------- | --------------------------------------------------------------- |
+| `run-lychee-link-check`     | Runs Lychee with the shared `lychee-config-nick2bad4u` package. |
+| `run-jscpd-duplicate-check` | Runs JSCPD with the shared `jscpd-config-nick2bad4u` package.   |
 
 ## Test And Codecov Actions
 

@@ -33,6 +33,9 @@
         "lint:all:fix": "npm run lint:fix && npm run lint:remark:fix && npm run format",
         "lint:fix": "npx cross-env NODE_OPTIONS=--max_old_space_size=8192 npx eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache --fix",
         "lint:gitleaks": "gitleaks dir --config .gitleaks.toml .",
+        "lint:jscpd": "jscpd --config node_modules/jscpd-config-nick2bad4u/jscpd.json",
+        "lint:lychee": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml .",
+        "lint:lychee:smoke": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml --dump-inputs README.md",
         "lint:package-json": "npmPkgJsonLint . --config .npmpackagejsonlintrc.json",
         "lint:prettier": "npx prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --check",
         "lint:prettier:fix": "npx prettier . --log-level warn --cache --cache-location=.cache/.prettier-cache --cache-strategy=content --write",
@@ -46,10 +49,7 @@
         "schema:update:workflow-template-properties": "node ./scripts/update-workflow-template-properties-schema.mjs",
         "typecheck": "npx tsc -p tsconfig.js.json --noEmit",
         "update-actions": "npx actions-up --yes --style sha",
-        "update-deps": "npx ncu -i --install never && npm update --all --force && npm install --force",
-        "lint:jscpd": "jscpd --config node_modules/jscpd-config-nick2bad4u/jscpd.json",
-        "lint:lychee": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml .",
-        "lint:lychee:smoke": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml --dump-inputs README.md"
+        "update-deps": "npx ncu -i --install never && npm update --all --force && npm install --force"
     },
     "devDependencies": {
         "@microsoft/tsdoc-config": "^0.18.1",

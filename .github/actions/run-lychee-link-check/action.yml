@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-action.json
+
+name: "Run Lychee Link Check"
+description: "Run Lychee with the shared repository config installed from npm dependencies."
+
+inputs:
+    args:
+        description: "Arguments passed to lycheeverse/lychee-action."
+        required: false
+        default: "--config node_modules/lychee-config-nick2bad4u/lychee.toml ."
+    config-path:
+        description: "Expected Lychee config path."
+        required: false
+        default: "node_modules/lychee-config-nick2bad4u/lychee.toml"
+    fail:
+        description: "Fail the workflow when Lychee finds broken links."
+        required: false
+        default: "true"
+    fail-if-empty:
+        description: "Fail the workflow when Lychee finds no links to check."
+        required: false
+        default: "false"
+    lychee-version:
+        description: "Lychee binary version installed by lycheeverse/lychee-action."
+        required: false
+        default: "v0.24.2"
+    working-directory:
+        description: "Directory where Lychee runs."
+        required: false
+        default: "."
+
+runs:
+    using: "composite"
+    steps:
+        - name: "Verify Lychee config"
+          shell: "bash"
+          env:
+              CONFIG_PATH: "${{ inputs.config-path }}"
+              WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+          run: |
+              set -euo pipefail
+
+              cd "${WORKING_DIRECTORY}"
+
+              if [ ! -f "${CONFIG_PATH}" ]; then
+                echo "Lychee config was not found at ${CONFIG_PATH}." >&2
+                echo "Install lychee-config-nick2bad4u before calling this action." >&2
+                exit 1
+              fi
+
+        - name: "Run Lychee"
+          uses: "lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411" # v2
+          with:
+              args: "${{ inputs.args }}"
+              fail: "${{ inputs.fail }}"
+              failIfEmpty: "${{ inputs.fail-if-empty }}"
+              lycheeVersion: "${{ inputs.lychee-version }}"
+              workingDirectory: "${{ inputs.working-directory }}"

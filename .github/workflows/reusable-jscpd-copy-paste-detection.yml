@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: "JSCPD Copy/Paste Detection"
+
+on:
+    workflow_call:
+        inputs:
+            node-version:
+                description: "Node.js version used to install JSCPD and the shared config package."
+                required: false
+                type: "string"
+                default: "24"
+            cache-dependency-path:
+                description: "Dependency lockfile path used by npm cache."
+                required: false
+                type: "string"
+                default: "package-lock.json"
+            install-command:
+                description: "Command used to install dependencies before running JSCPD."
+                required: false
+                type: "string"
+                default: "npm ci --no-audit --no-fund"
+            jscpd-command:
+                description: "Command used to run JSCPD duplicate detection."
+                required: false
+                type: "string"
+                default: "npm run lint:jscpd"
+            jscpd-config-path:
+                description: "Expected JSCPD config path."
+                required: false
+                type: "string"
+                default: "node_modules/jscpd-config-nick2bad4u/jscpd.json"
+            working-directory:
+                description: "Directory where npm install and JSCPD commands run."
+                required: false
+                type: "string"
+                default: "."
+
+permissions:
+    contents: "read"
+
+defaults:
+    run:
+        shell: "bash"
+
+jobs:
+    jscpd:
+        name: "JSCPD Copy/Paste Detection"
+        runs-on: "ubuntu-latest"
+        timeout-minutes: 30
+        env:
+            WORKING_DIRECTORY: "${{ inputs.working-directory }}"
+        steps:
+            - name: "Harden runner"
+              uses: "step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411" # v2.19.4
+              with:
+                  egress-policy: "audit"
+
+            - name: "Checkout"
+              uses: "actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0" # v7.0.0
+
+            - name: "Setup Node"
+              uses: "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e" # v6.4.0
+              with:
+                  node-version: "${{ inputs.node-version }}"
+                  cache: "npm"
+                  cache-dependency-path: "${{ inputs.cache-dependency-path }}"
+
+            - name: "Install dependencies"
+              env:
+                  INSTALL_COMMAND: "${{ inputs.install-command }}"
+              run: |
+                  set -euo pipefail
+
+                  cd "${WORKING_DIRECTORY}"
+                  bash -o pipefail -euc "${INSTALL_COMMAND}"
+
+            - name: "Run JSCPD"
+              env:
+                  CONFIG_PATH: "${{ inputs.jscpd-config-path }}"
+                  JSCPD_COMMAND: "${{ inputs.jscpd-command }}"
+              run: |
+                  set -euo pipefail
+
+                  cd "${WORKING_DIRECTORY}"
+
+                  if [ ! -f "${CONFIG_PATH}" ]; then
+                    echo "JSCPD config was not found at ${CONFIG_PATH}." >&2
+                    echo "Install jscpd-config-nick2bad4u before running this workflow." >&2
+                    exit 1
+                  fi
+
+                  bash -o pipefail -euc "${JSCPD_COMMAND}"
