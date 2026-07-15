@@ -49,6 +49,7 @@ jobs:
               env:
                   CHANGELOG_PATH: "${{ inputs.changelog_path || 'CHANGELOG.md' }}"
                   CLIFF_CONFIG: "${{ inputs.cliff_config || 'cliff.toml' }}"
+                  GITHUB_TOKEN: "${{ github.token }}"
               run: |
                   npx git-cliff --config "${CLIFF_CONFIG}" --verbose --output "${CHANGELOG_PATH}"
 
