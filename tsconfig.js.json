@@ -26,7 +26,8 @@
         "*.d.mts",
         "*.mjs",
         "*.js",
-        "*.mjs",
+        "scripts/validate-git-cliff-token-exports.mjs",
+        "test/**/*.mjs",
         "test/_internal/**/*.d.ts"
     ]
 }

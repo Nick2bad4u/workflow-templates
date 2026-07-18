@@ -4,16 +4,34 @@ import nickTwoBadFourU from "eslint-config-nick2bad4u";
 const config = [
     ...nickTwoBadFourU.configs.all,
     {
-        files: ["*.mjs", ".*.mjs"],
+        files: [
+            "*.mjs",
+            ".*.mjs",
+            "test/*.mjs",
+        ],
         languageOptions: {
             parserOptions: {
                 projectService: {
-                    allowDefaultProject: ["*.mjs", ".*.mjs"],
+                    allowDefaultProject: [
+                        "*.mjs",
+                        ".*.mjs",
+                        "test/*.mjs",
+                    ],
                     defaultProject: "tsconfig.js.json",
                 },
             },
         },
-        name: "🧰 Root JavaScript config files: TypeScript project service",
+        name: "🧰 JavaScript config and test files: TypeScript project service",
+    },
+    {
+        files: ["test/*.test.mjs"],
+        name: "⛔ Node.js built-in test runner compatibility: Disables",
+        rules: {
+            "no-template-curly-in-string": "off",
+            "test-signal/require-assertions": "off",
+            "vitest/no-import-node-test": "off",
+            "vitest/prefer-importing-vitest-globals": "off",
+        },
     },
     {
         files: [

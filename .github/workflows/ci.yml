@@ -63,6 +63,9 @@ jobs:
             - name: "Validate schema fixtures"
               run: "npm run schema:test:workflow-template-properties"
 
+            - name: "Validate git-cliff token exports"
+              run: "npm run validate:git-cliff-token"
+
             - name: "Lint repository"
               run: "npm run lint"
 

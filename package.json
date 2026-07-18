@@ -29,9 +29,10 @@
         "format:check": "npx prettier . --check",
         "lint": "npx cross-env NODE_OPTIONS=--max_old_space_size=8192 npx eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache",
         "lint:actions": "actionlint -color -shellcheck= -pyflakes=",
-        "lint:all": "npm run lint && npm run format:check && npm run lint:gitleaks && npm run lint:yamllint",
+        "lint:all": "npm run lint && npm run validate:git-cliff-token && npm run format:check && npm run lint:gitleaks && npm run lint:yamllint",
         "lint:all:fix": "npm run lint:fix && npm run lint:remark:fix && npm run format",
         "lint:fix": "npx cross-env NODE_OPTIONS=--max_old_space_size=8192 npx eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache --fix",
+        "lint:git-cliff-token": "node ./scripts/validate-git-cliff-token-exports.mjs",
         "lint:gitleaks": "gitleaks dir --config .gitleaks.toml .",
         "lint:jscpd": "npx jscpd --config node_modules/jscpd-config-nick2bad4u/jscpd.json",
         "lint:lychee": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml .",
@@ -47,9 +48,11 @@
         "schema:check:workflow-template-properties": "node ./scripts/update-workflow-template-properties-schema.mjs && git diff --exit-code -- schemas/github-workflow-template-properties.schema.json",
         "schema:test:workflow-template-properties": "node ./scripts/validate-workflow-template-properties-schema-fixtures.mjs",
         "schema:update:workflow-template-properties": "node ./scripts/update-workflow-template-properties-schema.mjs",
+        "test:git-cliff-token": "node --test ./test/git-cliff-token-exports.test.mjs",
         "typecheck": "npx tsc -p tsconfig.js.json --noEmit",
         "update-actions": "npx actions-up --yes --style sha",
-        "update-deps": "npx ncu --configFileName .ncurc.json --configFilePath node_modules/ncu-config-nick2bad4u && npm update --all --force && npm install --force"
+        "update-deps": "npx ncu --configFileName .ncurc.json --configFilePath node_modules/ncu-config-nick2bad4u && npm update --all --force && npm install --force",
+        "validate:git-cliff-token": "npm run test:git-cliff-token && npm run lint:git-cliff-token"
     },
     "devDependencies": {
         "@microsoft/tsdoc-config": "^0.18.1",
