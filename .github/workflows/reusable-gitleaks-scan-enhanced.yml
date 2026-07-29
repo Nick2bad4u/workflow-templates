@@ -86,14 +86,17 @@ jobs:
                     exit 0
                   fi
 
-                  if [[ -f package-lock.json ]]; then
-                    npm ci --ignore-scripts --no-audit --no-fund
-                  elif [[ -f package.json ]]; then
-                    npm install --ignore-scripts --no-audit --no-fund
-                  else
+                  if [[ ! -f package.json ]]; then
                     echo "::error title=Missing npm manifest::.gitleaks.toml extends ${shared_config_path}, but package.json was not found."
                     exit 1
                   fi
+
+                  if [[ ! -f package-lock.json ]]; then
+                    echo "::error title=Missing npm lockfile::.gitleaks.toml extends ${shared_config_path}, but package-lock.json was not found."
+                    exit 1
+                  fi
+
+                  npm ci --ignore-scripts --no-audit --no-fund
 
                   if [[ ! -f "${shared_config_path}" ]]; then
                     echo "::error title=Missing shared Gitleaks config::Expected ${shared_config_path} after installing npm dependencies."
