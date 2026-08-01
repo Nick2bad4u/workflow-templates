@@ -96,7 +96,76 @@ jobs:
                     exit 1
                   fi
 
-                  npm ci --ignore-scripts --no-audit --no-fund
+                  mapfile -t locked_metadata < <(
+                    node <<'NODE'
+                  const fs = require("node:fs");
+
+                  const packageName = "gitleaks-config-nick2bad4u";
+                  const lock = JSON.parse(fs.readFileSync("package-lock.json", "utf8"));
+                  const entry =
+                    lock.packages?.[`node_modules/${packageName}`] ??
+                    lock.dependencies?.[packageName];
+
+                  if (!entry?.version || !entry?.integrity) {
+                    console.error(
+                      `package-lock.json does not contain a locked ${packageName} version and integrity.`,
+                    );
+                    process.exit(1);
+                  }
+
+                  console.log(entry.version);
+                  console.log(entry.integrity);
+                  NODE
+                  )
+
+                  locked_version="${locked_metadata[0]:-}"
+                  locked_integrity="${locked_metadata[1]:-}"
+                  package_dir="$(mktemp -d "${RUNNER_TEMP}/gitleaks-config.XXXXXX")"
+                  pack_output="${package_dir}/pack.json"
+
+                  npm pack \
+                    --ignore-scripts \
+                    --json \
+                    --pack-destination "${package_dir}" \
+                    "gitleaks-config-nick2bad4u@${locked_version}" >"${pack_output}"
+
+                  tarball_filename="$(
+                    PACK_OUTPUT="${pack_output}" \
+                    LOCKED_INTEGRITY="${locked_integrity}" \
+                    node <<'NODE'
+                  const fs = require("node:fs");
+
+                  const packResults = JSON.parse(
+                    fs.readFileSync(process.env.PACK_OUTPUT, "utf8"),
+                  );
+                  const packResult = Array.isArray(packResults)
+                    ? packResults[0]
+                    : packResults["gitleaks-config-nick2bad4u"];
+
+                  if (!packResult?.filename || !packResult?.integrity) {
+                    console.error("npm pack did not return package metadata.");
+                    process.exit(1);
+                  }
+
+                  if (packResult.integrity !== process.env.LOCKED_INTEGRITY) {
+                    console.error(
+                      `Packed Gitleaks config integrity ${packResult.integrity} does not match package-lock.json ${process.env.LOCKED_INTEGRITY}.`,
+                    );
+                    process.exit(1);
+                  }
+
+                  process.stdout.write(packResult.filename);
+                  NODE
+                  )"
+
+                  shared_config_dir="$(dirname "${shared_config_path}")"
+                  mkdir -p "${shared_config_dir}"
+                  tar \
+                    --extract \
+                    --file "${package_dir}/${tarball_filename}" \
+                    --gzip \
+                    --directory "${shared_config_dir}" \
+                    --strip-components 1
 
                   if [[ ! -f "${shared_config_path}" ]]; then
                     echo "::error title=Missing shared Gitleaks config::Expected ${shared_config_path} after installing npm dependencies."
