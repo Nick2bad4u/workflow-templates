@@ -30,7 +30,7 @@ jobs:
         timeout-minutes: 15
         steps:
             - name: "Harden the runner (Audit all outbound calls)"
-              uses: "step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920" # v2.20.0
+              uses: "step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c" # v2.21.0
               with:
                   egress-policy: "audit"
 
@@ -70,7 +70,7 @@ jobs:
               run: "npm run lint"
 
             - name: "Lint workflow syntax with actionlint"
-              uses: "reviewdog/action-actionlint@50842263c20a7c46bd0065b9e624d3c569db061e" # v1.73.0
+              uses: "reviewdog/action-actionlint@dbe5299849118fd6f099ba563d263d770955a64a" # v1.73.2
               with:
                   fail_level: "error"
 
